@@ -118,6 +118,8 @@ let name = "Oscar Vargas Torres";
       # End
       bindkey '\e[F'  end-of-line
       bindkey '\eOF'  end-of-line
+      
+      export GPG_TTY=$(tty)
     '';
   };
 
