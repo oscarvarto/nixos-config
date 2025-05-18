@@ -20,7 +20,7 @@ in
   };
 
   environment.variables = {
-    # EDITOR = "nvim";
+    EDITOR = "nvim";
     LANG = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
   };
@@ -40,7 +40,10 @@ in
 
     brews = [
       "awscli"
+      "bat"
+      "bat-extras"
       "cmake"
+      "difftastic"
       "dotnet"
       {
         name = "emacs-plus@31";
@@ -141,6 +144,9 @@ in
     shellInit = ''
       export PATH=/opt/homebrew/bin:/opt/homebrew/opt/llvm/bin:$PATH
       export JAVA_HOME=$(/usr/libexec/java_home -v 24)
+      export BAT_THEME=Coldark-Cold
+
+      alias tg="$EDITOR $HOME/Library/Application\ Support/com.mitchellh.ghostty/config"
     '';
   };
 }

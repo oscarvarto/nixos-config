@@ -62,7 +62,8 @@ in
       export VISUAL="emacsclient -nc"
 
       t() {
-         nvim "$@"
+         # nvim "$@"
+         emacsclient -nw "$@"
       }
 
       ec() {

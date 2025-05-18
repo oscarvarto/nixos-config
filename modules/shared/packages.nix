@@ -6,7 +6,6 @@ with pkgs;
   aspell
   aspellDicts.en
   bash-completion
-  bat
   btop
   coreutils
   curl
