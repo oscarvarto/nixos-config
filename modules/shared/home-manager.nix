@@ -82,6 +82,7 @@ in
       alias gp="git fetch --all -p; git pull; git submodule update --recursive"
 
       # Doom update alias
+      alias ds="doom sync --aot --gc -j $(nproc)"
       alias dup="doom upgrade; doom sync --aot --gc -j $(nproc)"
 
       # pnpm is a javascript package manager

@@ -20,6 +20,7 @@ _:
   "1password@nightly"
   "1password-cli"
   "karabiner-elements"
+  "proton-drive"
   "syncthing"
   "unnaturalscrollwheels"
 

@@ -140,6 +140,7 @@ in
     # the rest of your shell configuration here
     shellInit = ''
       export PATH=/opt/homebrew/bin:/opt/homebrew/opt/llvm/bin:$PATH
+      export JAVA_HOME=$(/usr/libexec/java_home -v 24)
     '';
   };
 }
