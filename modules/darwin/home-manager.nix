@@ -23,6 +23,7 @@ in
     EDITOR = "nvim";
     LANG = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
+    BAT_THEME="Coldark-Dark";
   };
 
   homebrew = {
@@ -66,6 +67,7 @@ in
       "pass"
       "pinentry-mac"
       "swig"
+      "vivid"
       "wmctrl"
       "xz" # lzma is part of xz
       "yq"
@@ -142,9 +144,16 @@ in
     enable = true;
     # the rest of your shell configuration here
     shellInit = ''
-      export PATH=/opt/homebrew/bin:/opt/homebrew/opt/llvm/bin:$PATH
-      export JAVA_HOME=$(/usr/libexec/java_home -v 24)
-      export BAT_THEME=Coldark-Cold
+      export PATH=/opt/homebrew/bin:$PATH
+     
+      export PATH=/opt/homebrew/opt/llvm/bin:$PATH
+      export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+      export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+
+      export DOTNET_ROOT=/usr/local/share/dotnet
+      export PATH=$DOTNET_ROOT:$HOME/.dotnet/tools:$PATH
+
+      export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 
       alias tg="$EDITOR $HOME/Library/Application\ Support/com.mitchellh.ghostty/config"
     '';

@@ -59,15 +59,15 @@ in
 
       export ALTERNATE_EDITOR=""
       export EDITOR="nvim"
-      export VISUAL="emacsclient -nc"
+      export VISUAL="/opt/homebrew/bin/emacsclient -nc"
 
       t() {
          # nvim "$@"
-         emacsclient -nw "$@"
+         /opt/homebrew/bin/emacsclient -nw "$@"
       }
 
       ec() {
-         emacsclient -nc "$@"
+         /opt/homebrew/bin/emacsclient -nc "$@"
       }
 
       e() {
