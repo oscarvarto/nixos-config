@@ -6,30 +6,24 @@ let
   xdg_stateHome  = "${config.users.users.${user}.home}/.local/state"; in
 {
   # Raycast script so that "Run Emacs" is available and uses Emacs daemon
-  # "${xdg_dataHome}/bin/emacsclient" = {
-  #   executable = true;
-  #   text = ''
-  #     #!/bin/zsh
-  #     #
-  #     # Required parameters:
-  #     # @raycast.schemaVersion 1
-  #     # @raycast.title Run Emacs
-  #     # @raycast.mode silent
-  #     #
-  #     # Optional parameters:
-  #     # @raycast.packageName Emacs
-  #     # @raycast.icon ${xdg_dataHome}/img/icons/Emacs.icns
-  #     # @raycast.iconDark ${xdg_dataHome}/img/icons/Emacs.icns
+  "${xdg_dataHome}/bin/emacsclient" = {
+    executable = true;
+    text = ''
+      #!/bin/zsh
+      #
+      # Required parameters:
+      # @raycast.schemaVersion 1
+      # @raycast.title Run Emacs
+      # @raycast.mode silent
+      #
+      # Optional parameters:
+      # @raycast.packageName Emacs
+      # @raycast.icon ${xdg_dataHome}/img/icons/Emacs.icns
+      # @raycast.iconDark ${xdg_dataHome}/img/icons/Emacs.icns
 
-  #     if [[ $1 = "-t" ]]; then
-  #       # Terminal mode
-  #       ${myEmacs}/bin/emacsclient -t $@
-  #     else
-  #       # GUI mode
-  #       ${myEmacs}/bin/emacsclient -c -n $@
-  #     fi
-  #   '';
-  # };
+      /opt/homebrew/bin/emacsclient -c -n $@
+    '';
+  };
 
   # Create a template config file with just the biometric settings
   "${xdg_configHome}/op/biometric-config.json" = {

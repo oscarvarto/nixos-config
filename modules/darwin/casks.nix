@@ -3,22 +3,27 @@ _:
 [
   # Development Tools
   # "homebrew/cask/docker"
+  "chromedriver"
   "ghostty@tip"
   "jetbrains-toolbox"
+  "mactex"
+  "miniforge"
+  "okta-advanced-server-access"
+  "powershell"
   "visual-studio-code"
- 
+
   # Communication Tools
   "discord"
   "microsoft-outlook"
   "microsoft-teams"
   "notion"
   "slack"
-  "telegram"
   "zoom"
 
   # Utility Tools
   "1password@nightly"
   "1password-cli"
+  "dropbox"
   "karabiner-elements"
   "proton-drive"
   "syncthing"

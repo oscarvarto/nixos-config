@@ -40,9 +40,13 @@ in
     ];
 
     brews = [
+      "autoconf"
+      "autoconf-archive"
+      "automake"
       "awscli"
       "bat"
       "bat-extras"
+      "ccache"
       "cmake"
       "difftastic"
       "dotnet"
@@ -51,6 +55,8 @@ in
         args = [ "with-xwidgets" "with-imagemagick" "with-savchenkovaleriy-big-sur-curvy-3d-icon" "with-mailutils" ];
         link = true;
       }
+      "fish"
+      "fish-lsp"
       "gradle"
       "jq"
       "libedit"
@@ -61,13 +67,19 @@ in
       "maven"
       "mise"
       "mu"
+      "nasm"
       "ncurses"
       "ninja"
       "nushell"
+      "pandoc"
       "pass"
+      "pkg-config"
       "pinentry-mac"
+      "pixi"
       "swig"
+      "uv"
       "vivid"
+      "vcpkg"
       "wmctrl"
       "xz" # lzma is part of xz
       "yq"
@@ -144,16 +156,17 @@ in
     enable = true;
     # the rest of your shell configuration here
     shellInit = ''
-      export PATH=/opt/homebrew/bin:$PATH
+      PATH="/opt/homebrew/bin:$PATH"
      
-      export PATH=/opt/homebrew/opt/llvm/bin:$PATH
+      PATH="/opt/homebrew/opt/llvm/bin:$PATH"
       export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
       export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
 
       export DOTNET_ROOT=/usr/local/share/dotnet
-      export PATH=$DOTNET_ROOT:$HOME/.dotnet/tools:$PATH
+      PATH="$DOTNET_ROOT:$HOME/.dotnet/tools:$PATH"
 
-      export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+      export PATH="/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH"
+      eval "$(mise activate zsh)"
 
       alias tg="$EDITOR $HOME/Library/Application\ Support/com.mitchellh.ghostty/config"
     '';
