@@ -61,12 +61,14 @@ in
       "jq"
       "libedit"
       "libvterm"
+      "libsql"
       "libtool"
       "llvm"
       "lua"
       "maven"
       "mise"
       "mu"
+      "mysql@8.4"
       "nasm"
       "ncurses"
       "ninja"
@@ -80,6 +82,7 @@ in
       "uv"
       "vivid"
       "vcpkg"
+      "volta"
       "wmctrl"
       "xz" # lzma is part of xz
       "yq"
@@ -104,6 +107,7 @@ in
     masApps = {
       # "1password" = 1333542190;
       # "wireguard" = 1451685025;
+      "neptunes" = 1006739057;
     };
   };
 
@@ -132,7 +136,7 @@ in
           enable = true;
           # the specified packages as well as 1Password CLI will be
           # automatically installed and configured to use shell plugins
-          plugins = with pkgs; [ gh awscli2 cachix ];
+          plugins = with pkgs; [ awscli2 cachix gh glab ];
         };
       } // import ../shared/home-manager.nix { inherit
           config
@@ -165,6 +169,7 @@ in
       export DOTNET_ROOT=/usr/local/share/dotnet
       PATH="$DOTNET_ROOT:$HOME/.dotnet/tools:$PATH"
 
+      PATH="/opt/homebrew/opt/mysql@8.4/bin:$PATH"
       export PATH="/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH"
       eval "$(mise activate zsh)"
 

@@ -3,12 +3,15 @@ _:
 [
   # Development Tools
   # "homebrew/cask/docker"
+  "bruno"
   "chromedriver"
   "ghostty@tip"
   "jetbrains-toolbox"
   "mactex"
   "miniforge"
   "okta-advanced-server-access"
+  "ollama"
+  "postman"
   "powershell"
   "visual-studio-code"
 
@@ -25,7 +28,9 @@ _:
   "1password-cli"
   "dropbox"
   "karabiner-elements"
+  "nordvpn"
   "proton-drive"
+  "snagit"
   "syncthing"
   "unnaturalscrollwheels"
 
