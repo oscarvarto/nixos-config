@@ -8,7 +8,7 @@ in
 {
 
   imports = [
-    # ./dock
+    ./dock
   ];
 
   # It me
@@ -46,6 +46,7 @@ in
       "awscli"
       "bat"
       "bat-extras"
+      "cargo-binstall"
       "ccache"
       "cmake"
       "difftastic"
@@ -55,6 +56,7 @@ in
         args = [ "with-xwidgets" "with-imagemagick" "with-savchenkovaleriy-big-sur-curvy-3d-icon" "with-mailutils" ];
         link = true;
       }
+      "borders"
       "fish"
       "fish-lsp"
       "gradle"
@@ -79,6 +81,7 @@ in
       "pinentry-mac"
       "pixi"
       "swig"
+      "trash-cli"
       "uv"
       "vivid"
       "vcpkg"
@@ -155,6 +158,31 @@ in
     };
   };
 
+  # Fully declarative dock using the latest from Nix Store
+  local = {
+    dock = {
+      enable = true;
+      username = user;
+      entries = [
+        { path = "/Applications/Zed Preview.app/"; }
+        { path = "/Applications/Ghostty.app/"; }
+        { path = "/Applications/WarpPreview.app/"; }
+        { path = "/Applications/Firefox Nightly.app/"; }
+        { path = "/Applications/Microsoft Edge.app/"; }
+        { path = "/Applications/Google Chrome.app/"; }
+        { path = "/Applications/Safari.app/"; }
+        { path = "/Applications/Microsoft Teams.app/"; }
+        { path = "/Applications/Microsoft Outlook.app/"; }
+        { path = "/Applications/zoom.us.app/"; }
+        { path = "/Applications/Parallels Desktop.app/"; }
+        { path = "/Applications/Beekeeper Studio.app/"; }
+        { path = "/System/Applications/Music.app/"; }
+        { path = "/System/Applications/Calendar.app/"; }
+        { path = "/System/Applications/System Settings.app/"; }
+      ];
+    };
+  };
+
   # this can also be `programs.bash` or `programs.fish`
   programs.zsh = {
     enable = true;
@@ -174,6 +202,117 @@ in
       eval "$(mise activate zsh)"
 
       alias tg="$EDITOR $HOME/Library/Application\ Support/com.mitchellh.ghostty/config"
+
+      # >>> conda initialize >>>
+      # !! Contents within this block are managed by 'conda init' !!
+      __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+      if [ $? -eq 0 ]; then
+          eval "$__conda_setup"
+      else
+          if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+              . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+          else
+              export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+          fi
+      fi
+      unset __conda_setup
+      # <<< conda initialize <<<
     '';
   };
+
+  services = {
+
+    jankyborders = {
+      enable = true;
+      active_color = "0xff00ff00";
+      inactive_color = "0xff494d64";
+      width = 10.0;
+    };
+
+    yabai = {
+      enable = true;
+      enableScriptingAddition = true;
+      config = {
+        mouse_follows_focus = "on";
+        focus_follows_mouse = "autofocus";
+        display_arrangement_order = "horizontal";
+        window_origin_display = "default";
+        window_placement = "second_child";
+        window_zoom_persist = "on";
+        window_shadow = "on";
+        window_animation_duration = "0.0";
+        window_animation_easing = "ease_out_circ";
+        window_opacity_duration = "0.2";
+        active_window_opacity = "1.0";
+        normal_window_opacity = "0.7";
+        window_opacity = "on";
+        insert_feedback_color = "0xffd75f5f";
+        split_ratio = "0.50";
+        split_type = "auto";
+        auto_balance = "off";
+        top_padding = 20;
+        bottom_padding = 20;
+        left_padding = 20;
+        right_padding = 20;
+        window_gap = 20;
+        layout = "bsp f";
+        mouse_modifier = "fn";
+        mouse_action1 = "move";
+        mouse_action2 = "resize";
+        mouse_drop_action = "swap";
+      };
+      extraConfig = ''
+        # yabai -m rule --add app="^Google Chrome$" space=^10
+        # Flash focused
+        # yabai -m signal --add label="flash_focus" event="window_focused" action="yabai -m window \$YABAI_WINDOW_ID --opacity 0.1 && sleep $(yabai -m config window_opacity_duration) && yabai -m window \$YABAI_WINDOW_ID --opacity 0.0"
+        # float system preferences
+        yabai -m rule --add app="^System Settings$" manage=off
+        yabai -m rule --add title="Zoom Workplace" manage=off
+        yabai -m rule --add title="Zoom Meeting" manage=off
+        yabai -m signal --add app='^Ghostty$' event=window_created action='yabai -m space --layout bsp'
+        yabai -m signal --add app='^Ghostty$' event=window_destroyed action='yabai -m space --layout bsp'
+        borders &
+      '';
+    };
+
+    skhd = {
+      enable = true;
+      skhdConfig = ''
+        # Example and documentation here: https://github.com/koekeishiya/yabai/blob/master/examples/skhdrc
+        # ctrl + shift - f7 : skhd -r
+        cmd + ctrl + shift - r : skhd -r
+        cmd + alt - 1  : yabai -m space --focus 1
+        cmd + alt - 2  : yabai -m space --focus 2
+        cmd + alt - 3  : yabai -m space --focus 3
+        cmd + alt - 4  : yabai -m space --focus 4
+        cmd + alt - 5  : yabai -m space --focus 5
+        cmd + alt - 6  : yabai -m space --focus 6
+        cmd + alt - 7  : yabai -m space --focus 7
+        cmd + alt - 8  : yabai -m space --focus 8
+        cmd + alt - 9  : yabai -m space --focus 9
+        cmd + alt - 0  : yabai -m space --focus 10
+        # send window to desktop and follow focus
+        shift + cmd + alt - 1  : yabai -m window --space  1; yabai -m space --focus  1
+        shift + cmd + alt - 2  : yabai -m window --space  2; yabai -m space --focus  2
+        shift + cmd + alt - 3  : yabai -m window --space  3; yabai -m space --focus  3
+        shift + cmd + alt - 4  : yabai -m window --space  4; yabai -m space --focus  4
+        shift + cmd + alt - 5  : yabai -m window --space  5; yabai -m space --focus  5
+        shift + cmd + alt - 6  : yabai -m window --space  6; yabai -m space --focus  6
+        shift + cmd + alt - 7  : yabai -m window --space  7; yabai -m space --focus  7
+        shift + cmd + alt - 8  : yabai -m window --space  8; yabai -m space --focus  8
+        shift + cmd + alt - 9  : yabai -m window --space  9; yabai -m space --focus  9
+        shift + cmd + alt - 0  : yabai -m window --space 10; yabai -m space --focus 10
+        # options: zoom-parent, zoom-fullscreen, native-fullscreen
+        ctrl + alt + shift - f : yabai -m window --toggle native-fullscreen
+        ctrl + alt + shift - r : yabai --restart-service
+        ctrl + alt + shift - t : yabai --stop-service
+        ctrl + alt + shift - s : yabai --start-service
+        ctrl + alt + shift - 0 : yabai -m config window_opacity off
+        ctrl + alt + shift - 1 : yabai -m config window_opacity on
+        # cmd + ctrl - 0 : /opt/homebrew/bin/emacsclient -s /Users/oscarvarto/.local/run/emacs/server -e '(emacs-everywhere)'
+        # cmd + alt + shift - e : /opt/homebrew/Cellar/emacs-plus@30/30.0.92/bin/emacsclient -s /Users/oscarvarto/.local/run/emacs/server -e '(emacs-everywhere)'
+      '';
+    };
+  };
+
 }

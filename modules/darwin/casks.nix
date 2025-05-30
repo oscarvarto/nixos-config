@@ -17,6 +17,7 @@ _:
 
   # Communication Tools
   "discord"
+  "element"
   "microsoft-outlook"
   "microsoft-teams"
   "notion"
@@ -27,7 +28,6 @@ _:
   "1password@nightly"
   "1password-cli"
   "dropbox"
-  "karabiner-elements"
   "nordvpn"
   "proton-drive"
   "snagit"

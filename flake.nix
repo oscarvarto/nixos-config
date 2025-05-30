@@ -26,7 +26,7 @@
     homebrew-cask = {
       url = "github:homebrew/homebrew-cask";
       flake = false;
-    }; 
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -41,7 +41,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-emacs-plus, homebrew-cask, home-manager, nixpkgs, disko, agenix, secrets, op-shell-plugins } @inputs:
+  outputs = { self, darwin,
+              nix-homebrew,
+              homebrew-bundle,
+              homebrew-core,
+              homebrew-emacs-plus,
+              homebrew-cask,
+              home-manager,
+              nixpkgs, disko, agenix, secrets, op-shell-plugins } @inputs:
     let
       user = "oscarvarto";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -105,7 +112,7 @@
                   "homebrew/homebrew-bundle" = homebrew-bundle;
                   "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
                 };
-                mutableTaps = false;
+                mutableTaps = true;
                 autoMigrate = true;
               };
             }
