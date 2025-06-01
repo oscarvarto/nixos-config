@@ -20,8 +20,10 @@ _:
   "element"
   "microsoft-outlook"
   "microsoft-teams"
+  "nheko"
   "notion"
   "slack"
+  "whatsapp"
   "zoom"
 
   # Utility Tools

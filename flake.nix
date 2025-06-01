@@ -97,7 +97,7 @@
       darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (system:
         darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = inputs;
+          specialArgs = inputs // { inherit user; };
           modules = [
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
