@@ -84,7 +84,7 @@ in
       };
 
       trackpad = {
-        Clicking = false;
+        Clicking = true;
         TrackpadThreeFingerDrag = false;
       };
     };

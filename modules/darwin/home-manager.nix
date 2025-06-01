@@ -246,7 +246,7 @@ in
         window_opacity_duration = "0.2";
         active_window_opacity = "1.0";
         normal_window_opacity = "0.7";
-        window_opacity = "on";
+        window_opacity = "off";
         insert_feedback_color = "0xffd75f5f";
         split_ratio = "0.50";
         split_type = "auto";
@@ -285,31 +285,6 @@ in
 
         # Emacs specific rules
         # yabai -m rule --add app="^Emacs$" manage=on space=^1
-
-        # Add signal handlers for maintaining layout
-        yabai -m signal --add event=window_created app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=window_moved app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=window_resized app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=window_created app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=window_moved app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=window_resized app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=application_activated app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=application_activated app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-
-        # Signal handlers for Emacs/Ghostty layout management
-        yabai -m signal --add event=window_created app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=window_created app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=window_destroyed app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=window_destroyed app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-
-        # Better window restoration
-        yabai -m signal --add event=application_activated app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
-        yabai -m signal --add event=application_activated app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-
-        # Track layout changes
-        yabai -m signal --add event=window_resized action='~/.config/yabai/track_layout.sh save'
-        yabai -m signal --add event=window_moved action='~/.config/yabai/track_layout.sh save'
-        yabai -m signal --add event=space_changed action='~/.config/yabai/track_layout.sh restore'
 
         borders &
       '';
@@ -350,8 +325,6 @@ in
         ctrl + alt + shift - s : yabai --start-service
         ctrl + alt + shift - 0 : yabai -m config window_opacity off
         ctrl + alt + shift - 1 : yabai -m config window_opacity on
-        # cmd + alt + cmd - e : /Users/oscarvarto/.local/share/bin/emacsclient -s /Users/${user}/.local/run/emacs/server -e '(emacs-everywhere)'
-        cmd + alt + cmd - e :  /opt/homebrew/bin/emacsclient -s /Users/${user}/.local/run/emacs/server -e '(emacs-everywhere)'
       '';
     };
   };
