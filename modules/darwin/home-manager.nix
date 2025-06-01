@@ -190,7 +190,7 @@ in
     # the rest of your shell configuration here
     shellInit = ''
       PATH="/opt/homebrew/bin:$PATH"
-     
+
       PATH="/opt/homebrew/opt/llvm/bin:$PATH"
       export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
       export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
@@ -248,7 +248,7 @@ in
         normal_window_opacity = "0.7";
         window_opacity = "on";
         insert_feedback_color = "0xffd75f5f";
-        split_ratio = "0.50";              # Default to 80% split for our layouts
+        split_ratio = "0.50";
         split_type = "auto";
         auto_balance = "off";
         # Add window borders for easier identification
@@ -282,10 +282,10 @@ in
         yabai -m rule --add app="^System Settings$" manage=off
         yabai -m rule --add title="Zoom Workplace" manage=off
         yabai -m rule --add title="Zoom Meeting" manage=off
-        
+
         # Emacs specific rules
         # yabai -m rule --add app="^Emacs$" manage=on space=^1
-        
+
         # Add signal handlers for maintaining layout
         yabai -m signal --add event=window_created app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
         yabai -m signal --add event=window_moved app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
@@ -295,22 +295,22 @@ in
         yabai -m signal --add event=window_resized app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
         yabai -m signal --add event=application_activated app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
         yabai -m signal --add event=application_activated app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-        
+
         # Signal handlers for Emacs/Ghostty layout management
         yabai -m signal --add event=window_created app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
         yabai -m signal --add event=window_created app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
         yabai -m signal --add event=window_destroyed app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
         yabai -m signal --add event=window_destroyed app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-        
+
         # Better window restoration
         yabai -m signal --add event=application_activated app="^Emacs$" action='~/.config/yabai/maintain_layout.sh'
         yabai -m signal --add event=application_activated app="^Ghostty$" action='~/.config/yabai/maintain_layout.sh'
-        
+
         # Track layout changes
         yabai -m signal --add event=window_resized action='~/.config/yabai/track_layout.sh save'
         yabai -m signal --add event=window_moved action='~/.config/yabai/track_layout.sh save'
         yabai -m signal --add event=space_changed action='~/.config/yabai/track_layout.sh restore'
-        
+
         borders &
       '';
     };
@@ -356,7 +356,7 @@ in
         #### Ghostty and Emacs window management ####
         # Set up the Emacs-paired Ghostty window (requires a Ghostty window to be focused)
         cmd + alt - g : ~/.config/yabai/set_emacs_ghostty.sh
-        
+
         #### Toggle the Emacs-paired Ghostty terminal visibility ####
         ctrl + alt + shift - t : \
             . ~/.config/yabai/helpers.sh; \
@@ -378,7 +378,7 @@ in
                 ~/.config/yabai/set_emacs_ghostty.sh; \
                 notify "New Emacs-paired Ghostty window created"; \
             fi
-        
+
         #### Layout 1: Emacs on top (70% height), Ghostty at bottom ####
         ctrl + alt + shift - 1 : \
             . ~/.config/yabai/helpers.sh; \
@@ -398,7 +398,7 @@ in
                 ~/.config/yabai/track_layout.sh save; \
                 notify "Switched to vertical layout"; \
             fi
-        
+
         #### Layout 2: Emacs on left (70% width), Ghostty on right ####
         ctrl + alt + shift - 2 : \
             . ~/.config/yabai/helpers.sh; \
@@ -418,7 +418,7 @@ in
                 ~/.config/yabai/track_layout.sh save; \
                 notify "Switched to horizontal layout"; \
             fi
-        
+
         #### Quick focus between Emacs and its paired Ghostty ####
         ctrl + alt + shift - e : yabai -m window --focus $(yabai -m query --windows | jq '.[] | select(.app=="Emacs").id')
         ctrl + alt + shift - g : \
@@ -429,7 +429,7 @@ in
             else \
                 notify "No Emacs-paired Ghostty found"; \
             fi
-        
+
         #### Hide/show Emacs-paired Ghostty terminal ####
         ctrl + alt + shift - h : \
             . ~/.config/yabai/helpers.sh; \
@@ -466,7 +466,7 @@ in
                     notify "Layout reset"; \
                 fi; \
             fi
-        
+
         #### Restore both windows if they get hidden ####
         ctrl + alt + cmd - 0 : \
             . ~/.config/yabai/helpers.sh; \
@@ -490,7 +490,7 @@ in
                 ~/.config/yabai/set_emacs_ghostty.sh; \
                 notify "New Emacs-paired Ghostty window created"; \
             fi
-        
+
         #### Swap Emacs and Ghostty positions ####
         ctrl + alt + shift - w : \
             . ~/.config/yabai/helpers.sh; \
@@ -501,16 +501,16 @@ in
                 ~/.config/yabai/track_layout.sh save; \
                 notify "Windows swapped"; \
             fi
-            
+
         #### Create a new Emacs-paired Ghostty window ####
         ctrl + alt + cmd - g : \
             osascript -e 'tell application "Ghostty" to activate'; \
             sleep 0.3; \
             ~/.config/yabai/set_emacs_ghostty.sh; \
             notify "New Emacs-paired Ghostty window created"
-        
+
         #### Toggle padding for full-screen work ####
-        crtl + alt + shift - p : \
+        ctrl + alt + shift - p : \
             CURRENT_PADDING=$(yabai -m config top_padding); \
             if [ "''${CURRENT_PADDING}" = "20" ]; then \
                 yabai -m config top_padding 0; \
