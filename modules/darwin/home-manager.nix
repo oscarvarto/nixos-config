@@ -22,7 +22,7 @@ in
     EDITOR = "nvim";
     LANG = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
-    BAT_THEME="Coldark-Dark";
+    BAT_THEME="Coldark-Cold";
   };
 
   homebrew = {
@@ -242,7 +242,7 @@ in
         focus_follows_mouse = "autofocus";
         display_arrangement_order = "horizontal";
         window_origin_display = "default";
-        window_placement = "second_child";
+        window_placement = "first_child";
         window_zoom_persist = "on";
         window_shadow = "off";
         window_animation_duration = "0.0";  # Faster window operations
@@ -324,9 +324,9 @@ in
 
         # options: zoom-parent, zoom-fullscreen, native-fullscreen
         ctrl + alt + shift - f : yabai -m window --toggle native-fullscreen
-        ctrl + alt + shift - r : yabai --restart-service
-        ctrl + alt + shift - t : yabai --stop-service
-        ctrl + alt + shift - s : yabai --start-service
+        # ctrl + alt + shift - r : yabai --restart-service
+        # ctrl + alt + shift - t : yabai --stop-service
+        # ctrl + alt + shift - s : yabai --start-service
      '';
     };
   };
