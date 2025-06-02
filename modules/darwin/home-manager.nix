@@ -199,7 +199,9 @@ in
       PATH="$DOTNET_ROOT:$HOME/.dotnet/tools:$PATH"
 
       PATH="/opt/homebrew/opt/mysql@8.4/bin:$PATH"
-      export PATH="/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH"
+      PATH="/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH"
+      PATH="/run/current-system/sw/bin:$PATH"
+
       eval "$(mise activate zsh)"
 
       alias tg="$EDITOR $HOME/.config/ghostty/config"
@@ -218,6 +220,8 @@ in
       fi
       unset __conda_setup
       # <<< conda initialize <<<
+
+      export PATH
     '';
   };
 
@@ -240,15 +244,15 @@ in
         window_origin_display = "default";
         window_placement = "second_child";
         window_zoom_persist = "on";
-        window_shadow = "on";
+        window_shadow = "off";
         window_animation_duration = "0.0";  # Faster window operations
         window_animation_easing = "ease_out_circ";
         window_opacity_duration = "0.2";
         active_window_opacity = "1.0";
-        normal_window_opacity = "0.7";
-        window_opacity = "off";
+        normal_window_opacity = "0.70";
+        window_opacity = "on";
         insert_feedback_color = "0xffd75f5f";
-        split_ratio = "0.50";
+        split_ratio = "0.70";
         split_type = "auto";
         auto_balance = "off";
         # Add window borders for easier identification
@@ -263,7 +267,7 @@ in
         left_padding = 20;
         right_padding = 20;
         window_gap = 20;
-        layout = "bsp f";
+        layout = "bsp float";
         mouse_modifier = "fn";
         mouse_action1 = "move";
         mouse_action2 = "resize";
@@ -323,9 +327,7 @@ in
         ctrl + alt + shift - r : yabai --restart-service
         ctrl + alt + shift - t : yabai --stop-service
         ctrl + alt + shift - s : yabai --start-service
-        ctrl + alt + shift - 0 : yabai -m config window_opacity off
-        ctrl + alt + shift - 1 : yabai -m config window_opacity on
-      '';
+     '';
     };
   };
 

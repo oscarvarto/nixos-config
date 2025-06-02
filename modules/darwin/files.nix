@@ -6,11 +6,47 @@ let
   xdg_stateHome  = "${config.users.users.${user}.home}/.local/state"; 
 in
 {
-  # Raycast script so that "Run Emacs" is available and uses Emacs daemon
+  # yabai toggle split
+  # Toggles between vertical and horizontal split layouts
+  "${xdg_dataHome}/bin/yabai_toggle_split.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      #
+      # Required parameters:
+      # @raycast.schemaVersion 1
+      # @raycast.title Yabai Toggle Split
+      # @raycast.mode silent
+
+      /run/current-system/sw/bin/yabai -m window --toggle split
+    '';
+  };
+
+  # Emacs everywhere
+  "${xdg_dataHome}/bin/emacs_everywhere.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      #
+      # Required parameters:
+      # @raycast.schemaVersion 1
+      # @raycast.title Emacs Everywhere
+      # @raycast.mode silent
+
+      # /Users/oscarvarto/.emacs.d/bin/doom everywhere -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom; \
+      /opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom -e '(emacs-everywhere)'; \
+      sleep 2; \
+      /run/current-system/sw/bin/yabai -m window --focus east; \
+      /run/current-system/sw/bin/yabai -m window --toggle float; \
+      /run/current-system/sw/bin/yabai -m window --grid 4:4:1:1:2:2
+    '';
+  };
+
+  # Emacs daemon Raycast script so that "Run Emacs" is available and uses Emacs daemon
   "${xdg_dataHome}/bin/emacsclient" = {
     executable = true;
     text = ''
-      #!/bin/zsh
+      #!/usr/bin/env bash
       #
       # Required parameters:
       # @raycast.schemaVersion 1
@@ -22,7 +58,7 @@ in
       # @raycast.icon ${xdg_dataHome}/img/icons/Emacs.icns
       # @raycast.iconDark ${xdg_dataHome}/img/icons/Emacs.icns
 
-      /opt/homebrew/bin/emacsclient -c -n $@
+      /opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom $@
     '';
   };
 

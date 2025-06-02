@@ -59,15 +59,15 @@ in
 
       export ALTERNATE_EDITOR=""
       export EDITOR="nvim"
-      export VISUAL="/opt/homebrew/bin/emacsclient -nc"
+      export VISUAL="/opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom"
 
       t() {
          # nvim "$@"
-         /opt/homebrew/bin/emacsclient -nw "$@"
+         /opt/homebrew/bin/emacsclient -nw -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom "$@"
       }
 
       ec() {
-         /opt/homebrew/bin/emacsclient -nc "$@"
+         /opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom "$@"
       }
 
       e() {
