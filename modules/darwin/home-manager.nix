@@ -205,6 +205,7 @@ in
       eval "$(mise activate zsh)"
 
       alias tg="$EDITOR $HOME/.config/ghostty/config"
+      alias edd="emacs --daemon=doom"
 
       # >>> conda initialize >>>
       # !! Contents within this block are managed by 'conda init' !!

@@ -75,7 +75,7 @@ in
         autohide = false;
         show-recents = false;
         launchanim = false;
-        orientation = "right";
+        orientation = "left";
         tilesize = 30;
       };
 
