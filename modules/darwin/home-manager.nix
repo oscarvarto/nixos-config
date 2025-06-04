@@ -251,7 +251,7 @@ in
         window_opacity_duration = "0.2";
         active_window_opacity = "1.0";
         normal_window_opacity = "0.70";
-        window_opacity = "on";
+        window_opacity = "off";
         insert_feedback_color = "0xffd75f5f";
         split_ratio = "0.70";
         split_type = "auto";

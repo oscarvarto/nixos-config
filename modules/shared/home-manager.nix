@@ -126,11 +126,14 @@ in
     extraConfig = {
       init.defaultBranch = "main";
       core = {
-	    editor = "nvim";
+        editor = "nvim";
         autocrlf = "input";
       };
       commit.gpgsign = false;
+      diff.colorMoved = "zebra"; # https://spin.atomicobject.com/git-configurations-default/
+      fetch.prune = true;
       pull.rebase = true;
+      push.autoSetupRemote = true;
       rebase.autoStash = true;
     };
   };

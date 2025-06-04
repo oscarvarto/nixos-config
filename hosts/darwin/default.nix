@@ -72,10 +72,10 @@ in
       };
 
       dock = {
-        autohide = false;
+        autohide = true;
         show-recents = false;
         launchanim = false;
-        orientation = "left";
+        orientation = "bottom";
         tilesize = 30;
       };
 

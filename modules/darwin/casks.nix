@@ -23,6 +23,7 @@ _:
   "nheko"
   "notion"
   "slack"
+  "teamviewer"
   "whatsapp"
   "zoom"
 
