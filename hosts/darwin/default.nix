@@ -49,7 +49,13 @@ in
     isync
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
+  # Add fish to available shells
+  environment.shells = [ "/opt/homebrew/bin/fish" ];
+
   security.pam.services.sudo_local.touchIdAuth = true;
+
+  # Enable fish shell system-wide
+  programs.fish.enable = true;
 
   system = {
     stateVersion = 4;

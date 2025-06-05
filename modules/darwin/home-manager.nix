@@ -15,7 +15,7 @@ in
     name = "${user}";
     home = "/Users/${user}";
     isHidden = false;
-    shell = pkgs.zsh;
+    shell = "/opt/homebrew/bin/fish";
   };
 
   environment.variables = {
@@ -141,6 +141,127 @@ in
           # automatically installed and configured to use shell plugins
           plugins = with pkgs; [ awscli2 cachix gh glab ];
         };
+        
+        # Fish shell configuration (Darwin-specific)
+        fish = {
+          enable = true;
+          shellInit = ''
+            # PATH configuration
+            fish_add_path /opt/homebrew/bin
+            fish_add_path /opt/homebrew/opt/llvm/bin
+            fish_add_path /opt/homebrew/opt/mysql@8.4/bin
+            fish_add_path /opt/homebrew/opt/gnu-tar/libexec/gnubin
+            fish_add_path /run/current-system/sw/bin
+
+            # Environment variables for compilation
+            set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
+            set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+     
+            # .NET configuration
+            set -gx DOTNET_ROOT /usr/local/share/dotnet
+            fish_add_path $DOTNET_ROOT
+            fish_add_path $HOME/.dotnet/tools
+     
+            # Mise activation (if available)
+            if command -v mise >/dev/null 2>&1
+              mise activate fish | source
+            end
+          '';
+          
+          interactiveShellInit = ''
+            # Define variables for directories
+            set -gx EMACSDIR $HOME/.emacs.d
+            set -gx DOOMDIR $HOME/.doom.d
+            set -gx DOOMLOCALDIR $HOME/.emacs.d/.local
+            
+            # PATH configuration
+            fish_add_path $HOME/.pnpm-packages/bin
+            fish_add_path $HOME/.pnpm-packages
+            fish_add_path $HOME/.npm-packages/bin
+            fish_add_path $HOME/bin
+            fish_add_path $HOME/.local/share/bin
+            fish_add_path $HOME/.local/bin
+            fish_add_path $HOME/.cargo/bin
+            fish_add_path $EMACSDIR/bin
+            fish_add_path "$HOME/Library/Application Support/Coursier/bin"
+            fish_add_path "$HOME/.volta/bin"
+            
+            # Environment variables
+            set -gx LC_ALL "en_US.UTF-8"
+            set -gx ALTERNATE_EDITOR ""
+            set -gx EDITOR nvim
+            set -gx VISUAL "/opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom"
+            
+            # >>> conda initialize >>>
+            # !! Contents within this block are managed by 'conda init' !!
+            if test -f /opt/homebrew/Caskroom/miniforge/base/bin/conda
+                eval /opt/homebrew/Caskroom/miniforge/base/bin/conda "shell.fish" "hook" | source
+            else
+                if test -f "/opt/homebrew/Caskroom/miniforge/base/etc/fish/conf.d/conda.fish"
+                    . "/opt/homebrew/Caskroom/miniforge/base/etc/fish/conf.d/conda.fish"
+                else
+                    set -x PATH "/opt/homebrew/Caskroom/miniforge/base/bin" $PATH
+                end
+            end
+            # <<< conda initialize <<<
+          '';
+          
+          functions = {
+            # Terminal Emacs function
+            t = {
+              body = ''/opt/homebrew/bin/emacsclient -nw -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom $argv'';
+              description = "Open file in terminal Emacs";
+            };
+            
+            # GUI Emacs client function
+            ec = {
+              body = ''/opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom $argv'';
+              description = "Open file in GUI Emacs client";
+            };
+            
+            # Start Emacs in background
+            e = {
+              body = ''emacs & disown'';
+              description = "Start Emacs in background";
+            };
+            
+            # Nix shell shortcut
+            shell = {
+              body = ''nix-shell '<nixpkgs>' -A "$argv[1]"'';
+              description = "Enter nix-shell for package";
+            };
+          };
+          
+          shellAbbrs = {
+            # 1Password plugin aliases
+            aws = "op plugin run -- aws";
+            cachix = "op plugin run -- cachix";
+            gh = "op plugin run -- gh";
+            glab = "op plugin run -- glab";
+            
+            # Utility aliases
+            search = "rg -p --glob '!node_modules/*'";
+            diff = "difft";
+            
+            # Terminal and editor shortcuts
+            tg = "$EDITOR $HOME/.config/ghostty/config";
+            edd = "emacs --daemon=doom";
+            pke = "pkill -9 Emacs";
+            nf = "nvim ~/.config/fish/config.fish";
+            gd = "ghostty +show-config --default --docs";
+            
+            # Git shortcuts
+            gp = "git fetch --all -p; git pull; git submodule update --recursive";
+            
+            # Doom Emacs shortcuts
+            ds = "doom sync --aot --gc -j (nproc)";
+            dup = "doom sync -u --aot --gc -j (nproc)";
+            
+            # Nix shortcuts
+            nb = "pushd $HOME/nixos-config >/dev/null; nix run .#build; popd >/dev/null";
+            ns = "pushd $HOME/nixos-config >/dev/null; nix run .#build-switch; popd >/dev/null";
+          };
+        };
       } // import ../shared/home-manager.nix { inherit
           config
           pkgs
@@ -204,9 +325,6 @@ in
 
       eval "$(mise activate zsh)"
 
-      alias tg="$EDITOR $HOME/.config/ghostty/config"
-      alias edd="emacs --daemon=doom"
-
       # >>> conda initialize >>>
       # !! Contents within this block are managed by 'conda init' !!
       __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -225,6 +343,7 @@ in
       export PATH
     '';
   };
+
 
   services = {
 
@@ -325,9 +444,17 @@ in
 
         # options: zoom-parent, zoom-fullscreen, native-fullscreen
         ctrl + alt + shift - f : yabai -m window --toggle native-fullscreen
-        # ctrl + alt + shift - r : yabai --restart-service
-        # ctrl + alt + shift - t : yabai --stop-service
-        # ctrl + alt + shift - s : yabai --start-service
+
+        # • Status: launchctl list | grep yabai
+
+        # yabai --restart-service
+        ctrl + alt + shift - r : launchctl kickstart -k gui/$(id -u)/org.nixos.yabai
+ 
+        # yabai --start-service
+        ctrl + alt + shift - s : launchctl start gui/$(id -u)/org.nixos.yabai
+
+        # yabai --stop-service
+        ctrl + alt + shift - t : launchctl stop gui/$(id -u)/org.nixos.yabai
      '';
     };
   };

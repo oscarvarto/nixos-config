@@ -3,6 +3,7 @@
 let name = "Oscar Vargas Torres";
     user = "oscarvarto";
     email = "contact@oscarvarto.mx";
+    inherit (builtins) fromTOML;
 in
 {
   # Shared shell configuration
@@ -39,23 +40,7 @@ in
       export HISTIGNORE="pwd:ls:cd"
 
       # Ripgrep alias
-      alias pke="pkill -9 Emacs"
       alias search=rg -p --glob '!node_modules/*' $@
-
-      alias nz="nvim ~/.zshrc"
-      alias gd="ghostty +show-config --default --docs"
-
-      nb() {
-        pushd $HOME/nixos-config >/dev/null
-        nix run .#build
-        popd >/dev/null
-      }
-
-      ns() {
-        pushd $HOME/nixos-config >/dev/null
-        nix run .#build-switch
-        popd >/dev/null
-      }
 
       export ALTERNATE_EDITOR=""
       export EDITOR="nvim"
@@ -79,22 +64,21 @@ in
           nix-shell '<nixpkgs>' -A "$1"
       }
 
-      # common git alias
-      alias gp="git fetch --all -p; git pull; git submodule update --recursive"
-
-      # Doom update alias
-      alias ds="doom sync --aot --gc -j $(nproc)"
-      alias dup="doom upgrade; doom sync --aot --gc -j $(nproc)"
-
-      # pnpm is a javascript package manager
-      alias pn=pnpm
-      alias px=pnpx
-
-      # Use difftastic, syntax-aware diffing
-      alias diff=difft
-
       # Always color ls and group directories
       alias ls='ls --color=auto'
+      
+      alias tg="$EDITOR $HOME/.config/ghostty/config"
+      alias edd="emacs --daemon=doom"
+ 
+      alias pke="pkill -9 Emacs"
+      alias nz="nvim ~/.zshrc"
+      alias gd="ghostty +show-config --default --docs"
+      alias gp="git fetch --all -p; git pull; git submodule update --recursive"
+      alias ds="doom sync --aot --gc -j \$(nproc)"
+      alias dup="doom sync -u --aot --gc -j \$(nproc)"
+      alias diff="difft"
+      alias nb="pushd \$HOME/nixos-config > /dev/null; nix run .#build; popd > /dev/null"
+      alias ns="pushd \$HOME/nixos-config > /dev/null; nix run .#build-switch; popd > /dev/null"
     '';
   };
 
@@ -102,17 +86,18 @@ in
     enable = true;
     enableNushellIntegration = true;
     enableZshIntegration = true;
+    enableFishIntegration = true;
   };
 
   direnv = {
       enable = true;
-      enableZshIntegration = true;
       nix-direnv.enable = true;
   };
 
   fzf = {
     enable = true;
     enableZshIntegration = true;
+    enableFishIntegration = true;
   };
 
   git = {
@@ -166,6 +151,7 @@ in
   starship = {
     enable = true;
     enableZshIntegration = true;
+    enableFishIntegration = true;
     enableNushellIntegration = true;
     settings = fromTOML(builtins.readFile ./config/starship.toml); 
   };
@@ -173,5 +159,7 @@ in
   zoxide = {
     enable = true;
     enableZshIntegration = true;
+    enableFishIntegration = true;
   };
+
 }
