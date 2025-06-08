@@ -1,4 +1,4 @@
-{ agenix, config, pkgs, ... }:
+{ agenix, config, pkgs, nixCats, ... }:
 
 let 
   user = "oscarvarto";
@@ -9,7 +9,7 @@ in
     ../../modules/darwin/secrets.nix
     ../../modules/darwin/home-manager.nix
     ../../modules/shared
-     agenix.darwinModules.default
+    agenix.darwinModules.default
   ];
 
   # Setup user, packages, programs
@@ -24,7 +24,7 @@ in
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       ];
 
-      warn-dirty = false;
+      warn-dirty = true;
       # produces linking issues when updating on macOS
       # https://github.com/NixOS/nix/issues/7273
       auto-optimise-store = false;
@@ -49,7 +49,6 @@ in
   # Load configuration that is shared across systems
   environment.systemPackages = with pkgs; [
     agenix.packages."${pkgs.system}".default
-    isync
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
   # Add fish to available shells

@@ -3,6 +3,7 @@
 with pkgs; 
 [
   # General packages for development and system management
+  alejandra
   aspell
   aspellDicts.en
   bash-completion
@@ -11,6 +12,7 @@ with pkgs;
   curl
   killall
   neofetch
+  nil
   openssh
   sqlite
   wget
@@ -49,7 +51,6 @@ with pkgs;
   jq
   (ripgrep.override {withPCRE2 = true;})
   isync
-  nil
   nurl
   tree
   unrar

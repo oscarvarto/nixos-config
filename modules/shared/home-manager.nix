@@ -8,7 +8,7 @@ in
 {
   # Shared shell configuration
   zsh = {
-    enable = true;
+    enable = false;
     autocd = false;
     cdpath = [ "~/.local/share/src" ];
     plugins = [

@@ -3,7 +3,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     agenix.url = "github:ryantm/agenix";
-    catppuccin.url = "github:catppuccin/nix";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -12,7 +11,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager.url = "github:nix-community/home-manager/master";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
       flake = false;
@@ -38,7 +40,6 @@
     };
     nixCats = {
       url = "github:BirdeeHub/nixCats-nvim";
-      flake = false;
     };
     op-shell-plugins = {
       url = "github:1Password/shell-plugins";
@@ -53,7 +54,6 @@
   outputs = { self,
               nixpkgs,
               agenix,
-              catppuccin,
               darwin,
               disko,
               home-manager,
@@ -62,8 +62,8 @@
               homebrew-core,
               homebrew-emacs-plus,
               neovim-nightly-overlay,
-              nixCats,
               nix-homebrew,
+              nixCats,
               op-shell-plugins,
               secrets } @inputs:
     let
@@ -75,6 +75,7 @@
         default = with pkgs; mkShell {
           nativeBuildInputs = with pkgs; [ bashInteractive git age age-plugin-yubikey ];
           shellHook = with pkgs; ''
+            export EDITOR=nvim
           '';
         };
       };
@@ -109,6 +110,7 @@
     {
       devShells = forAllSystems devShell;
       apps = nixpkgs.lib.genAttrs linuxSystems mkLinuxApps // nixpkgs.lib.genAttrs darwinSystems mkDarwinApps;
+      inherit (inputs.nixCats) utils;
 
       darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (system:
         darwin.lib.darwinSystem {
