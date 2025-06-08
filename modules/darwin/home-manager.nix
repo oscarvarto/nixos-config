@@ -211,7 +211,7 @@ in
               lze
               lzextras
               snacks-nvim
-              onedark-nvim
+              modus-themes-nvim
               vim-sleuth
             ];
           };
@@ -284,7 +284,7 @@ in
               suffix-path = true;
               suffix-LD = true;
               wrapRc = true;
-              # unwrappedCfgPath = "/path/to/here";
+              unwrappedCfgPath = ./nixCats;
               # IMPORTANT:
               # your alias may not conflict with your other packages.
               aliases = [ "nvim" "vim" "homeVim" ];
