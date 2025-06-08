@@ -1,9 +1,9 @@
-{ config, pkgs, lib, nixCats, neovim-nightly-overlay, op-shell-plugins, user ? "oscarvarto", ... } @ inputs:
+{ config, pkgs, lib, neovim-nightly-overlay, op-shell-plugins, user ? "oscarvarto", ... } @ inputs:
 
 let
   sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
-  utils = inputs.nixCats.utils;  # Available when needed
+  utils = inputs.nixCats.utils;
 in
 {
 
@@ -150,14 +150,7 @@ in
           # automatically installed and configured to use shell plugins
           plugins = with pkgs; [ awscli2 cachix gh glab ];
         };
-
-      } // import ../shared/home-manager.nix { inherit
-        config
-        pkgs
-        lib
-        # myEmacs
-        ;
-      };
+      } // import ../shared/home-manager.nix { inherit config pkgs lib /* myEmacs */; };
 
       nixCats = {
         enable = true;
