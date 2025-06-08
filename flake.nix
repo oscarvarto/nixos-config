@@ -3,7 +3,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     agenix.url = "github:ryantm/agenix";
-    # catppuccin.url = "github:catppuccin/nix";
+    catppuccin.url = "github:catppuccin/nix";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -12,7 +12,7 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager.url = "github:nix-community/home-manager/master";
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
       flake = false;
@@ -53,7 +53,7 @@
   outputs = { self,
               nixpkgs,
               agenix,
-              # catppuccin,
+              catppuccin,
               darwin,
               disko,
               home-manager,

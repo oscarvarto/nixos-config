@@ -58,6 +58,7 @@ in
   security.pam.services.sudo_local.touchIdAuth = true;
 
   # Enable fish shell system-wide
+  # programs.zsh.enable = true;
   programs.fish.enable = true;
 
   system = {

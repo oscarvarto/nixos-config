@@ -1,4 +1,4 @@
-{ config, pkgs, op-shell-plugins, user ? "oscarvarto", ... } @ inputs:
+{ config, pkgs, lib, catppuccin, neovim-nightly-overlay, op-shell-plugins, user ? "oscarvarto", ... } @ inputs:
 
 let
   sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
@@ -25,6 +25,7 @@ in
     LC_ALL = "en_US.UTF-8";
     BAT_THEME="Coldark-Cold";
   };
+
 
   homebrew = {
     enable = true;
@@ -123,9 +124,12 @@ in
     extraSpecialArgs = inputs;
     users.${user} = { pkgs, config, lib, ... }: {
       imports = [
+        catppuccin.homeModules.catppuccin
         op-shell-plugins.hmModules.default
         inputs.nixCats.homeModule
       ];
+
+      catppuccin.mako.enable = false;
 
       home = {
         enableNixpkgsReleaseCheck = false;
@@ -137,6 +141,7 @@ in
 
         stateVersion = "25.05";
       };
+
 
       programs = {
         _1password-shell-plugins = {
@@ -152,7 +157,7 @@ in
           generateCompletions = false;
           shellInit = ''
             # Nix daemon initialization
-            if test -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+            if test -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
               set -gx NIX_SSL_CERT_FILE /nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt
               set -gx NIX_PROFILES "/nix/var/nix/profiles/default $HOME/.nix-profile"
               set -gx NIX_PATH "/nix/var/nix/profiles/per-user/root/channels"
@@ -422,7 +427,7 @@ in
               # IMPORTANT:
               # your alias may not conflict with your other packages.
               aliases = [ "vim" "homeVim" ];
-              # neovim-unwrapped = inputs.neovim-nightly-overlay.packages.${pkgs.system}.neovim;
+              neovim-unwrapped = inputs.neovim-nightly-overlay.packages.${pkgs.system}.neovim;
               hosts.python3.enable = true;
               hosts.node.enable = true;
             };
@@ -445,18 +450,20 @@ in
 
       # Marked broken Oct 20, 2022 check later to remove this
       # https://github.com/nix-community/home-manager/issues/3344
-      manual.manpages.enable = true;
+      manual.manpages.enable = false;
 
-      services = lib.mkIf pkgs.stdenv.isDarwin {
-        # Explicitly disable Linux-specific services on Darwin
-        # This fixes the mako lib.hm error when using themes like Catppuccin
-        mako.enable = false;
-        dunst.enable = false;
-        swayidle.enable = false;
-        swaylock.enable = false;
-        waybar.enable = false;
-        hyprpaper.enable = false;
-      };
+      services.mako.enable = false;
+
+      # services = lib.mkIf pkgs.stdenv.isDarwin {
+      #   # Explicitly disable Linux-specific services on Darwin
+      #   # This fixes the mako lib.hm error when using themes like Catppuccin
+      #   mako.enable = false;
+      #   dunst.enable = false;
+      #   swayidle.enable = false;
+      #   swaylock.enable = false;
+      #   waybar.enable = false;
+      #   hyprpaper.enable = false;
+      # };
 
     };
   };
