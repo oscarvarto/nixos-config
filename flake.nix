@@ -3,16 +3,22 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     agenix.url = "github:ryantm/agenix";
-    home-manager.url = "github:nix-community/home-manager";
+    # catppuccin.url = "github:catppuccin/nix";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-homebrew = {
-      url = "github:zhaofengli-wip/nix-homebrew";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
+    home-manager.url = "github:nix-community/home-manager";
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
       flake = false;
     };
     homebrew-core = {
@@ -23,16 +29,15 @@
       url = "github:d12frosted/homebrew-emacs-plus";
       flake = false;
     };
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
-    disko = {
-      url = "github:nix-community/disko";
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    secrets = {
-      url = "git+ssh://git@github.com/oscarvarto/nix-secrets.git";
+    nix-homebrew = {
+      url = "github:zhaofengli-wip/nix-homebrew";
+    };
+    nixCats = {
+      url = "github:BirdeeHub/nixCats-nvim";
       flake = false;
     };
     op-shell-plugins = {
@@ -40,15 +45,27 @@
       flake = true;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    secrets = {
+      url = "git+ssh://git@github.com/oscarvarto/nix-secrets.git";
+      flake = false;
+    };
   };
-  outputs = { self, darwin,
-              nix-homebrew,
+  outputs = { self,
+              nixpkgs,
+              agenix,
+              # catppuccin,
+              darwin,
+              disko,
+              home-manager,
               homebrew-bundle,
+              homebrew-cask,
               homebrew-core,
               homebrew-emacs-plus,
-              homebrew-cask,
-              home-manager,
-              nixpkgs, disko, agenix, secrets, op-shell-plugins } @inputs:
+              neovim-nightly-overlay,
+              nixCats,
+              nix-homebrew,
+              op-shell-plugins,
+              secrets } @inputs:
     let
       user = "oscarvarto";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -58,7 +75,6 @@
         default = with pkgs; mkShell {
           nativeBuildInputs = with pkgs; [ bashInteractive git age age-plugin-yubikey ];
           shellHook = with pkgs; ''
-            export EDITOR=nvim
           '';
         };
       };
@@ -101,7 +117,6 @@
           modules = [
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
-            # op-shell-plugins.hmModules.default
             {
               nix-homebrew = {
                 inherit user;

@@ -18,7 +18,7 @@ with pkgs;
 
   # Encryption and security tools
   age
-  age-plugin-yubikey
+  # age-plugin-yubikey
   gnupg
   libfido2
 
@@ -49,7 +49,6 @@ with pkgs;
   jq
   (ripgrep.override {withPCRE2 = true;})
   isync
-  neovim
   nil
   nurl
   tree

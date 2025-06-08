@@ -84,9 +84,9 @@ in
 
   broot = {
     enable = true;
+    enableFishIntegration = true;
     enableNushellIntegration = true;
     enableZshIntegration = true;
-    enableFishIntegration = true;
   };
 
   direnv = {
@@ -160,6 +160,7 @@ in
     enable = true;
     enableZshIntegration = true;
     enableFishIntegration = true;
+    enableNushellIntegration = true;
   };
 
 }
