@@ -81,13 +81,13 @@
       };
 
       # GUI Emacs client function
-      e = {
+      ee = {
         body = ''/opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom $argv'';
         description = "Open file in GUI Emacs client";
       };
 
       # Start Emacs in background
-      ee = {
+      e = {
         body = ''emacs & disown'';
         description = "Start Emacs in background";
       };
