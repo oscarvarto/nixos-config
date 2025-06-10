@@ -356,23 +356,24 @@ in
     text = ''
       # Ghostty Configuration - Base settings managed by Nix
       # Override settings in ~/.config/ghostty/overrides.conf for quick changes
-      
+ 
       # Shell configuration (default fish, can be overridden)
       # Note: Default shell is set below, override with ghostty-config shell <shell-name>
       shell-integration = fish
       shell-integration-features = no-cursor,sudo,title
-      
+
       # Default font (can be overridden)
-      font-family = PragmataPro Liga
+      # font-family = PragmataPro Mono Liga
+      font-family = MonoLisaVariable Nerd Font
       font-size = 18
-      
-  # Default theme (can be overridden)
-  theme = dracula
-  
-  # Default shell (can be overridden)
-  command = /opt/homebrew/bin/fish -i -l
-  initial-command = /opt/homebrew/bin/fish -i -l
-      
+ 
+      # Default theme (can be overridden)
+      theme = dracula
+
+      # Default shell (can be overridden)
+      command = /opt/homebrew/bin/fish -i -l
+      initial-command = /opt/homebrew/bin/fish -i -l
+
       # Window and appearance settings
       split-divider-color = green
       window-save-state = always
@@ -380,14 +381,14 @@ in
       cursor-color = "#D9905A"
       auto-update-channel = tip
       quit-after-last-window-closed = true
-      
+
       # macOS specific settings
       macos-option-as-alt = left
-      
+
       # Key bindings
       keybind = global:super+ctrl+grave_accent=toggle_quick_terminal
-      
-      # Include user overrides (this file can be edited without Nix rebuild)
+
+      # Include user overrides LAST so they take precedence
       config-file = ~/.config/ghostty/overrides.conf
     '';
   };
@@ -401,16 +402,16 @@ in
     text = ''#!/usr/bin/env bash
       # Ghostty configuration helper for quick changes
       set -e
-      
+
       # Colors
       RED='\e[0;31m'
       GREEN='\e[0;32m'
       YELLOW='\e[1;33m'
       BLUE='\e[0;34m'
       NC='\e[0m'
-      
+
       OVERRIDES_FILE="''${HOME}/.config/ghostty/overrides.conf"
-      
+
       show_help() {
         echo -e "''${BLUE}👻 Ghostty Configuration Helper''${NC}"
         echo ""
@@ -428,7 +429,7 @@ in
         echo ""
         echo "Font Examples:"
         echo "  ghostty-config font 'MonoLisaVariable Nerd Font' 14"
-        echo "  ghostty-config font 'PragmataPro Liga' 18"
+        echo "  ghostty-config font 'PragmataPro Mono Liga' 18"
         echo "  ghostty-config font 'JetBrains Mono'"
         echo ""
         echo "Theme Examples:"
@@ -447,35 +448,35 @@ in
         echo "  ghostty-config opacity 0.9"
         echo "  ghostty-config reset"
       }
-      
+
       ensure_config_dir() {
         mkdir -p "$(dirname "''${OVERRIDES_FILE}")"
         if [ ! -f "''${OVERRIDES_FILE}" ]; then
           touch "''${OVERRIDES_FILE}"
         fi
       }
-      
+
       update_setting() {
-        local key="$1"
-        local value="$2"
-        
+        local key="''${1}"
+        local value="''${2}"
+
         ensure_config_dir
-        
+
         # Remove existing setting if it exists
-        sed -i.bak "/^$key[[:space:]]*=/d" "$OVERRIDES_FILE"
-        
+        sed -i.bak "/^''${key}[[:space:]]*=/d" "''${OVERRIDES_FILE}"
+
         # Add new setting
-        echo "$key = $value" >> "$OVERRIDES_FILE"
-        
+        echo "''${key} = ''${value}" >> "''${OVERRIDES_FILE}"
+
         # Clean up backup file
-        rm -f "$OVERRIDES_FILE.bak"
-        
-        echo -e "$GREEN✅ Updated $key = $value$NC"
+        rm -f "''${OVERRIDES_FILE}.bak"
+
+        echo -e "''${GREEN}✅ Updated ''${key} = ''${value}''${NC}"
       }
-      
+
       get_shell_path() {
-        local shell_name="$1"
-        case "$shell_name" in
+        local shell_name="''${1}"
+        case "''${shell_name}" in
           fish)
             echo "/opt/homebrew/bin/fish -i -l"
             ;;
@@ -486,7 +487,7 @@ in
             echo "/bin/bash -i -l"
             ;;
           nushell|nu)
-            echo "/opt/homebrew/bin/nu -i -l"
+            echo "/Users/oscarvarto/.nix-profile/bin/nu -i -l"
             ;;
           pwsh|powershell)
             echo "/opt/homebrew/bin/pwsh -i -l"
@@ -496,42 +497,52 @@ in
             ;;
         esac
       }
-      
+
       set_shell() {
-        local shell_name="$1"
-        local shell_path=$(get_shell_path "$shell_name")
-        
-        if [ -z "$shell_path" ]; then
-          echo -e "$RED❌ Unknown shell: $shell_name$NC" >&2
-          echo -e "$YELLOW Available shells: fish, zsh, bash, nushell, pwsh $NC" >&2
+        local shell_name="''${1}"
+        local shell_path=$(get_shell_path "''${shell_name}")
+
+        if [ -z "''${shell_path}" ]; then
+          echo -e "''${RED}❌ Unknown shell: ''${shell_name}''${NC}" >&2
+          echo -e "''${YELLOW}Available shells: fish, zsh, bash, nushell, pwsh''${NC}" >&2
           return 1
         fi
-        
+
         # Check if shell exists
-        local shell_binary=$(echo "$shell_path" | awk '{print $1}')
-        if [ ! -x "$shell_binary" ]; then
-          echo -e "$RED❌ Shell not found: $shell_binary$NC" >&2
-          echo -e "$YELLOW Make sure $shell_name is installed $NC" >&2
+        local shell_binary=$(echo "''${shell_path}" | awk '{print $1}')
+        if [ ! -x "''${shell_binary}" ]; then
+          echo -e "''${RED}❌ Shell not found: ''${shell_binary}''${NC}" >&2
+          echo -e "''${YELLOW}Make sure ''${shell_name} is installed''${NC}" >&2
           return 1
         fi
-        
+
         # Update both command and initial-command
-        update_setting "command" "$shell_path"
-        update_setting "initial-command" "$shell_path"
-        
-        echo -e "$GREEN🐚 Shell set to $shell_name$NC"
+        update_setting "command" "''${shell_path}"
+        update_setting "initial-command" "''${shell_path}"
+
+        echo -e "''${GREEN}🐚 Shell set to ''${shell_name}''${NC}"
       }
-      
+
       remove_setting() {
         local key="''${1}"
-        
+
         if [ -f "''${OVERRIDES_FILE}" ]; then
           sed -i.bak "/^''${key}[[:space:]]*=/d" "''${OVERRIDES_FILE}"
           rm -f "''${OVERRIDES_FILE}.bak"
           echo -e "''${GREEN}✅ Removed ''${key} override''${NC}"
         fi
       }
-      
+
+      remove_setting_old() {
+        local key="''${1}"
+
+        if [ -f "''${OVERRIDES_FILE}" ]; then
+          sed -i.bak "/^''${key}[[:space:]]*=/d" "''${OVERRIDES_FILE}"
+          rm -f "''${OVERRIDES_FILE}.bak"
+          echo -e "''${GREEN}✅ Removed ''${key} override''${NC}"
+        fi
+      }
+
       restart_ghostty() {
         echo -e "''${YELLOW}🔄 Restarting Ghostty to apply changes...''${NC}"
         # Kill existing Ghostty processes
@@ -541,7 +552,7 @@ in
         open -a Ghostty &> /dev/null &
         echo -e "''${GREEN}✅ Ghostty restarted''${NC}"
       }
-      
+
       case "''${1:-help}" in
         font)
           if [ -z "''${2}" ]; then
@@ -549,7 +560,17 @@ in
             show_help
             exit 1
           fi
-          update_setting "font-family" "''${2}"
+          # Reset font family first, then set new one (two lines for proper reset)
+          ensure_config_dir
+          # Remove existing font-family lines
+          sed -i.bak "/^font-family[[:space:]]*=/d" "''${OVERRIDES_FILE}"
+          rm -f "''${OVERRIDES_FILE}.bak"
+          # Add reset line first (empty quoted string as per Ghostty docs)
+          echo 'font-family = ""' >> "''${OVERRIDES_FILE}"
+          echo -e "''${GREEN}✅ Added font-family reset''${NC}"
+          # Then add new font setting
+          echo "font-family = \"''${2}\"" >> "''${OVERRIDES_FILE}"
+          echo -e "''${GREEN}✅ Updated font-family = ''${2}''${NC}"
           [ -n "''${3}" ] && update_setting "font-size" "''${3}"
           restart_ghostty
           ;;
@@ -563,21 +584,21 @@ in
           restart_ghostty
           ;;
         opacity)
-          if [ -z "\''${2}" ]; then
-            echo -e "\''${RED}❌ Opacity value required\''${NC}" >&2
+          if [ -z "''${2}" ]; then
+            echo -e "''${RED}❌ Opacity value required''${NC}" >&2
             show_help
             exit 1
           fi
-          update_setting "background-opacity" "\''${2}"
+          update_setting "background-opacity" "''${2}"
           restart_ghostty
           ;;
         shell)
-          if [ -z "$2" ]; then
-            echo -e "$RED❌ Shell name required$NC" >&2
+          if [ -z "''${2}" ]; then
+            echo -e "''${RED}❌ Shell name required''${NC}" >&2
             show_help
             exit 1
           fi
-          set_shell "$2"
+          set_shell "''${2}"
           restart_ghostty
           ;;
         reset)
@@ -590,16 +611,16 @@ in
           restart_ghostty
           ;;
         list)
-          echo -e "\''${BLUE}📋 Available Options:\''${NC}"
+          echo -e "''${BLUE}📋 Available Options:''${NC}"
           echo ""
-          echo -e "\''${YELLOW}Fonts:\''${NC}"
+          echo -e "''${YELLOW}Fonts:''${NC}"
           echo "  - MonoLisaVariable Nerd Font"
-          echo "  - PragmataPro Liga"
+          echo "  - PragmataPro Mono Liga"
           echo "  - JetBrains Mono"
           echo "  - SF Mono"
           echo "  - Iosevka"
           echo ""
-          echo -e "\''${YELLOW}Themes:\''${NC}"
+          echo -e "''${YELLOW}Themes:''${NC}"
           echo "  - dracula"
           echo "  - BlulocoLight"
           echo "  - nord"
@@ -608,17 +629,17 @@ in
           echo "  - onedark"
           echo "  - gruvbox"
           echo ""
-          echo -e "\''${YELLOW}Shells:\''${NC}"
+          echo -e "''${YELLOW}Shells:''${NC}"
           echo "  - fish (default)"
           echo "  - zsh"
           echo "  - bash"
           echo "  - nushell (nu)"
           echo "  - pwsh (powershell)"
           echo ""
-          echo -e "\''${YELLOW}Font Sizes:\''${NC}"
+          echo -e "''${YELLOW}Font Sizes:''${NC}"
           echo "  - 12, 14, 16, 18, 20, 24"
           echo ""
-          echo -e "\''${YELLOW}Opacity:\''${NC}"
+          echo -e "''${YELLOW}Opacity:''${NC}"
           echo "  - 0.8 (very transparent)"
           echo "  - 0.9 (semi-transparent)"
           echo "  - 0.95 (slightly transparent)"
@@ -659,7 +680,7 @@ in
   ".local/bin/ghostty-font-pragmata" = {
     executable = true;
     text = ''#!/usr/bin/env bash
-      ghostty-config font "PragmataPro Liga" 18
+      ghostty-config font "PragmataPro Mono Liga" 18
     '';
   };
 
