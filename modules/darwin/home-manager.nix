@@ -125,6 +125,7 @@ in
   # Enable home-manager
   home-manager = {
     useGlobalPkgs = true;
+    backupFileExtension = "backup";
     # extraSpecialArgs = { inherit op-shell-plugins neovim-nightly-overlay; };
     extraSpecialArgs = { inherit inputs; };
     users.${user} = { pkgs, config, lib, ... }: {

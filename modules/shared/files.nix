@@ -389,36 +389,8 @@ in
     '';
   };
 
-  # Ghostty overrides template (user-editable without Nix rebuild)
-  ".config/ghostty/overrides.conf" = {
-    text = ''
-      # Ghostty Runtime Overrides
-      # Edit this file for quick changes without Nix rebuild
-      # These settings override the base config
-      
-      # Font switching examples:
-      # font-family = MonoLisaVariable Nerd Font
-      # font-family = PragmataPro Liga
-      # font-family = JetBrains Mono
-      # font-size = 14
-      # font-size = 16
-      # font-size = 18
-      
-      # Theme switching examples:
-      # theme = dracula
-      # theme = BlulocoLight
-      # theme = nord
-      # theme = github_light
-      # theme = tokyo-night
-      
-      # Background opacity examples:
-      # background-opacity = 0.9
-      # background-opacity = 0.95
-      # background-opacity = 1.0
-      
-      # Add your custom overrides below:
-    '';
-  };
+  # Note: overrides.conf is NOT managed by Nix - it's created and managed by the helper scripts
+  # This allows users to edit it directly without rebuilding the Nix configuration
 
   # Ghostty configuration helper scripts
   ".local/bin/ghostty-config" = {
