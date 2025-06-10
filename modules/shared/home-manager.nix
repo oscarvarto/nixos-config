@@ -121,10 +121,10 @@ in
       push.autoSetupRemote = true;
       rebase.autoStash = true;
       safe.directory = [
+        "*"  # Trust all directories (most comprehensive)
         "/Users/${user}/nixos-config"
         "/nix/store/*"
         "/opt/homebrew/*"
-        # Add other specific directories as needed
       ];
     };
   };
