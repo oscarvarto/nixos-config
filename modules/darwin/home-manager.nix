@@ -47,6 +47,7 @@ in
       "awscli"
       "bat"
       "bat-extras"
+      "bfg"
       "borders"
       "cargo-binstall"
       "ccache"
@@ -58,9 +59,11 @@ in
         args = [ "with-xwidgets" "with-imagemagick" "with-savchenkovaleriy-big-sur-curvy-3d-icon" "with-mailutils" ];
         link = true;
       }
+      "eza"
       "fish"
       "fish-lsp"
       "gradle"
+      "git-filter-repo"
       "gnuplot"
       "isync"
       "jq"
