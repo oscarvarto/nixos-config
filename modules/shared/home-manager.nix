@@ -120,6 +120,12 @@ in
       pull.rebase = true;
       push.autoSetupRemote = true;
       rebase.autoStash = true;
+      safe.directory = [
+        "/Users/${user}/nixos-config"
+        "/nix/store/*"
+        "/opt/homebrew/*"
+        # Add other specific directories as needed
+      ];
     };
   };
 
