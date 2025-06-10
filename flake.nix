@@ -19,6 +19,11 @@
       url = "github:tesujimath/bash-env-json";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    bash-env-nushell = {
+      url = "github:tesujimath/bash-env-nushell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.bash-env-json.follows = "bash-env-json";
+    };
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
       flake = false;
@@ -59,6 +64,7 @@
               nixpkgs,
               agenix,
               bash-env-json,
+              bash-env-nushell,
               darwin,
               disko,
               home-manager,

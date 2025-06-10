@@ -403,11 +403,11 @@ in
       set -e
       
       # Colors
-      RED='\033[0;31m'
-      GREEN='\033[0;32m'
-      YELLOW='\033[1;33m'
-      BLUE='\033[0;34m'
-      NC='\033[0m'
+      RED='\e[0;31m'
+      GREEN='\e[0;32m'
+      YELLOW='\e[1;33m'
+      BLUE='\e[0;34m'
+      NC='\e[0m'
       
       OVERRIDES_FILE="''${HOME}/.config/ghostty/overrides.conf"
       
@@ -456,26 +456,26 @@ in
       }
       
       update_setting() {
-        local key="\''${1}"
-        local value="\''${2}"
+        local key="$1"
+        local value="$2"
         
         ensure_config_dir
         
         # Remove existing setting if it exists
-        sed -i.bak "/^\''${key}[[:space:]]*=/d" "\''${OVERRIDES_FILE}"
+        sed -i.bak "/^$key[[:space:]]*=/d" "$OVERRIDES_FILE"
         
         # Add new setting
-        echo "\''${key} = \''${value}" >> "\''${OVERRIDES_FILE}"
+        echo "$key = $value" >> "$OVERRIDES_FILE"
         
         # Clean up backup file
-        rm -f "\''${OVERRIDES_FILE}.bak"
+        rm -f "$OVERRIDES_FILE.bak"
         
-        echo -e "\''${GREEN}✅ Updated \''${key} = \''${value}\''${NC}"
+        echo -e "$GREEN✅ Updated $key = $value$NC"
       }
       
       get_shell_path() {
-        local shell_name="\''${1}"
-        case "\''${shell_name}" in
+        local shell_name="$1"
+        case "$shell_name" in
           fish)
             echo "/opt/homebrew/bin/fish -i -l"
             ;;
@@ -498,28 +498,28 @@ in
       }
       
       set_shell() {
-        local shell_name="\''${1}"
-        local shell_path=$(get_shell_path "\''${shell_name}")
+        local shell_name="$1"
+        local shell_path=$(get_shell_path "$shell_name")
         
-        if [ -z "\''${shell_path}" ]; then
-          echo -e "\''${RED}❌ Unknown shell: \''${shell_name}\''${NC}" >&2
-          echo -e "\''${YELLOW}Available shells: fish, zsh, bash, nushell, pwsh\''${NC}" >&2
+        if [ -z "$shell_path" ]; then
+          echo -e "$RED❌ Unknown shell: $shell_name$NC" >&2
+          echo -e "$YELLOW Available shells: fish, zsh, bash, nushell, pwsh $NC" >&2
           return 1
         fi
         
         # Check if shell exists
-        local shell_binary=$(echo "\''${shell_path}" | awk '{print $1}')
-        if [ ! -x "\''${shell_binary}" ]; then
-          echo -e "\''${RED}❌ Shell not found: \''${shell_binary}\''${NC}" >&2
-          echo -e "\''${YELLOW}Make sure \''${shell_name} is installed\''${NC}" >&2
+        local shell_binary=$(echo "$shell_path" | awk '{print $1}')
+        if [ ! -x "$shell_binary" ]; then
+          echo -e "$RED❌ Shell not found: $shell_binary$NC" >&2
+          echo -e "$YELLOW Make sure $shell_name is installed $NC" >&2
           return 1
         fi
         
         # Update both command and initial-command
-        update_setting "command" "\''${shell_path}"
-        update_setting "initial-command" "\''${shell_path}"
+        update_setting "command" "$shell_path"
+        update_setting "initial-command" "$shell_path"
         
-        echo -e "\''${GREEN}🐚 Shell set to \''${shell_name}\''${NC}"
+        echo -e "$GREEN🐚 Shell set to $shell_name$NC"
       }
       
       remove_setting() {
@@ -572,12 +572,12 @@ in
           restart_ghostty
           ;;
         shell)
-          if [ -z "\''${2}" ]; then
-            echo -e "\''${RED}❌ Shell name required\''${NC}" >&2
+          if [ -z "$2" ]; then
+            echo -e "$RED❌ Shell name required$NC" >&2
             show_help
             exit 1
           fi
-          set_shell "\''${2}"
+          set_shell "$2"
           restart_ghostty
           ;;
         reset)
