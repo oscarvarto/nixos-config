@@ -122,34 +122,131 @@
   home.file.".config/git/templates/README-secrets.md" = {
     text = ''# Secret Management with 1Password
       
-      This project uses 1Password CLI for secure secret management.
+      This project uses 1Password CLI for secure secret management across different shells.
       
       ## Setup
       
-      1. Install 1Password CLI: `brew install --cask 1password/tap/1password-cli`
+      1. Ensure 1Password CLI is installed (handled via Nix configuration)
       2. Sign in: `op signin`
       3. Verify access: `op vault list`
       
-      ## Usage
+      ## Usage by Shell
       
-      ### Environment Variables
+      ### Bash/Zsh
+      
+      #### Environment Variables
       ```bash
       # Export secrets to environment
       export API_KEY=$(op read "op://vault/item/field")
       export DB_PASSWORD=$(op read "op://vault/database/password")
+      export OAUTH_SECRET=$(op read "op://vault/oauth/secret")
       ```
       
-      ### In Scripts
+      #### In Scripts
       ```bash
       #!/bin/bash
       # Get secret in script
       API_KEY=$(op read "op://vault/api/key")
       curl -H "Authorization: Bearer $API_KEY" https://api.example.com
+      
+      # Multiple secrets
+      DB_USER=$(op read "op://vault/database/username")
+      DB_PASS=$(op read "op://vault/database/password")
+      psql "postgresql://$DB_USER:$DB_PASS@localhost/mydb"
+      ```
+      
+      ### Fish Shell
+      
+      #### Environment Variables
+      ```fish
+      # Export secrets to environment
+      set -gx API_KEY (op read "op://vault/item/field")
+      set -gx DB_PASSWORD (op read "op://vault/database/password")
+      set -gx OAUTH_SECRET (op read "op://vault/oauth/secret")
+      ```
+      
+      #### In Scripts
+      ```fish
+      #!/usr/bin/env fish
+      # Get secret in script
+      set API_KEY (op read "op://vault/api/key")
+      curl -H "Authorization: Bearer $API_KEY" https://api.example.com
+      
+      # Multiple secrets
+      set DB_USER (op read "op://vault/database/username")
+      set DB_PASS (op read "op://vault/database/password")
+      psql "postgresql://$DB_USER:$DB_PASS@localhost/mydb"
+      ```
+      
+      #### Fish Functions
+      ```fish
+      # Create a function for commonly used secrets
+      function get_api_key
+          op read "op://vault/api/key"
+      end
+      
+      function setup_dev_env
+          set -gx API_KEY (op read "op://vault/dev/api-key")
+          set -gx DB_URL (op read "op://vault/dev/database-url")
+          echo "Development environment configured"
+      end
+      ```
+      
+      ### Nushell
+      
+      #### Environment Variables
+      ```nu
+      # Export secrets to environment
+      $env.API_KEY = (op read "op://vault/item/field")
+      $env.DB_PASSWORD = (op read "op://vault/database/password")
+      $env.OAUTH_SECRET = (op read "op://vault/oauth/secret")
+      ```
+      
+      #### In Scripts
+      ```nu
+      #!/usr/bin/env nu
+      # Get secret in script
+      let api_key = (op read "op://vault/api/key")
+      curl -H $"Authorization: Bearer ($api_key)" https://api.example.com
+      
+      # Multiple secrets with error handling
+      try {
+          let db_user = (op read "op://vault/database/username")
+          let db_pass = (op read "op://vault/database/password")
+          psql $"postgresql://($db_user):($db_pass)@localhost/mydb"
+      } catch {
+          echo "Failed to retrieve database credentials"
+      }
+      ```
+      
+      #### Nushell Functions
+      ```nu
+      # Create custom commands for secret management
+      def get-api-key [] {
+          op read "op://vault/api/key"
+      }
+      
+      def setup-dev-env [] {
+          $env.API_KEY = (op read "op://vault/dev/api-key")
+          $env.DB_URL = (op read "op://vault/dev/database-url")
+          print "Development environment configured"
+      }
+      
+      # Load secrets into a record
+      def load-secrets [] {
+          {
+              api_key: (op read "op://vault/api/key")
+              db_password: (op read "op://vault/database/password")
+              oauth_secret: (op read "op://vault/oauth/secret")
+          }
+      }
       ```
       
       ### Helper Script
+      
+      The provided `git-1p-helper` works with all shells:
       ```bash
-      # Use the provided helper
+      # Use the provided helper (works in any shell)
       git-1p-helper get vault/item/field
       git-1p-helper env API_KEY vault/item/field
       ```
@@ -161,6 +258,7 @@
       - Keep .env files in .gitignore
       - Use environment-specific vaults (dev, staging, prod)
       - Rotate secrets regularly
+      - Use shell-specific syntax for optimal integration
       
       ## Git Hooks
       
