@@ -114,7 +114,7 @@
       
       # Try to get work email from 1Password, fallback to placeholder
       if command -v op >/dev/null 2>&1 && op account get >/dev/null 2>&1; then
-        WORK_EMAIL=$(op read "op://Work/***REMOVED***/email" 2>/dev/null || echo "YOUR-WORK-EMAIL@company.com")
+        WORK_EMAIL=$(op read "op://Work/CompanyName/email" 2>/dev/null || echo "YOUR-WORK-EMAIL@company.com")
       else
         WORK_EMAIL="YOUR-WORK-EMAIL@company.com"
         echo "⚠️  1Password CLI not available or not signed in. Using placeholder email."
@@ -333,8 +333,8 @@ EOF
       1. Store your work email in 1Password:
          ```bash
          # Create or update the work email in 1Password
-         op item create --category login --title "***REMOVED***" --vault "Work" \
-           email="***REMOVED***"
+         op item create --category login --title "CompanyName" --vault "Work" \
+           email="your.name@company.com"
          ```
       
       2. Update git configuration to use the stored email:
@@ -348,7 +348,7 @@ EOF
       
       1. Open 1Password
       2. Create a new item in your "Work" vault
-      3. Title: "***REMOVED***"
+      3. Title: "CompanyName" (replace with your company)
       4. Add a field named "email" with your work email
       5. Run `update-work-git-config` to sync
       
