@@ -357,9 +357,8 @@ in
       # Ghostty Configuration - Base settings managed by Nix
       # Override settings in ~/.config/ghostty/overrides.conf for quick changes
       
-      # Shell configuration
-      command = /opt/homebrew/bin/nu -i -l
-      initial-command = /opt/homebrew/bin/nu -i -l
+      # Shell configuration (default fish, can be overridden)
+      # Note: Default shell is set below, override with ghostty-config shell <shell-name>
       shell-integration = fish
       shell-integration-features = no-cursor,sudo,title
       
@@ -367,8 +366,12 @@ in
       font-family = PragmataPro Liga
       font-size = 18
       
-      # Default theme (can be overridden)
-      theme = dracula
+  # Default theme (can be overridden)
+  theme = dracula
+  
+  # Default shell (can be overridden)
+  command = /opt/homebrew/bin/fish -i -l
+  initial-command = /opt/homebrew/bin/fish -i -l
       
       # Window and appearance settings
       split-divider-color = green
@@ -416,6 +419,7 @@ in
         echo "Commands:"
         echo "  font <font-name> [<size>]   Set font (and optional size)"
         echo "  theme <theme-name>         Set theme"
+        echo "  shell <shell-name>         Set shell for new terminals"
         echo "  opacity <value>          Set background opacity (0.0-1.0)"
         echo "  reset                   Reset overrides to defaults"
         echo "  list                    Show available options"
@@ -432,6 +436,13 @@ in
         echo "  ghostty-config theme BlulocoLight"
         echo "  ghostty-config theme nord"
         echo ""
+        echo "Shell Examples:"
+        echo "  ghostty-config shell fish"
+        echo "  ghostty-config shell zsh"
+        echo "  ghostty-config shell bash"
+        echo "  ghostty-config shell nushell"
+        echo "  ghostty-config shell pwsh"
+        echo ""
         echo "Other Examples:"
         echo "  ghostty-config opacity 0.9"
         echo "  ghostty-config reset"
@@ -445,21 +456,70 @@ in
       }
       
       update_setting() {
-        local key="''${1}"
-        local value="''${2}"
+        local key="\''${1}"
+        local value="\''${2}"
         
         ensure_config_dir
         
         # Remove existing setting if it exists
-        sed -i.bak "/^''${key}[[:space:]]*=/d" "''${OVERRIDES_FILE}"
+        sed -i.bak "/^\''${key}[[:space:]]*=/d" "\''${OVERRIDES_FILE}"
         
         # Add new setting
-        echo "''${key} = ''${value}" >> "''${OVERRIDES_FILE}"
+        echo "\''${key} = \''${value}" >> "\''${OVERRIDES_FILE}"
         
         # Clean up backup file
-        rm -f "''${OVERRIDES_FILE}.bak"
+        rm -f "\''${OVERRIDES_FILE}.bak"
         
-        echo -e "''${GREEN}✅ Updated ''${key} = ''${value}''${NC}"
+        echo -e "\''${GREEN}✅ Updated \''${key} = \''${value}\''${NC}"
+      }
+      
+      get_shell_path() {
+        local shell_name="\''${1}"
+        case "\''${shell_name}" in
+          fish)
+            echo "/opt/homebrew/bin/fish -i -l"
+            ;;
+          zsh)
+            echo "/bin/zsh -i -l"
+            ;;
+          bash)
+            echo "/bin/bash -i -l"
+            ;;
+          nushell|nu)
+            echo "/opt/homebrew/bin/nu -i -l"
+            ;;
+          pwsh|powershell)
+            echo "/opt/homebrew/bin/pwsh -i -l"
+            ;;
+          *)
+            echo ""
+            ;;
+        esac
+      }
+      
+      set_shell() {
+        local shell_name="\''${1}"
+        local shell_path=$(get_shell_path "\''${shell_name}")
+        
+        if [ -z "\''${shell_path}" ]; then
+          echo -e "\''${RED}❌ Unknown shell: \''${shell_name}\''${NC}" >&2
+          echo -e "\''${YELLOW}Available shells: fish, zsh, bash, nushell, pwsh\''${NC}" >&2
+          return 1
+        fi
+        
+        # Check if shell exists
+        local shell_binary=$(echo "\''${shell_path}" | awk '{print $1}')
+        if [ ! -x "\''${shell_binary}" ]; then
+          echo -e "\''${RED}❌ Shell not found: \''${shell_binary}\''${NC}" >&2
+          echo -e "\''${YELLOW}Make sure \''${shell_name} is installed\''${NC}" >&2
+          return 1
+        fi
+        
+        # Update both command and initial-command
+        update_setting "command" "\''${shell_path}"
+        update_setting "initial-command" "\''${shell_path}"
+        
+        echo -e "\''${GREEN}🐚 Shell set to \''${shell_name}\''${NC}"
       }
       
       remove_setting() {
@@ -503,12 +563,21 @@ in
           restart_ghostty
           ;;
         opacity)
-          if [ -z "''${2}" ]; then
-            echo -e "''${RED}❌ Opacity value required''${NC}" >&2
+          if [ -z "\''${2}" ]; then
+            echo -e "\''${RED}❌ Opacity value required\''${NC}" >&2
             show_help
             exit 1
           fi
-          update_setting "background-opacity" "''${2}"
+          update_setting "background-opacity" "\''${2}"
+          restart_ghostty
+          ;;
+        shell)
+          if [ -z "\''${2}" ]; then
+            echo -e "\''${RED}❌ Shell name required\''${NC}" >&2
+            show_help
+            exit 1
+          fi
+          set_shell "\''${2}"
           restart_ghostty
           ;;
         reset)
@@ -521,16 +590,16 @@ in
           restart_ghostty
           ;;
         list)
-          echo -e "''${BLUE}📋 Available Options:''${NC}"
+          echo -e "\''${BLUE}📋 Available Options:\''${NC}"
           echo ""
-          echo -e "''${YELLOW}Fonts:''${NC}"
+          echo -e "\''${YELLOW}Fonts:\''${NC}"
           echo "  - MonoLisaVariable Nerd Font"
           echo "  - PragmataPro Liga"
           echo "  - JetBrains Mono"
           echo "  - SF Mono"
           echo "  - Iosevka"
           echo ""
-          echo -e "''${YELLOW}Themes:''${NC}"
+          echo -e "\''${YELLOW}Themes:\''${NC}"
           echo "  - dracula"
           echo "  - BlulocoLight"
           echo "  - nord"
@@ -539,10 +608,17 @@ in
           echo "  - onedark"
           echo "  - gruvbox"
           echo ""
-          echo -e "''${YELLOW}Font Sizes:''${NC}"
+          echo -e "\''${YELLOW}Shells:\''${NC}"
+          echo "  - fish (default)"
+          echo "  - zsh"
+          echo "  - bash"
+          echo "  - nushell (nu)"
+          echo "  - pwsh (powershell)"
+          echo ""
+          echo -e "\''${YELLOW}Font Sizes:\''${NC}"
           echo "  - 12, 14, 16, 18, 20, 24"
           echo ""
-          echo -e "''${YELLOW}Opacity:''${NC}"
+          echo -e "\''${YELLOW}Opacity:\''${NC}"
           echo "  - 0.8 (very transparent)"
           echo "  - 0.9 (semi-transparent)"
           echo "  - 0.95 (slightly transparent)"
@@ -599,6 +675,42 @@ in
     executable = true;
     text = ''#!/usr/bin/env bash
       ghostty-config theme BlulocoLight
+    '';
+  };
+
+  # Quick shell switcher aliases
+  ".local/bin/ghostty-shell-fish" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config shell fish
+    '';
+  };
+
+  ".local/bin/ghostty-shell-zsh" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config shell zsh
+    '';
+  };
+
+  ".local/bin/ghostty-shell-bash" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config shell bash
+    '';
+  };
+
+  ".local/bin/ghostty-shell-nushell" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config shell nushell
+    '';
+  };
+
+  ".local/bin/ghostty-shell-pwsh" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config shell pwsh
     '';
   };
 }
