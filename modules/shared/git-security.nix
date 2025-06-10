@@ -99,6 +99,55 @@
     '';
   };
 
+  # Script to generate work-specific git configuration
+  home.file.".local/bin/update-work-git-config" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      # Script to update work git config with email from 1Password
+      set -e
+      
+      CONFIG_DIR="$HOME/.local/share/git"
+      CONFIG_FILE="$CONFIG_DIR/config-work"
+      
+      # Ensure directory exists
+      mkdir -p "$CONFIG_DIR"
+      
+      # Try to get work email from 1Password, fallback to placeholder
+      if command -v op >/dev/null 2>&1 && op account get >/dev/null 2>&1; then
+        WORK_EMAIL=$(op read "op://Work/***REMOVED***/email" 2>/dev/null || echo "YOUR-WORK-EMAIL@company.com")
+      else
+        WORK_EMAIL="YOUR-WORK-EMAIL@company.com"
+        echo "⚠️  1Password CLI not available or not signed in. Using placeholder email."
+        echo "💡 Sign in with: op signin"
+      fi
+      
+      # Create/update the git config file
+      cat > "$CONFIG_FILE" << EOF
+[user]
+    name = Oscar Vargas Torres
+    email = $WORK_EMAIL
+EOF
+      
+      echo "✅ Updated work git config with email: $WORK_EMAIL"
+    '';
+  };
+  
+  # Work-specific git configuration file (will be updated by script)
+  home.file.".config/git/config-work" = {
+    text = ''[user]
+    name = Oscar Vargas Torres
+    email = YOUR-WORK-EMAIL@company.com
+    '';
+  };
+  
+  # Default git configuration for personal projects
+  home.file.".config/git/config-personal" = {
+    text = ''[user]
+      name = Oscar Vargas Torres
+      email = contact@oscarvarto.mx
+    '';
+  };
+
   # Template files for secure development
   home.file.".config/git/templates/env.example" = {
     text = ''# Environment variables template
@@ -273,6 +322,53 @@
       ### Bypass (use with caution)
       ```bash
       git commit --no-verify
+      ```
+      
+      ## Work Email Management with 1Password
+      
+      Your work directory (`~/ir/`) is configured to use 1Password for secure email management.
+      
+      ### Setup Work Email in 1Password
+      
+      1. Store your work email in 1Password:
+         ```bash
+         # Create or update the work email in 1Password
+         op item create --category login --title "***REMOVED***" --vault "Work" \
+           email="***REMOVED***"
+         ```
+      
+      2. Update git configuration to use the stored email:
+         ```bash
+         update-work-git-config
+         ```
+      
+      ### Manual Setup (Alternative)
+      
+      If you prefer to set up the 1Password item manually:
+      
+      1. Open 1Password
+      2. Create a new item in your "Work" vault
+      3. Title: "***REMOVED***"
+      4. Add a field named "email" with your work email
+      5. Run `update-work-git-config` to sync
+      
+      ### Verification
+      
+      Check that your work email is configured correctly:
+      ```bash
+      cd ~/ir/any-work-repo
+      git config --get user.email  # Should show your work email
+      
+      cd ~/personal-project
+      git config --get user.email  # Should show contact@oscarvarto.mx
+      ```
+      
+      ### Automation
+      
+      You can add this to your shell profile to automatically update on login:
+      ```bash
+      # Add to ~/.config/fish/config.fish or ~/.zshrc
+      update-work-git-config >/dev/null 2>&1
       ```
     '';
   };

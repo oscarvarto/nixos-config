@@ -342,7 +342,7 @@ in
       "*.zip"
     ];
     userName = name;
-    userEmail = email;
+    # userEmail is handled by conditional includes based on directory
     lfs = {
       enable = true;
     };
@@ -367,6 +367,10 @@ in
         "/nix/store/*"
         "/opt/homebrew/*"
       ];
+      # Conditional includes for work directory
+      includeIf."gitdir:/Users/${user}/ir/**".path = "/Users/${user}/.local/share/git/config-work";
+      # Include personal config as fallback for all other directories
+      include.path = "/Users/${user}/.config/git/config-personal";
     };
   };
 
