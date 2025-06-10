@@ -15,6 +15,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    bash-env-json = {
+      url = "github:tesujimath/bash-env-json";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
       flake = false;
@@ -54,6 +58,7 @@
   outputs = { self,
               nixpkgs,
               agenix,
+              bash-env-json,
               darwin,
               disko,
               home-manager,

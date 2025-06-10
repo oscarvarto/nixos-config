@@ -82,6 +82,7 @@ in
       "ninja"
       "nushell"
       "pandoc"
+      "pueue"
       "pass"
       "pkg-config"
       "pinentry-mac"
@@ -134,7 +135,15 @@ in
         ../shared/git-security.nix
         inputs.nixCats.homeModules.default
         op-shell-plugins.hmModules.default
+        ../shared/nushell
       ];
+
+      # Enable nushell with Nix environment integration
+      local.nushell = {
+        enable = true;
+        left_prompt_cmd = "hostname -s";
+        history_file_format = "sqlite";
+      };
 
       home = {
         enableNixpkgsReleaseCheck = false;
@@ -155,7 +164,7 @@ in
           # automatically installed and configured to use shell plugins
           plugins = with pkgs; [ awscli2 cachix gh glab ];
         };
-      } // import ../shared/home-manager.nix { inherit config pkgs lib /* myEmacs */; };
+      } // import ../shared/home-manager.nix { inherit config pkgs lib; /* myEmacs */ };
 
       nixCats = {
         enable = true;
