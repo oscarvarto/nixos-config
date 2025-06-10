@@ -350,5 +350,284 @@ in
       fi
     '';
   };
+
+  # Ghostty base configuration (managed by Nix)
+  ".config/ghostty/config" = {
+    text = ''
+      # Ghostty Configuration - Base settings managed by Nix
+      # Override settings in ~/.config/ghostty/overrides.conf for quick changes
+      
+      # Shell configuration
+      command = /opt/homebrew/bin/nu -i -l
+      initial-command = /opt/homebrew/bin/nu -i -l
+      shell-integration = fish
+      shell-integration-features = no-cursor,sudo,title
+      
+      # Default font (can be overridden)
+      font-family = PragmataPro Liga
+      font-size = 18
+      
+      # Default theme (can be overridden)
+      theme = dracula
+      
+      # Window and appearance settings
+      split-divider-color = green
+      window-save-state = always
+      cursor-style = block
+      cursor-color = "#D9905A"
+      auto-update-channel = tip
+      quit-after-last-window-closed = true
+      
+      # macOS specific settings
+      macos-option-as-alt = left
+      
+      # Key bindings
+      keybind = global:super+ctrl+grave_accent=toggle_quick_terminal
+      
+      # Include user overrides (this file can be edited without Nix rebuild)
+      config-file = ~/.config/ghostty/overrides.conf
+    '';
+  };
+
+  # Ghostty overrides template (user-editable without Nix rebuild)
+  ".config/ghostty/overrides.conf" = {
+    text = ''
+      # Ghostty Runtime Overrides
+      # Edit this file for quick changes without Nix rebuild
+      # These settings override the base config
+      
+      # Font switching examples:
+      # font-family = MonoLisaVariable Nerd Font
+      # font-family = PragmataPro Liga
+      # font-family = JetBrains Mono
+      # font-size = 14
+      # font-size = 16
+      # font-size = 18
+      
+      # Theme switching examples:
+      # theme = dracula
+      # theme = BlulocoLight
+      # theme = nord
+      # theme = github_light
+      # theme = tokyo-night
+      
+      # Background opacity examples:
+      # background-opacity = 0.9
+      # background-opacity = 0.95
+      # background-opacity = 1.0
+      
+      # Add your custom overrides below:
+    '';
+  };
+
+  # Ghostty configuration helper scripts
+  ".local/bin/ghostty-config" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      # Ghostty configuration helper for quick changes
+      set -e
+      
+      # Colors
+      RED='\033[0;31m'
+      GREEN='\033[0;32m'
+      YELLOW='\033[1;33m'
+      BLUE='\033[0;34m'
+      NC='\033[0m'
+      
+      OVERRIDES_FILE="''${HOME}/.config/ghostty/overrides.conf"
+      
+      show_help() {
+        echo -e "''${BLUE}👻 Ghostty Configuration Helper''${NC}"
+        echo ""
+        echo "Usage: ghostty-config [COMMAND] [OPTIONS]"
+        echo ""
+        echo "Commands:"
+        echo "  font <font-name> [<size>]   Set font (and optional size)"
+        echo "  theme <theme-name>         Set theme"
+        echo "  opacity <value>          Set background opacity (0.0-1.0)"
+        echo "  reset                   Reset overrides to defaults"
+        echo "  list                    Show available options"
+        echo "  current                 Show current override settings"
+        echo "  edit                    Open overrides file in editor"
+        echo ""
+        echo "Font Examples:"
+        echo "  ghostty-config font 'MonoLisaVariable Nerd Font' 14"
+        echo "  ghostty-config font 'PragmataPro Liga' 18"
+        echo "  ghostty-config font 'JetBrains Mono'"
+        echo ""
+        echo "Theme Examples:"
+        echo "  ghostty-config theme dracula"
+        echo "  ghostty-config theme BlulocoLight"
+        echo "  ghostty-config theme nord"
+        echo ""
+        echo "Other Examples:"
+        echo "  ghostty-config opacity 0.9"
+        echo "  ghostty-config reset"
+      }
+      
+      ensure_config_dir() {
+        mkdir -p "$(dirname "''${OVERRIDES_FILE}")"
+        if [ ! -f "''${OVERRIDES_FILE}" ]; then
+          touch "''${OVERRIDES_FILE}"
+        fi
+      }
+      
+      update_setting() {
+        local key="''${1}"
+        local value="''${2}"
+        
+        ensure_config_dir
+        
+        # Remove existing setting if it exists
+        sed -i.bak "/^''${key}[[:space:]]*=/d" "''${OVERRIDES_FILE}"
+        
+        # Add new setting
+        echo "''${key} = ''${value}" >> "''${OVERRIDES_FILE}"
+        
+        # Clean up backup file
+        rm -f "''${OVERRIDES_FILE}.bak"
+        
+        echo -e "''${GREEN}✅ Updated ''${key} = ''${value}''${NC}"
+      }
+      
+      remove_setting() {
+        local key="''${1}"
+        
+        if [ -f "''${OVERRIDES_FILE}" ]; then
+          sed -i.bak "/^''${key}[[:space:]]*=/d" "''${OVERRIDES_FILE}"
+          rm -f "''${OVERRIDES_FILE}.bak"
+          echo -e "''${GREEN}✅ Removed ''${key} override''${NC}"
+        fi
+      }
+      
+      restart_ghostty() {
+        echo -e "''${YELLOW}🔄 Restarting Ghostty to apply changes...''${NC}"
+        # Kill existing Ghostty processes
+        pkill -f Ghostty || true
+        sleep 1
+        # Start Ghostty in background
+        open -a Ghostty &> /dev/null &
+        echo -e "''${GREEN}✅ Ghostty restarted''${NC}"
+      }
+      
+      case "''${1:-help}" in
+        font)
+          if [ -z "''${2}" ]; then
+            echo -e "''${RED}❌ Font name required''${NC}" >&2
+            show_help
+            exit 1
+          fi
+          update_setting "font-family" "''${2}"
+          [ -n "''${3}" ] && update_setting "font-size" "''${3}"
+          restart_ghostty
+          ;;
+        theme)
+          if [ -z "''${2}" ]; then
+            echo -e "''${RED}❌ Theme name required''${NC}" >&2
+            show_help
+            exit 1
+          fi
+          update_setting "theme" "''${2}"
+          restart_ghostty
+          ;;
+        opacity)
+          if [ -z "''${2}" ]; then
+            echo -e "''${RED}❌ Opacity value required''${NC}" >&2
+            show_help
+            exit 1
+          fi
+          update_setting "background-opacity" "''${2}"
+          restart_ghostty
+          ;;
+        reset)
+          echo -e "''${YELLOW}🔄 Resetting overrides...''${NC}"
+          echo "# Ghostty Runtime Overrides" > "''${OVERRIDES_FILE}"
+          echo "# Edit this file for quick changes without Nix rebuild" >> "''${OVERRIDES_FILE}"
+          echo "# These settings override the base config" >> "''${OVERRIDES_FILE}"
+          echo "" >> "''${OVERRIDES_FILE}"
+          echo -e "''${GREEN}✅ Overrides reset to defaults''${NC}"
+          restart_ghostty
+          ;;
+        list)
+          echo -e "''${BLUE}📋 Available Options:''${NC}"
+          echo ""
+          echo -e "''${YELLOW}Fonts:''${NC}"
+          echo "  - MonoLisaVariable Nerd Font"
+          echo "  - PragmataPro Liga"
+          echo "  - JetBrains Mono"
+          echo "  - SF Mono"
+          echo "  - Iosevka"
+          echo ""
+          echo -e "''${YELLOW}Themes:''${NC}"
+          echo "  - dracula"
+          echo "  - BlulocoLight"
+          echo "  - nord"
+          echo "  - github_light"
+          echo "  - tokyo-night"
+          echo "  - onedark"
+          echo "  - gruvbox"
+          echo ""
+          echo -e "''${YELLOW}Font Sizes:''${NC}"
+          echo "  - 12, 14, 16, 18, 20, 24"
+          echo ""
+          echo -e "''${YELLOW}Opacity:''${NC}"
+          echo "  - 0.8 (very transparent)"
+          echo "  - 0.9 (semi-transparent)"
+          echo "  - 0.95 (slightly transparent)"
+          echo "  - 1.0 (opaque)"
+          ;;
+        current)
+          echo -e "''${BLUE}📋 Current Override Settings:''${NC}"
+          if [ -f "''${OVERRIDES_FILE}" ] && [ -s "''${OVERRIDES_FILE}" ]; then
+            grep -v '^#' "''${OVERRIDES_FILE}" | grep -v '^[[:space:]]*$' || echo "No active overrides"
+          else
+            echo "No overrides file or empty"
+          fi
+          ;;
+        edit)
+          ''${EDITOR:-nano} "''${OVERRIDES_FILE}"
+          echo -e "''${YELLOW}🔄 Restart Ghostty to apply manual changes''${NC}"
+          ;;
+        help|--help|-h)
+          show_help
+          ;;
+        *)
+          echo -e "''${RED}❌ Unknown command: ''${1}''${NC}" >&2
+          show_help
+          exit 1
+          ;;
+      esac
+    '';
+  };
+
+  # Quick font switcher aliases
+  ".local/bin/ghostty-font-monolisa" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config font "MonoLisaVariable Nerd Font" 14
+    '';
+  };
+
+  ".local/bin/ghostty-font-pragmata" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config font "PragmataPro Liga" 18
+    '';
+  };
+
+  # Quick theme switcher aliases
+  ".local/bin/ghostty-theme-dark" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config theme dracula
+    '';
+  };
+
+  ".local/bin/ghostty-theme-light" = {
+    executable = true;
+    text = ''#!/usr/bin/env bash
+      ghostty-config theme BlulocoLight
+    '';
+  };
 }
 
