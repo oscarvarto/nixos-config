@@ -21,6 +21,7 @@ with pkgs;
   # Encryption and security tools
   age
   # age-plugin-yubikey
+  bfg-repo-cleaner
   gnupg
   libfido2
 
