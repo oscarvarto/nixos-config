@@ -130,6 +130,7 @@ in
     users.${user} = { pkgs, config, lib, ... }: {
       imports = [
         ./fish-config.nix
+        ../shared/git-security.nix
         inputs.nixCats.homeModules.default
         op-shell-plugins.hmModules.default
       ];

@@ -151,13 +151,13 @@ in
       
       # Emacs
       "*~"
-      "\#*\#"
+      "\\#*\\#"
       "/.emacs.desktop"
       "/.emacs.desktop.lock"
       "*.elc"
       "auto-save-list"
       "tramp"
-      ".\#*"
+      ".\\#*"
       ".org-id-locations"
       "*_archive"
       "*_flymake.*"
@@ -353,6 +353,7 @@ in
         autocrlf = false;  # Better for macOS/Linux - preserves line endings as-is
         eol = "lf";        # Use LF line endings on macOS/Linux
         ignorecase = false; # Case-sensitive file names (better for cross-platform)
+        hooksPath = "~/.config/git/hooks"; # Use custom hooks directory
       };
       commit.gpgsign = false;
       diff.colorMoved = "zebra"; # https://spin.atomicobject.com/git-configurations-default/
