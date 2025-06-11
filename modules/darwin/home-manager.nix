@@ -48,7 +48,7 @@ in
       "bat"
       "bat-extras"
       "bfg"
-      "borders"
+      # "borders"
       "cargo-binstall"
       "ccache"
       "cmake"
@@ -119,7 +119,7 @@ in
       "1Password for Safari" = 1569813296;
       "neptunes" = 1006739057;
       "rcmd" = 1596283165;
-      "XCode" = 497799835;
+      # "XCode" = 497799835;
     };
   };
 
@@ -398,12 +398,12 @@ in
 
   services = {
 
-    jankyborders = {
-      enable = true;
-      active_color = "0xff00ff00";
-      inactive_color = "0xff494d64";
-      width = 10.0;
-    };
+    # jankyborders = {
+    #  enable = false;
+    #  active_color = "0xff00ff00";
+    #  inactive_color = "0xff494d64";
+    #  width = 10.0;
+    # };
 
     yabai = {
       enable = true;
@@ -461,7 +461,7 @@ in
         # Emacs specific rules
         # yabai -m rule --add app="^Emacs$" manage=on space=^1
 
-        borders &
+        # borders &
       '';
     };
 
