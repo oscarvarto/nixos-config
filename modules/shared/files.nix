@@ -371,8 +371,8 @@ in
       theme = dracula
 
       # Default shell (can be overridden)
-      command = /opt/homebrew/bin/fish -i -l
-      initial-command = /opt/homebrew/bin/fish -i -l
+      command = /opt/homebrew/bin/fish -i
+      initial-command = /opt/homebrew/bin/fish -i
 
       # Window and appearance settings
       split-divider-color = green
@@ -475,22 +475,22 @@ in
       }
 
       get_shell_path() {
-        local shell_name="''${1}"
-        case "''${shell_name}" in
+        local shell_name="$1"
+        case "$shell_name" in
           fish)
-            echo "/opt/homebrew/bin/fish -i -l"
+            echo "/opt/homebrew/bin/fish -i"
             ;;
           zsh)
-            echo "/bin/zsh -i -l"
+            echo "/bin/zsh -i"
             ;;
           bash)
-            echo "/bin/bash -i -l"
+            echo "/bin/bash -i"
             ;;
           nushell|nu)
-            echo "/Users/oscarvarto/.nix-profile/bin/nu -i -l"
+            echo "/Users/oscarvarto/.nix-profile/bin/nu -i"
             ;;
           pwsh|powershell)
-            echo "/opt/homebrew/bin/pwsh -i -l"
+            echo "/opt/homebrew/bin/pwsh -i"
             ;;
           *)
             echo ""

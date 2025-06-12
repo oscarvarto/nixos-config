@@ -33,36 +33,6 @@
       if command -v mise > /dev/null 2>&1
         mise activate fish | source
       end
-      
-      # 1Password CLI session initialization
-      # Only initialize on login shells to avoid repeated prompts
-      if status is-login; and command -v op > /dev/null 2>&1
-        # Check if session file exists and is recent (less than 25 minutes old)
-        set SESSION_FILE "$HOME/.config/op/session"
-        if test -f "$SESSION_FILE"; and test (math (date +%s) - (stat -f %m "$SESSION_FILE")) -lt 1500
-          # Use existing session file
-          set -gx OP_SESSION_my (cat "$SESSION_FILE" 2>/dev/null || echo "")
-        else
-          # Only try to authenticate on login shells, not every shell instance
-          if test -n "$OP_SESSION_my"
-            # Session variable already exists, don't re-authenticate
-            echo "" > /dev/null
-          else
-            # Try to get session token silently
-            set session_token (op signin --raw 2>/dev/null || echo "")
-            if test -n "$session_token"
-              set -gx OP_SESSION_my "$session_token"
-              # Cache the session for other shells
-              mkdir -p (dirname "$SESSION_FILE")
-              echo "$session_token" > "$SESSION_FILE"
-              chmod 600 "$SESSION_FILE"
-            end
-          end
-        end
-      else if test -f "$HOME/.config/op/session"
-        # For non-login shells, just use cached session if available
-        set -gx OP_SESSION_my (cat "$HOME/.config/op/session" 2>/dev/null || echo "")
-      end
     '';
 
     interactiveShellInit = ''
@@ -130,11 +100,15 @@
     };
 
     shellAbbrs = {
-      # 1Password plugin aliases
-      aws = "op plugin run -- aws";
-      cachix = "op plugin run -- cachix";
+      # 1Password plugin aliases (fallback to regular commands if no session)
+      aws = "if set -q OP_SESSION_my; op plugin run -- aws; else; command aws; end";
+      cachix = "if set -q OP_SESSION_my; op plugin run -- cachix; else; command cachix; end";
       # gh = "op plugin run -- gh";
       # glab = "op plugin run -- glab";
+      
+      # 1Password session management
+      op-auth = "set -e OP_SESSION_my; rm -f ~/.config/op/session*; op signin";
+      op-status = "if set -q OP_SESSION_my; printf '\u2705 1Password session active\n'; else; printf '\u274c No 1Password session\n'; end";
 
       # Utility aliases
       search = "rg -p --glob '!node_modules/*'";
