@@ -1,0 +1,29 @@
+# NordVPN Autoconnect Configuration Example
+# Copy this to your shell configuration file (.bashrc, .zshrc, etc.)
+# or create a separate config file that gets sourced
+
+# Required: Set your dedicated IP address
+export NORDVPN_DEDICATED_IP="your.dedicated.ip.here"
+
+# Optional: Skip VPN autoconnect (set to "true" to disable)
+# export SKIP_VPN_AUTOCONNECT="false"
+
+# Optional: Indicate GlobalProtect is active (set to "true" to skip NordVPN)
+# export GLOBALPROTECT_ACTIVE="false"
+
+# Example usage scenarios:
+
+# 1. Normal operation (connect to dedicated IP)
+# NORDVPN_DEDICATED_IP="123.456.789.012" ./nordvpn-autoconnect.sh
+
+# 2. Skip VPN entirely
+# SKIP_VPN_AUTOCONNECT="true" ./nordvpn-autoconnect.sh
+
+# 3. Skip because GlobalProtect is active
+# GLOBALPROTECT_ACTIVE="true" ./nordvpn-autoconnect.sh
+
+# 4. For startup/login scripts, you can add to your shell profile:
+# if [ -f "$HOME/nixos-config/nordvpn-autoconnect.sh" ]; then
+#     "$HOME/nixos-config/nordvpn-autoconnect.sh"
+# fi
+

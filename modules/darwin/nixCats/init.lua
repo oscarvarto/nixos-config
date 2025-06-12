@@ -47,6 +47,26 @@ vim.o.breakindent = true
 -- Save undo history
 vim.o.undofile = true
 
+-- Disable swap files to avoid .swp file creation when force quitting
+-- This prevents the "swap file already exists" warnings and leftover .swp files
+vim.opt.swapfile = false
+
+-- Alternative: You can keep swap files but put them in a dedicated directory
+-- Uncomment the lines below if you prefer to keep swap files in a specific location
+-- vim.opt.swapfile = true
+-- vim.opt.directory = vim.fn.stdpath('data') .. '/swap//'
+-- vim.fn.mkdir(vim.fn.stdpath('data') .. '/swap', 'p')
+
+-- Enhanced backup and undo configuration for better file safety
+-- Set backup directory to avoid backup files in working directory
+vim.opt.backup = true
+vim.opt.backupdir = vim.fn.stdpath('data') .. '/backup//'
+vim.fn.mkdir(vim.fn.stdpath('data') .. '/backup', 'p')
+
+-- Set undo directory (already configured above, but ensuring it exists)
+vim.opt.undodir = vim.fn.stdpath('data') .. '/undo//'
+vim.fn.mkdir(vim.fn.stdpath('data') .. '/undo', 'p')
+
 -- Case-insensitive searching UNLESS \C or capital in search
 vim.o.ignorecase = true
 vim.o.smartcase = true

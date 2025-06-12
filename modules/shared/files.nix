@@ -95,7 +95,7 @@ in
       NC='\033[0m'
 
       show_help() {
-        echo -e "$BLUE🧹 Nix Generation Cleanup$NC"
+        echo -e "$BLUE\U0001F9F9 Nix Generation Cleanup$NC"
         echo ""
         echo "Usage: nix-cleanup [OPTIONS] [COMMAND]"
         echo ""
@@ -121,7 +121,7 @@ in
       }
 
       show_status() {
-        echo -e "$BLUE📊 Nix Store Status$NC"
+        echo -e "$BLUE\U0001F4CA Nix Store Status$NC"
         echo -e "$YELLOW├─ Store size:$NC $(du -sh /nix/store 2>/dev/null | cut -f1 || echo 'Unknown')"
         
         echo -e "$YELLOW├─ User generations:$NC"
@@ -147,21 +147,21 @@ in
         local dry_run=''${2}
         local force=''${3}
         
-        echo -e "$BLUE🧹 Cleaning up generations (keeping last $keep_count)$NC"
+        echo -e "$BLUE\U0001F9F9 Cleaning up generations (keeping last $keep_count)$NC"
         
         # Get current generation count
         local total_gens=$(nix-env --list-generations | wc -l)
         local to_delete=$((total_gens - keep_count))
         
         if [ $to_delete -le 0 ]; then
-          echo -e "$GREEN✅ No generations to clean (have $total_gens, keeping $keep_count)$NC"
+          echo -e "$GREEN\U2705 No generations to clean (have $total_gens, keeping $keep_count)$NC"
           return 0
         fi
         
-        echo -e "$YELLOW📋 Will delete $to_delete old generations$NC"
+        echo -e "$YELLOW\U1F4CB Will delete $to_delete old generations$NC"
         
         if [ "$dry_run" = true ]; then
-          echo -e "$BLUE💭 DRY RUN: Would delete the oldest $to_delete generations$NC"
+          echo -e "$BLUE\U1F4AD DRY RUN: Would delete the oldest $to_delete generations$NC"
           nix-env --list-generations | head -n $to_delete | while read line; do
             echo -e "$RED│  Would delete: $line$NC"
           done
@@ -169,11 +169,11 @@ in
         fi
         
         if [ "$force" != true ]; then
-          echo -e "$YELLOW⚠️  This will delete $to_delete old generations$NC"
+          echo -e "$YELLOW\U26A0 This will delete $to_delete old generations$NC"
           read -p "Continue? (y/N): " -n 1 -r
           echo ""
           if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            echo -e "$YELLOW🚫 Operation cancelled$NC"
+            echo -e "$YELLOW\U1F6AB Operation cancelled$NC"
             return 0
           fi
         fi
@@ -181,9 +181,9 @@ in
         # Delete old generations
         local gens_to_delete=$(nix-env --list-generations | head -n $to_delete | awk '{print $1}' | tr '\n' ' ')
         if [ -n "$gens_to_delete" ]; then
-          echo -e "$BLUE🗑️  Deleting generations: $gens_to_delete$NC"
+          echo -e "$BLUE\U1F5D1 Deleting generations: $gens_to_delete$NC"
           nix-env --delete-generations $gens_to_delete
-          echo -e "$GREEN✅ Deleted $to_delete generations$NC"
+          echo -e "$GREEN\U2705 Deleted $to_delete generations$NC"
         fi
       }
 
@@ -191,12 +191,12 @@ in
         local dry_run=''${1}
         local verbose=''${2}
         
-        echo -e "$BLUE🗑️  Running garbage collection$NC"
+        echo -e "$BLUE\U1F5D1 Running garbage collection$NC"
         
         local before_size=$(du -sb /nix/store 2>/dev/null | cut -f1 || echo "0")
         
         if [ "$dry_run" = true ]; then
-          echo -e "$BLUE💭 DRY RUN: Garbage collection preview$NC"
+          echo -e "$BLUE\U1F4AD DRY RUN: Garbage collection preview$NC"
           nix store gc --dry-run
         else
           if [ "$verbose" = true ]; then
@@ -209,8 +209,8 @@ in
           local freed=$((before_size - after_size))
           local freed_mb=$((freed / 1024 / 1024))
           
-          echo -e "$GREEN✅ Garbage collection complete$NC"
-          echo -e "$GREEN💾 Freed: ''${freed_mb}MB$NC"
+          echo -e "$GREEN\U2705 Garbage collection complete$NC"
+          echo -e "$GREEN\U1F4BE Freed: ''${freed_mb}MB$NC"
         fi
       }
 
@@ -250,18 +250,18 @@ in
               CUSTOM_COUNT="$1"
               shift
             else
-              echo -e "$RED❌ custom command requires a number$NC" >&2
+              echo -e "$RED\U274C custom command requires a number$NC" >&2
               show_help
               exit 1
             fi
             ;;
           -*)
-            echo -e "$RED❌ Unknown option: $1$NC" >&2
+            echo -e "$RED\U274C Unknown option: $1$NC" >&2
             show_help
             exit 1
             ;;
           *)
-            echo -e "$RED❌ Unknown command: $1$NC" >&2
+            echo -e "$RED\U274C Unknown command: $1$NC" >&2
             show_help
             exit 1
             ;;
@@ -322,31 +322,31 @@ in
       BLUE='\033[0;34m'
       NC='\033[0m'
 
-      echo -e "$BLUE🤖 Nix Auto-Cleanup$NC"
+      echo -e "$BLUE\U1F916 Nix Auto-Cleanup$NC"
 
       # Check if store is getting large (>10GB)
       STORE_SIZE_GB=$(du -sb /nix/store 2>/dev/null | awk '{print int($1/1024/1024/1024)}' || echo "0")
 
       if [ "$STORE_SIZE_GB" -gt 10 ]; then
-        echo -e "$YELLOW⚠️  Store size is ''${STORE_SIZE_GB}GB, running cleanup$NC"
+        echo -e "$YELLOW\U26A0 Store size is ''${STORE_SIZE_GB}GB, running cleanup$NC"
         
         # Conservative cleanup: keep last 7 generations
         GEN_COUNT=$(nix-env --list-generations | wc -l)
         if [ "$GEN_COUNT" -gt 7 ]; then
-          echo -e "$BLUE🧹 Cleaning old generations (keeping last 7)$NC"
+          echo -e "$BLUE\U1F9F9 Cleaning old generations (keeping last 7)$NC"
           OLD_GENS=$(nix-env --list-generations | head -n $((GEN_COUNT - 7)) | awk '{print $1}' | tr '\n' ' ')
           [ -n "$OLD_GENS" ] && nix-env --delete-generations $OLD_GENS
         fi
         
         # Run garbage collection
-        echo -e "$BLUE🗑️  Running garbage collection$NC"
+        echo -e "$BLUE\U1F5D1 Running garbage collection$NC"
         nix store gc > /dev/null 2>&1
         
         NEW_SIZE_GB=$(du -sb /nix/store 2>/dev/null | awk '{print int($1/1024/1024/1024)}' || echo "0")
         FREED_GB=$((STORE_SIZE_GB - NEW_SIZE_GB))
-        echo -e "$GREEN✅ Cleanup complete. Freed ''${FREED_GB}GB (''${NEW_SIZE_GB}GB remaining)$NC"
+        echo -e "$GREEN\U2705 Cleanup complete. Freed ''${FREED_GB}GB (''${NEW_SIZE_GB}GB remaining)$NC"
       else
-        echo -e "$GREEN✅ Store size is ''${STORE_SIZE_GB}GB, no cleanup needed$NC"
+        echo -e "$GREEN\U2705 Store size is ''${STORE_SIZE_GB}GB, no cleanup needed$NC"
       fi
     '';
   };
@@ -413,7 +413,7 @@ in
       OVERRIDES_FILE="''${HOME}/.config/ghostty/overrides.conf"
 
       show_help() {
-        echo -e "''${BLUE}👻 Ghostty Configuration Helper''${NC}"
+        echo -e "''${BLUE}\U1F47B Ghostty Configuration Helper''${NC}"
         echo ""
         echo "Usage: ghostty-config [COMMAND] [OPTIONS]"
         echo ""
@@ -471,7 +471,7 @@ in
         # Clean up backup file
         rm -f "''${OVERRIDES_FILE}.bak"
 
-        echo -e "''${GREEN}✅ Updated ''${key} = ''${value}''${NC}"
+        echo -e "''${GREEN}\U2705 Updated ''${key} = ''${value}''${NC}"
       }
 
       get_shell_path() {
@@ -503,7 +503,7 @@ in
         local shell_path=$(get_shell_path "''${shell_name}")
 
         if [ -z "''${shell_path}" ]; then
-          echo -e "''${RED}❌ Unknown shell: ''${shell_name}''${NC}" >&2
+          echo -e "''${RED}\U274C Unknown shell: ''${shell_name}''${NC}" >&2
           echo -e "''${YELLOW}Available shells: fish, zsh, bash, nushell, pwsh''${NC}" >&2
           return 1
         fi
@@ -511,7 +511,7 @@ in
         # Check if shell exists
         local shell_binary=$(echo "''${shell_path}" | awk '{print $1}')
         if [ ! -x "''${shell_binary}" ]; then
-          echo -e "''${RED}❌ Shell not found: ''${shell_binary}''${NC}" >&2
+          echo -e "''${RED}\U274C Shell not found: ''${shell_binary}''${NC}" >&2
           echo -e "''${YELLOW}Make sure ''${shell_name} is installed''${NC}" >&2
           return 1
         fi
@@ -520,7 +520,7 @@ in
         update_setting "command" "''${shell_path}"
         update_setting "initial-command" "''${shell_path}"
 
-        echo -e "''${GREEN}🐚 Shell set to ''${shell_name}''${NC}"
+        echo -e "''${GREEN}\U1F41A Shell set to ''${shell_name}''${NC}"
       }
 
       remove_setting() {
@@ -529,7 +529,7 @@ in
         if [ -f "''${OVERRIDES_FILE}" ]; then
           sed -i.bak "/^''${key}[[:space:]]*=/d" "''${OVERRIDES_FILE}"
           rm -f "''${OVERRIDES_FILE}.bak"
-          echo -e "''${GREEN}✅ Removed ''${key} override''${NC}"
+          echo -e "''${GREEN}\U2705 Removed ''${key} override''${NC}"
         fi
       }
 
@@ -539,24 +539,24 @@ in
         if [ -f "''${OVERRIDES_FILE}" ]; then
           sed -i.bak "/^''${key}[[:space:]]*=/d" "''${OVERRIDES_FILE}"
           rm -f "''${OVERRIDES_FILE}.bak"
-          echo -e "''${GREEN}✅ Removed ''${key} override''${NC}"
+          echo -e "''${GREEN}\U2705 Removed ''${key} override''${NC}"
         fi
       }
 
       restart_ghostty() {
-        echo -e "''${YELLOW}🔄 Restarting Ghostty to apply changes...''${NC}"
+        echo -e "''${YELLOW}\U1F504 Restarting Ghostty to apply changes...''${NC}"
         # Kill existing Ghostty processes
         pkill -f Ghostty || true
         sleep 1
         # Start Ghostty in background
         open -a Ghostty &> /dev/null &
-        echo -e "''${GREEN}✅ Ghostty restarted''${NC}"
+        echo -e "''${GREEN}\U2705 Ghostty restarted''${NC}"
       }
 
       case "''${1:-help}" in
         font)
           if [ -z "''${2}" ]; then
-            echo -e "''${RED}❌ Font name required''${NC}" >&2
+            echo -e "''${RED}\U274C Font name required''${NC}" >&2
             show_help
             exit 1
           fi
@@ -567,16 +567,16 @@ in
           rm -f "''${OVERRIDES_FILE}.bak"
           # Add reset line first (empty quoted string as per Ghostty docs)
           echo 'font-family = ""' >> "''${OVERRIDES_FILE}"
-          echo -e "''${GREEN}✅ Added font-family reset''${NC}"
+          echo -e "''${GREEN}\U2705 Added font-family reset''${NC}"
           # Then add new font setting
           echo "font-family = \"''${2}\"" >> "''${OVERRIDES_FILE}"
-          echo -e "''${GREEN}✅ Updated font-family = ''${2}''${NC}"
+          echo -e "''${GREEN}\U2705 Updated font-family = ''${2}''${NC}"
           [ -n "''${3}" ] && update_setting "font-size" "''${3}"
           restart_ghostty
           ;;
         theme)
           if [ -z "''${2}" ]; then
-            echo -e "''${RED}❌ Theme name required''${NC}" >&2
+            echo -e "''${RED}\U274C Theme name required''${NC}" >&2
             show_help
             exit 1
           fi
@@ -585,7 +585,7 @@ in
           ;;
         opacity)
           if [ -z "''${2}" ]; then
-            echo -e "''${RED}❌ Opacity value required''${NC}" >&2
+            echo -e "''${RED}\U274C Opacity value required''${NC}" >&2
             show_help
             exit 1
           fi
@@ -594,7 +594,7 @@ in
           ;;
         shell)
           if [ -z "''${2}" ]; then
-            echo -e "''${RED}❌ Shell name required''${NC}" >&2
+            echo -e "''${RED}\U274C Shell name required''${NC}" >&2
             show_help
             exit 1
           fi
@@ -602,16 +602,16 @@ in
           restart_ghostty
           ;;
         reset)
-          echo -e "''${YELLOW}🔄 Resetting overrides...''${NC}"
+          echo -e "''${YELLOW}\U1F504 Resetting overrides...''${NC}"
           echo "# Ghostty Runtime Overrides" > "''${OVERRIDES_FILE}"
           echo "# Edit this file for quick changes without Nix rebuild" >> "''${OVERRIDES_FILE}"
           echo "# These settings override the base config" >> "''${OVERRIDES_FILE}"
           echo "" >> "''${OVERRIDES_FILE}"
-          echo -e "''${GREEN}✅ Overrides reset to defaults''${NC}"
+          echo -e "''${GREEN}\U2705 Overrides reset to defaults''${NC}"
           restart_ghostty
           ;;
         list)
-          echo -e "''${BLUE}📋 Available Options:''${NC}"
+          echo -e "''${BLUE}\U1F4CB Available Options:''${NC}"
           echo ""
           echo -e "''${YELLOW}Fonts:''${NC}"
           echo "  - MonoLisaVariable Nerd Font"
@@ -646,7 +646,7 @@ in
           echo "  - 1.0 (opaque)"
           ;;
         current)
-          echo -e "''${BLUE}📋 Current Override Settings:''${NC}"
+          echo -e "''${BLUE}\U1F4CB Current Override Settings:''${NC}"
           if [ -f "''${OVERRIDES_FILE}" ] && [ -s "''${OVERRIDES_FILE}" ]; then
             grep -v '^#' "''${OVERRIDES_FILE}" | grep -v '^[[:space:]]*$' || echo "No active overrides"
           else
@@ -655,13 +655,13 @@ in
           ;;
         edit)
           ''${EDITOR:-nano} "''${OVERRIDES_FILE}"
-          echo -e "''${YELLOW}🔄 Restart Ghostty to apply manual changes''${NC}"
+          echo -e "''${YELLOW}\U1F504 Restart Ghostty to apply manual changes''${NC}"
           ;;
         help|--help|-h)
           show_help
           ;;
         *)
-          echo -e "''${RED}❌ Unknown command: ''${1}''${NC}" >&2
+          echo -e "''${RED}\U274C Unknown command: ''${1}''${NC}" >&2
           show_help
           exit 1
           ;;

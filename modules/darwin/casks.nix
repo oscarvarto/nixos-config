@@ -31,6 +31,7 @@ _:
   "1password@nightly"
   "1password-cli"
   "dropbox"
+  "hammerspoon"  # Lua scripting for macOS automation
   "nordvpn"
   "proton-drive"
   "snagit"

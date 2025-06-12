@@ -14,13 +14,13 @@
       YELLOW='\033[1;33m'
       NC='\033[0m'
 
-      echo -e "$YELLOW🔍 Scanning for secrets...$NC"
+      echo -e "$YELLOW\U1F50D Scanning for secrets...$NC"
 
       # Get staged files
       STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|py|java|scala|clj|cs|json|yaml|yml|toml|env|sh|bash|fish|nix)$' || true)
 
       if [ -z "$STAGED_FILES" ]; then
-        echo -e "$GREEN✅ No files to check$NC"
+        echo -e "$GREEN\U2705 No files to check$NC"
         exit 0
       fi
 
@@ -40,7 +40,7 @@
         if [ -f "$FILE" ]; then
           for PATTERN in "''${PATTERNS[@]}"; do
             if git show ":$FILE" | grep -qE "$PATTERN"; then
-              echo -e "$RED❌ Potential secret found in $FILE$NC"
+              echo -e "$RED\U274C Potential secret found in $FILE$NC"
               FOUND_SECRETS=true
             fi
           done
@@ -48,14 +48,14 @@
       done
 
       if [ "$FOUND_SECRETS" = true ]; then
-        echo -e "$RED\n🚫 COMMIT BLOCKED: Potential secrets detected!$NC"
-        echo -e "$YELLOW💡 Use 1Password CLI instead:$NC"
+        echo -e "$RED\n\U1F6AB COMMIT BLOCKED: Potential secrets detected!$NC"
+        echo -e "$YELLOW\U1F4A1 Use 1Password CLI instead:$NC"
         echo -e "$YELLOW   export API_KEY=\$(op read 'op://vault/item/field')$NC"
-        echo -e "$YELLOW\n🔧 To bypass (use with caution): git commit --no-verify$NC"
+        echo -e "$YELLOW\n\U1F527 To bypass (use with caution): git commit --no-verify$NC"
         exit 1
       fi
 
-      echo -e "$GREEN✅ No secrets detected$NC"
+      echo -e "$GREEN\U2705 No secrets detected$NC"
     '';
   };
 
@@ -72,8 +72,8 @@
             exit 1
           fi
           op read "op://$2" 2>/dev/null || {
-            echo "❌ Failed to read from 1Password: $2" >&2
-            echo "💡 Try: op signin" >&2
+            echo "\U274C Failed to read from 1Password: $2" >&2
+            echo "\U1F4A1 Try: op signin" >&2
             exit 1
           }
           ;;
@@ -83,7 +83,7 @@
             exit 1
           fi
           export "$2"=$(op read "op://$3" 2>/dev/null)
-          echo "✅ Exported $2 from 1Password"
+          echo "\U2705 Exported $2 from 1Password"
           ;;
         *)
           echo "1Password Git Helper"
@@ -117,8 +117,8 @@
         WORK_EMAIL=$(op read "op://Work/CompanyName/email" 2>/dev/null || echo "YOUR-WORK-EMAIL@company.com")
       else
         WORK_EMAIL="YOUR-WORK-EMAIL@company.com"
-        echo "⚠️  1Password CLI not available or not signed in. Using placeholder email."
-        echo "💡 Sign in with: op signin"
+        echo "\U26A0 1Password CLI not available or not signed in. Using placeholder email."
+        echo "\U1F4A1 Sign in with: op signin"
       fi
       
       # Create/update the git config file
@@ -128,7 +128,7 @@
     email = ''${WORK_EMAIL}
 EOF
       
-      echo "✅ Updated work git config with email: ''${WORK_EMAIL}"
+      echo "\U2705 Updated work git config with email: ''${WORK_EMAIL}"
     '';
   };
   
@@ -388,7 +388,7 @@ EOF
       NC='\033[0m'
       
       show_help() {
-        echo -e "$BLUE🧹 Git BFG History Cleaner$NC"
+        echo -e "$BLUE\U1F9F9 Git BFG History Cleaner$NC"
         echo ""
         echo "Usage: git-bfg-cleaner [OPTIONS] <sensitive-data-file>"
         echo ""
@@ -442,7 +442,7 @@ EOF
             shift
             ;;
           -*)
-            echo -e "$RED❌ Unknown option: $1$NC" >&2
+            echo -e "$RED\U274C Unknown option: $1$NC" >&2
             show_help
             exit 1
             ;;
@@ -450,7 +450,7 @@ EOF
             if [ -z "$SENSITIVE_FILE" ]; then
               SENSITIVE_FILE="$1"
             else
-              echo -e "$RED❌ Too many arguments$NC" >&2
+              echo -e "$RED\U274C Too many arguments$NC" >&2
               show_help
               exit 1
             fi
@@ -461,107 +461,107 @@ EOF
       
       # Check if file argument is provided
       if [ -z "$SENSITIVE_FILE" ]; then
-        echo -e "$RED❌ Missing sensitive data file argument$NC" >&2
+        echo -e "$RED\U274C Missing sensitive data file argument$NC" >&2
         show_help
         exit 1
       fi
       
       # Check if file exists
       if [ ! -f "$SENSITIVE_FILE" ]; then
-        echo -e "$RED❌ File not found: $SENSITIVE_FILE$NC" >&2
+        echo -e "$RED\U274C File not found: $SENSITIVE_FILE$NC" >&2
         exit 1
       fi
       
       # Check if we're in a git repository
       if ! git rev-parse --git-dir > /dev/null 2>&1; then
-        echo -e "$RED❌ Not in a git repository$NC" >&2
+        echo -e "$RED\U274C Not in a git repository$NC" >&2
         exit 1
       fi
       
       # Check if bfg is available
       if ! command -v bfg > /dev/null 2>&1; then
-        echo -e "$RED❌ BFG not found. Install it via nixos-config.$NC" >&2
-        echo -e "$YELLOW💡 Add 'bfg-repo-cleaner' to your packages list$NC" >&2
+        echo -e "$RED\U274C BFG not found. Install it via nixos-config.$NC" >&2
+        echo -e "$YELLOW\U1F4A1 Add 'bfg-repo-cleaner' to your packages list$NC" >&2
         exit 1
       fi
       
       # Check for uncommitted changes
       if ! git diff-index --quiet HEAD --; then
-        echo -e "$RED❌ Repository has uncommitted changes$NC" >&2
-        echo -e "$YELLOW💡 Commit or stash your changes first$NC" >&2
+        echo -e "$RED\U274C Repository has uncommitted changes$NC" >&2
+        echo -e "$YELLOW\U1F4A1 Commit or stash your changes first$NC" >&2
         exit 1
       fi
       
       # Read and validate sensitive data file
-      echo -e "$BLUE📋 Reading sensitive data from: $SENSITIVE_FILE$NC"
+      echo -e "$BLUE\U1F4CB Reading sensitive data from: $SENSITIVE_FILE$NC"
       LINES_COUNT=$(wc -l < "$SENSITIVE_FILE")
-      echo -e "$BLUE📊 Found $LINES_COUNT items to clean$NC"
+      echo -e "$BLUE\U1F4CA Found $LINES_COUNT items to clean$NC"
       
       if [ "$LINES_COUNT" -eq 0 ]; then
-        echo -e "$YELLOW⚠️  File is empty, nothing to clean$NC"
+        echo -e "$YELLOW\U26A0 File is empty, nothing to clean$NC"
         exit 0
       fi
       
       # Show what will be cleaned
-      echo -e "$YELLOW🔍 Items to be removed from git history:$NC"
+      echo -e "$YELLOW\U1F50D Items to be removed from git history:$NC"
       while IFS= read -r line; do
         [ -n "$line" ] && echo "  - $line"
       done < "$SENSITIVE_FILE"
       
       if [ "$DRY_RUN" = true ]; then
-        echo -e "$BLUE💭 DRY RUN: Would clean the above items from git history$NC"
-        echo -e "$BLUE📝 Run without --dry-run to actually perform the cleanup$NC"
+        echo -e "$BLUE\U1F4AD DRY RUN: Would clean the above items from git history$NC"
+        echo -e "$BLUE\U1F4DD Run without --dry-run to actually perform the cleanup$NC"
         exit 0
       fi
       
       # Create backup branch if not skipped
       BACKUP_BRANCH="backup-before-bfg-$(date +%Y%m%d-%H%M%S)"
       if [ "$NO_BACKUP" != true ]; then
-        echo -e "$YELLOW💾 Creating backup branch: $BACKUP_BRANCH$NC"
+        echo -e "$YELLOW\U1F4BE Creating backup branch: $BACKUP_BRANCH$NC"
         git branch "$BACKUP_BRANCH"
-        echo -e "$GREEN✅ Backup created: git checkout $BACKUP_BRANCH$NC"
+        echo -e "$GREEN\U2705 Backup created: git checkout $BACKUP_BRANCH$NC"
       fi
       
       # Confirmation
       if [ "$FORCE" != true ]; then
-        echo -e "$RED⚠️  WARNING: This will permanently alter git history!$NC"
-        echo -e "$YELLOW📋 This action will:$NC"
+        echo -e "$RED\U26A0 WARNING: This will permanently alter git history!$NC"
+        echo -e "$YELLOW\U1F4CB This action will:$NC"
         echo -e "$YELLOW   1. Remove sensitive data from ALL commits$NC"
         echo -e "$YELLOW   2. Rewrite git history$NC"
         echo -e "$YELLOW   3. Change commit hashes$NC"
         echo -e "$YELLOW   4. Require force push if pushed to remote$NC"
-        [ "$NO_BACKUP" != true ] && echo -e "$GREEN   ✅ Backup branch created: $BACKUP_BRANCH$NC"
+        [ "$NO_BACKUP" != true ] && echo -e "$GREEN   \U2705 Backup branch created: $BACKUP_BRANCH$NC"
         echo ""
         read -p "Are you sure you want to continue? (y/N): " -n 1 -r
         echo ""
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-          echo -e "$YELLOW🚫 Operation cancelled$NC"
+          echo -e "$YELLOW\U1F6AB Operation cancelled$NC"
           [ "$NO_BACKUP" != true ] && git branch -d "$BACKUP_BRANCH" 2>/dev/null || true
           exit 0
         fi
       fi
       
-      echo -e "$BLUE🧹 Starting BFG cleanup...$NC"
+      echo -e "$BLUE\U1F9F9 Starting BFG cleanup...$NC"
       
       # Run BFG with the sensitive data file
       if bfg --replace-text="$SENSITIVE_FILE" --no-blob-protection; then
-        echo -e "$GREEN✅ BFG cleanup completed successfully$NC"
+        echo -e "$GREEN\U2705 BFG cleanup completed successfully$NC"
         
-        echo -e "$BLUE🔧 Running git reflog expire and gc...$NC"
+        echo -e "$BLUE\U1F527 Running git reflog expire and gc...$NC"
         git reflog expire --expire=now --all
         git gc --prune=now --aggressive
         
-        echo -e "$GREEN✅ Git repository optimized$NC"
+        echo -e "$GREEN\U2705 Git repository optimized$NC"
         echo ""
-        echo -e "$YELLOW📋 Next steps:$NC"
+        echo -e "$YELLOW\U1F4CB Next steps:$NC"
         echo -e "$YELLOW   1. Review the changes: git log --oneline$NC"
         echo -e "$YELLOW   2. Test your application thoroughly$NC"
         [ "$NO_BACKUP" != true ] && echo -e "$YELLOW   3. If satisfied, delete backup: git branch -d $BACKUP_BRANCH$NC"
         echo -e "$YELLOW   4. Force push to remote: git push --force-with-lease origin main$NC"
-        echo -e "$RED⚠️    WARNING: Force push will affect all collaborators!$NC"
+        echo -e "$RED\U26A0 WARNING: Force push will affect all collaborators!$NC"
       else
-        echo -e "$RED❌ BFG cleanup failed$NC" >&2
-        [ "$NO_BACKUP" != true ] && echo -e "$GREEN🔄 Restore from backup: git checkout $BACKUP_BRANCH$NC"
+        echo -e "$RED\U274C BFG cleanup failed$NC" >&2
+        [ "$NO_BACKUP" != true ] && echo -e "$GREEN\U1F504 Restore from backup: git checkout $BACKUP_BRANCH$NC"
         exit 1
       fi
     '';

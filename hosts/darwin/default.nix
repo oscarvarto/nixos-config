@@ -60,41 +60,73 @@ in
   # programs.zsh.enable = true;
   programs.fish.enable = true;
 
-    # Set global environment variables for GUI applications launched via launchd
-    # This ensures that applications like Ghostty launched via hotkeys have access
-    # to the same PATH as terminal applications, including Nix store paths
-    launchd.envVariables = {
-      PATH = [
-        # User script directories
-        "/Users/oscarvarto/.local/bin"
-        "/Users/oscarvarto/.local/share/bin"
-        "/Users/oscarvarto/.cargo/bin"
-        "/Users/oscarvarto/.emacs.d/bin"
-        "/Users/oscarvarto/.volta/bin"
-        "/Users/oscarvarto/Library/Application Support/Coursier/bin"
-
-        # Nix paths (essential for Nix-managed tools)
-        "/Users/oscarvarto/.nix-profile/bin"
-        "/run/current-system/sw/bin"
-        "/nix/var/nix/profiles/default/bin"
-
-        # Homebrew paths
-        "/opt/homebrew/bin"
-        "/opt/homebrew/opt/mise/bin"
-        "/opt/homebrew/opt/llvm/bin"
-        "/opt/homebrew/opt/mysql@8.4/bin"
-        "/opt/homebrew/opt/gnu-tar/libexec/gnubin"
-
-        # System paths
-        "/usr/local/bin"
-        "/usr/bin"
-        "/bin"
-        "/usr/sbin"
-        "/sbin"
-        "/Library/Apple/usr/bin"
-        "/Library/TeX/texbin"
+  # User-level launchd agent to set environment variables for GUI applications
+  # This works with SIP enabled and provides the same functionality as system-level launchd.envVariables
+  launchd.user.agents.setEnvVars = {
+    serviceConfig = {
+      Label = "org.nixos.setEnvVars";
+      ProgramArguments = [
+        "/bin/launchctl"
+        "setenv"
+        "PATH"
+        (builtins.concatStringsSep ":" [
+          # User script directories
+          "/Users/oscarvarto/.local/bin"
+          "/Users/oscarvarto/.local/share/bin"
+          "/Users/oscarvarto/.cargo/bin"
+          "/Users/oscarvarto/.emacs.d/bin"
+          "/Users/oscarvarto/.volta/bin"
+          "/Users/oscarvarto/Library/Application Support/Coursier/bin"
+          # Nix paths (essential for Nix-managed tools)
+          "/Users/oscarvarto/.nix-profile/bin"
+          "/run/current-system/sw/bin"
+          "/nix/var/nix/profiles/default/bin"
+          # Homebrew paths
+          "/opt/homebrew/bin"
+          "/opt/homebrew/opt/mise/bin"
+          "/opt/homebrew/opt/llvm/bin"
+          "/opt/homebrew/opt/mysql@8.4/bin"
+          "/opt/homebrew/opt/gnu-tar/libexec/gnubin"
+          # System paths
+          "/usr/local/bin"
+          "/usr/bin"
+          "/bin"
+          "/usr/sbin"
+          "/sbin"
+          "/Library/Apple/usr/bin"
+          "/Library/TeX/texbin"
+        ])
       ];
+      RunAtLoad = true;
     };
+  };
+
+  # Additional launchd agents for locale settings to fix "LANG=en_MX.UTF-8 cannot be used" warning
+  launchd.user.agents.setLangVar = {
+    serviceConfig = {
+      Label = "org.nixos.setLangVar";
+      ProgramArguments = [
+        "/bin/launchctl"
+        "setenv"
+        "LANG"
+        "en_US.UTF-8"
+      ];
+      RunAtLoad = true;
+    };
+  };
+
+  launchd.user.agents.setLcAllVar = {
+    serviceConfig = {
+      Label = "org.nixos.setLcAllVar";
+      ProgramArguments = [
+        "/bin/launchctl"
+        "setenv"
+        "LC_ALL"
+        "en_US.UTF-8"
+      ];
+      RunAtLoad = true;
+    };
+  };
 
   system = {
     stateVersion = 4;

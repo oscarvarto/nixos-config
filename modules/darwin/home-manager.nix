@@ -327,7 +327,34 @@ in
       # https://github.com/nix-community/home-manager/issues/3344
       manual.manpages.enable = false;
 
-      services = {};
+      # macOS LaunchAgent for NordVPN autoconnect at login - ONE SHOT ONLY
+      launchd.agents.nordvpn-autoconnect = {
+        enable = true;
+        config = {
+          Label = "local.nordvpn-autoconnect";
+          ProgramArguments = [
+            "/bin/bash"
+            "-c"
+            # One-shot execution with built-in retry logic and connectivity checks
+            "${config.home.homeDirectory}/nixos-config/nordvpn-autoconnect.sh"
+          ];
+          EnvironmentVariables = {
+            # No hardcoded IP - script retrieves from 1Password
+            # Uncomment to disable VPN autoconnect entirely
+            # SKIP_VPN_AUTOCONNECT = "true";
+            # Uncomment to skip when GlobalProtect is active
+            # GLOBALPROTECT_ACTIVE = "true";
+            PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/Users/oscarvarto/.nix-profile/bin";
+            # Ensure 1Password CLI has access to GUI for authentication if needed
+            HOME = config.home.homeDirectory;
+          };
+          RunAtLoad = true;
+          KeepAlive = false;
+          StandardOutPath = "${config.home.homeDirectory}/.nordvpn-autoconnect-out.log";
+          StandardErrorPath = "${config.home.homeDirectory}/.nordvpn-autoconnect-err.log";
+          # ONE SHOT - No StartInterval, runs only once at login
+        };
+      };
     };
   };
 
