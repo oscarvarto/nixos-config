@@ -10,6 +10,7 @@ with pkgs;
   btop
   coreutils
   curl
+  jujutsu
   killall
   neofetch
   nil
