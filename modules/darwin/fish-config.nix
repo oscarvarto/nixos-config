@@ -52,6 +52,7 @@
       fish_add_path $EMACSDIR/bin
       fish_add_path "$HOME/Library/Application Support/Coursier/bin"
       fish_add_path "$HOME/.volta/bin"
+      fish_add_path $HOME/.dotnet/tools
 
       # Environment variables
       set -gx LC_ALL "en_US.UTF-8"
