@@ -12,7 +12,9 @@
         set -gx NIX_PATH "/nix/var/nix/profiles/per-user/root/channels"
         fish_add_path /nix/var/nix/profiles/default/bin
       end
+    '';
 
+    interactiveShellInit = ''
       # PATH configuration
       fish_add_path /opt/homebrew/bin
       fish_add_path /opt/homebrew/opt/llvm/bin
@@ -33,9 +35,7 @@
       if command -v mise > /dev/null 2>&1
         mise activate fish | source
       end
-    '';
 
-    interactiveShellInit = ''
       # Define variables for directories
       set -gx EMACSDIR $HOME/.emacs.d
       set -gx DOOMDIR $HOME/.doom.d
@@ -58,7 +58,7 @@
       set -gx LC_ALL "en_US.UTF-8"
       set -gx ALTERNATE_EDITOR ""
       set -gx EDITOR nvim
-      set -gx VISUAL "/opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom"
+      set -gx VISUAL "/opt/homebrew/bin/emacsclient -nc -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom"
 
       # >>> conda initialize >>>
       # !! Contents within this block are managed by 'conda init' !!
@@ -77,13 +77,13 @@
     functions = {
       # Terminal Emacs function
       t = {
-        body = ''/opt/homebrew/bin/emacsclient -nw -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom $argv'';
+        body = ''/opt/homebrew/bin/emacsclient -nw -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom $argv'';
         description = "Open file in terminal Emacs";
       };
 
       # GUI Emacs client function
       ee = {
-        body = ''/opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom $argv'';
+        body = ''/opt/homebrew/bin/emacsclient -nc -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom $argv'';
         description = "Open file in GUI Emacs client";
       };
 
