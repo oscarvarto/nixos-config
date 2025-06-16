@@ -48,10 +48,10 @@ in
       "bat"
       "bat-extras"
       "bfg"
-      # "borders"
       "cargo-binstall"
       "ccache"
       "cmake"
+      "coursier"
       "difftastic"
       "dotnet"
       {
@@ -118,8 +118,9 @@ in
     masApps = {
       "1Password for Safari" = 1569813296;
       "neptunes" = 1006739057;
+      "Okta Verify" = 490179405;
       "rcmd" = 1596283165;
-      # "XCode" = 497799835;
+      "XCode" = 497799835;
     };
   };
 
