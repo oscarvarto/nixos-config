@@ -65,7 +65,7 @@ in
       # @raycast.title Emacs Everywhere
       # @raycast.mode silent
 
-      /Users/${user}/.emacs.d/bin/doom +everywhere; \
+      /Users/${user}/.local/share/bin/emacsclient -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom --eval "(emacs-everywhere)"; \
       sleep 2;
       /run/current-system/sw/bin/yabai -m window --focus west; \
       /run/current-system/sw/bin/yabai -m window --toggle float; \
@@ -89,7 +89,7 @@ in
       # @raycast.icon ${xdg_dataHome}/img/icons/Emacs.icns
       # @raycast.iconDark ${xdg_dataHome}/img/icons/Emacs.icns
 
-      /opt/homebrew/bin/emacsclient -nc -s /var/folders/yh/5_g54kd572gd9vr8tbc4m6gh0000gn/T/emacs501/doom "$@"
+      /Users/${user}/.local/share/bin/emacsclient -nc -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom "$@"
     '';
   };
 

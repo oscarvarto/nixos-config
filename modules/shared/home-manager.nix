@@ -353,7 +353,7 @@ in
         autocrlf = false;  # Better for macOS/Linux - preserves line endings as-is
         eol = "lf";        # Use LF line endings on macOS/Linux
         ignorecase = false; # Case-sensitive file names (better for cross-platform)
-        hooksPath = "~/.config/git/hooks"; # Use custom hooks directory
+        # hooksPath removed - now configured conditionally
       };
       commit.gpgsign = false;
       diff.colorMoved = "zebra"; # https://spin.atomicobject.com/git-configurations-default/
@@ -369,6 +369,8 @@ in
       ];
       # Conditional includes for work directory
       includeIf."gitdir:/Users/${user}/ir/**".path = "/Users/${user}/.local/share/git/config-work";
+      # Conditional include for Doom Emacs directory (with hooks)
+      includeIf."gitdir:/Users/${user}/.emacs.d/".path = "/Users/${user}/.config/git/config-doom";
       # Include personal config as fallback for all other directories
       include.path = "/Users/${user}/.config/git/config-personal";
     };

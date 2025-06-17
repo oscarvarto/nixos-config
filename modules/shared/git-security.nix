@@ -147,6 +147,16 @@ EOF
       email = contact@oscarvarto.mx
     '';
   };
+  
+  # Doom Emacs specific git configuration (with hooks)
+  home.file.".config/git/config-doom" = {
+    text = ''[user]
+      name = Oscar Vargas Torres
+      email = contact@oscarvarto.mx
+[core]
+      hooksPath = ~/.config/git/hooks
+    '';
+  };
 
   # Template files for secure development
   home.file.".config/git/templates/env.example" = {
