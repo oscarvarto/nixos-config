@@ -54,25 +54,6 @@ in
    '';
   };
 
-  # Emacs everywhere
-  "${xdg_dataHome}/bin/emacs_everywhere.sh" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      #
-      # Required parameters:
-      # @raycast.schemaVersion 1
-      # @raycast.title Emacs Everywhere
-      # @raycast.mode silent
-
-      /Users/${user}/.local/share/bin/emacsclient -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom --eval "(emacs-everywhere)"; \
-      sleep 2;
-      /run/current-system/sw/bin/yabai -m window --focus west; \
-      /run/current-system/sw/bin/yabai -m window --toggle float; \
-      /run/current-system/sw/bin/yabai -m window --grid 4:4:1:1:2:2
-    '';
-  };
-
   # Emacs daemon Raycast script so that "Run Emacs" is available and uses Emacs daemon
   "${xdg_dataHome}/bin/emacsclient" = {
     executable = true;
