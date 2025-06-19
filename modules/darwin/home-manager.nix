@@ -26,7 +26,6 @@ in
     BAT_THEME="ansi";
   };
 
-
   homebrew = {
     enable = true;
     onActivation = {

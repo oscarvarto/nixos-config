@@ -136,10 +136,6 @@ let light_theme = {
     shape_raw_string: light_purple
 }
 
-let carapace_completer = {|spans|
-    carapace $spans.0 nushell ...$spans | from json
-}
-
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
     show_banner: false # true or false to enable or disable the welcome banner at startup
@@ -209,7 +205,9 @@ $env.config = {
         external: {
             enable: true # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up may be very slow
             max_results: 100 # setting it lower can improve completion performance at the cost of omitting some options
-            completer: carapace_completer # check 'carapace_completer' above as an example
+            completer: {|spans|
+                carapace $spans.0 nushell ...$spans | from json
+            }
         }
         use_ls_colors: true # set this to true to enable file/path/directory completions using LS_COLORS
     }
@@ -894,17 +892,17 @@ def "ansi title" [title: string] {
 
 # run nix develop with nu shell
 def "nix-develop-nu" [] {
-    nix develop--command nu
+    nix develop --command nu
 }
 
 # ssh with nu as remote shell
 def "ssh-nu" [host] {
-    ssh -t $host bash--login -c nu
+    ssh -t $host bash --login -c nu
 }
 
 # mosh with nu as remote shell
 def "mosh-nu" [host] {
-    mosh -- $host bash--login -c nu
+    mosh -- $host bash --login -c nu
 }
 
 # search in nixpkgs
@@ -946,7 +944,7 @@ def "hx-for-target" [
 
 # start Helix with Windows rust-analyzer
 def "hx-win" [...params: string] {
-    hx-for-target x86_64-pc-windows-gnu ...$params
+    hx-for-target aarch64-pc-windows-msvc ...$params
 }
 
 # start Helix with MacOS rust-analyzer
