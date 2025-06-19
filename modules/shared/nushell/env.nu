@@ -70,3 +70,26 @@ $env.NU_PLUGIN_DIRS = [
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
+use std/util "path add"
+
+path add "/opt/homebrew/bin"
+path add "/opt/homebrew/opt/llvm/bin"
+path add "/opt/homebrew/opt/mysql@8.4/bin"
+path add "/opt/homebrew/opt/gnu-tar/libexec/gnubin"
+path add "/run/current-system/sw/bin"
+
+$env.DOTNET_ROOT = "/usr/local/share/dotnet"
+path add $env.DOTNET_ROOT
+path add "~/.dotnet/tools"
+path add "~/.local/share/bin"
+path add "~/.local/bin"
+$env.CARGO_HOME = "~/.cargo"
+path add ($env.CARGO_HOME | path join "bin")
+path add "~/nixos-config/modules/shared/elisp-formatter"
+
+$env.EMACSDIR = "~/.emacs.d"
+$env.DOOMDIR  = "~/.doom.d"
+$env.DOOMLOCALDIR = "~/.emacs.d/.local"
+path add ($env.EMACSDIR | path join "bin")
+path add "~/Library/Application Support/Coursier/bin"
+path add "~/.volta/bin"

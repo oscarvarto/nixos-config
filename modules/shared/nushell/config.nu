@@ -1,6 +1,4 @@
 # Nushell Config File
-#
-# version = "0.94.1"
 
 # For more information on defining custom themes, see
 # https://www.nushell.sh/book/coloring_and_theming.html
@@ -138,14 +136,13 @@ let light_theme = {
     shape_raw_string: light_purple
 }
 
-# External completer example
-# let carapace_completer = {|spans|
-#     carapace $spans.0 nushell ...$spans | from json
-# }
+let carapace_completer = {|spans|
+    carapace $spans.0 nushell ...$spans | from json
+}
 
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
-    show_banner: true # true or false to enable or disable the welcome banner at startup
+    show_banner: false # true or false to enable or disable the welcome banner at startup
 
     ls: {
         use_ls_colors: true # use the LS_COLORS environment variable to colorize output
@@ -208,11 +205,11 @@ $env.config = {
         case_sensitive: false # set to true to enable case-sensitive completions
         quick: true    # set this to false to prevent auto-selecting completions when only one remains
         partial: true    # set this to false to prevent partial filling of the prompt
-        algorithm: "prefix"    # prefix or fuzzy
+        algorithm: "fuzzy"    # prefix or fuzzy
         external: {
             enable: true # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up may be very slow
             max_results: 100 # setting it lower can improve completion performance at the cost of omitting some options
-            completer: null # check 'carapace_completer' above as an example
+            completer: carapace_completer # check 'carapace_completer' above as an example
         }
         use_ls_colors: true # set this to true to enable file/path/directory completions using LS_COLORS
     }
@@ -897,22 +894,17 @@ def "ansi title" [title: string] {
 
 # run nix develop with nu shell
 def "nix-develop-nu" [] {
-    nix develop --command nu
+    nix develop--command nu
 }
 
 # ssh with nu as remote shell
 def "ssh-nu" [host] {
-    ssh -t $host bash --login -c nu
+    ssh -t $host bash--login -c nu
 }
 
 # mosh with nu as remote shell
 def "mosh-nu" [host] {
-    mosh -- $host bash --login -c nu
-}
-
-# ssh via OpenStack CoreOS
-def "ssh-os-core" [host] {
-    openstack server ssh --private $host -- -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -l core
+    mosh -- $host bash--login -c nu
 }
 
 # search in nixpkgs
@@ -920,34 +912,21 @@ def "nix-search" [search_term: string] {
     nix search --json nixpkgs $search_term | from json | transpose package spec | each {|it| { package: $it.package ...$it.spec } }
 }
 
-def "virsh-ip-addr" [host: string] {
-    virsh net-dhcp-leases default | from ssv | find $host | get 0."IP address" | parse "{addr}/{class}" | get addr.0
-}
-
-def "win ssh" [] {
-    let addr = (virsh-ip-addr win10)
-    ssh $"simon@($addr)"
-}
-
-def "win start" [] {
-    virsh start win10
-}
-
-def "win shutdown" [] {
-    virsh shutdown win10
-}
-
-def "win reboot" [] {
-    virsh reboot win10
-}
-
 def "create-language-config" [target_triple: string] {
     if not (".helix" | path exists) {
         mkdir .helix
     }
-    let language_config = { language-server: { rust-analyzer: { config: {
-      cargo: { target: $target_triple }
-    } } } }
+    let language_config = {
+        language-server: {
+            rust-analyzer: {
+                config: {
+                    cargo: {
+                        target: $target_triple
+                    }
+                }
+            }
+        }
+    }
     $language_config | to toml out> .helix/languages.toml
 }
 
@@ -972,7 +951,7 @@ def "hx-win" [...params: string] {
 
 # start Helix with MacOS rust-analyzer
 def "hx-mac" [...params: string] {
-    hx-for-target x86_64-apple-darwin ...$params
+    hx-for-target aarch64-apple-darwin ...$params
 }
 
 # use bash-env as a module rather than plugin
