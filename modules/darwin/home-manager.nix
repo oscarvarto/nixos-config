@@ -169,6 +169,12 @@ in
       catppuccin = {
         enable = true;
         flavor = "mocha";
+        fzf.enable = true;
+        helix = {
+          enable =true;
+          useItalics = true;
+        };
+        vscode.enable = true;
       };
 
       programs = {
