@@ -68,6 +68,7 @@
       fish_add_path $HOME/.local/share/bin
       fish_add_path $HOME/.local/bin
       fish_add_path $HOME/.cargo/bin
+      fish_add_path $HOME/nixos-config/modules/shared/elisp-formatter
       fish_add_path $EMACSDIR/bin
       fish_add_path "$HOME/Library/Application Support/Coursier/bin"
       fish_add_path "$HOME/.volta/bin"

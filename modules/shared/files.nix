@@ -83,7 +83,8 @@ in
   # Nix generation cleanup helper
   ".local/bin/nix-cleanup" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       # Nix cleanup script for managing generations and disk usage
       set -e
 
@@ -303,7 +304,8 @@ in
   # Quick aliases for common cleanup operations
   ".local/bin/nix-quick-clean" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       # Quick cleanup: keep last 5 generations + GC
       nix-cleanup --force quick
     '';
@@ -312,7 +314,8 @@ in
   # Auto-cleanup script that can be run periodically
   ".local/bin/nix-auto-cleanup" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       # Automatic cleanup for regular maintenance
       # Designed to be safe for automated execution
 
@@ -399,7 +402,8 @@ in
   # Ghostty configuration helper scripts
   ".local/bin/ghostty-config" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       # Ghostty configuration helper for quick changes
       set -e
 
@@ -672,14 +676,16 @@ in
   # Quick font switcher aliases
   ".local/bin/ghostty-font-monolisa" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config font "MonoLisaVariable Nerd Font" 14
     '';
   };
 
   ".local/bin/ghostty-font-pragmata" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config font "PragmataPro Mono Liga" 18
     '';
   };
@@ -687,14 +693,16 @@ in
   # Quick theme switcher aliases
   ".local/bin/ghostty-theme-dark" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config theme dracula
     '';
   };
 
   ".local/bin/ghostty-theme-light" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config theme BlulocoLight
     '';
   };
@@ -702,35 +710,40 @@ in
   # Quick shell switcher aliases
   ".local/bin/ghostty-shell-fish" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config shell fish
     '';
   };
 
   ".local/bin/ghostty-shell-zsh" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config shell zsh
     '';
   };
 
   ".local/bin/ghostty-shell-bash" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config shell bash
     '';
   };
 
   ".local/bin/ghostty-shell-nushell" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config shell nushell
     '';
   };
 
   ".local/bin/ghostty-shell-pwsh" = {
     executable = true;
-    text = ''#!/usr/bin/env bash
+    text = ''
+      #!/usr/bin/env bash
       ghostty-config shell pwsh
     '';
   };
