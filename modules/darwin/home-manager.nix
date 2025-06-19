@@ -4,6 +4,7 @@ let
   sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
   utils = inputs.nixCats.utils;
+  inherit (builtins) fromTOML;
 in
 {
 
@@ -40,6 +41,7 @@ in
     ];
 
     brews = [
+      "7-zip"
       "atuin"
       "autoconf"
       "autoconf-archive"
@@ -63,10 +65,12 @@ in
       "eza"
       "fish"
       "fish-lsp"
+      "ffmpeg"
       "gradle"
       "git-filter-repo"
       "gnuplot"
       "helix"
+      "imagemagick"
       "isync"
       "jq"
       "libedit"
@@ -90,6 +94,8 @@ in
       "pkg-config"
       "pinentry-mac"
       "pixi"
+      "poppler"
+      "resvg"
       "swig"
       "trash-cli"
       "uv"
@@ -168,12 +174,14 @@ in
 
       catppuccin = {
         enable = true;
+        fish.enable = true;
         flavor = "mocha";
         fzf.enable = true;
         helix = {
           enable =true;
           useItalics = true;
         };
+        starship.enable = false;
         vscode.enable = true;
       };
 
@@ -190,6 +198,8 @@ in
           enable = true;
         };
 
+        helix.enable = true;
+
         jujutsu = {
           enable = true;
           settings = {
@@ -198,6 +208,26 @@ in
               name = "Oscar Vargas Torres";
             };
           };
+        };
+
+        starship = {
+          enable = true;
+          enableZshIntegration = true;
+          enableFishIntegration = true;
+          enableNushellIntegration = true;
+          settings = fromTOML(builtins.readFile ./starship.toml);
+        };
+
+        vscode = {
+          enable = true;
+          mutableExtensionsDir = true;
+        };
+
+        yazi = {
+          enable = true;
+          enableFishIntegration = true;
+          enableNushellIntegration = true;
+          enableZshIntegration = true;
         };
 
         # zellij is installed via homebrew and configured manually

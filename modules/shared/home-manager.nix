@@ -3,7 +3,6 @@
 let name = "Oscar Vargas Torres";
     user = "oscarvarto";
     email = "contact@oscarvarto.mx";
-    inherit (builtins) fromTOML;
 in
 {
   # Shared shell configuration
@@ -399,13 +398,6 @@ in
         ];
       };
     };
-  };
-
-  starship = {
-    enable = true;
-    enableZshIntegration = true;
-    enableFishIntegration = true;
-    enableNushellIntegration = true;
   };
 
   zoxide = {
