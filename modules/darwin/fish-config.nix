@@ -15,6 +15,25 @@
     '';
 
     interactiveShellInit = ''
+
+      # Unset the default fish greeting text which messes up Zellij
+      set fish_greeting
+      set -gx fish_color_autosuggestion brmagenta
+
+      # Check if we're in an interactive shell
+      if status is-interactive
+          atuin init fish | source
+
+          # At this point, specify the Zellij config dir, so we can launch it manually if we want to
+          export ZELLIJ_CONFIG_DIR=$HOME/.config/zellij
+
+          # Check if our Terminal emulator is Ghostty
+          if [ "$TERM" = "xterm-ghostty" ]
+              # Launch zellij
+              eval (zellij setup --generate-auto-start fish | string collect)
+          end
+      end
+
       # PATH configuration
       fish_add_path /opt/homebrew/bin
       fish_add_path /opt/homebrew/opt/llvm/bin
@@ -58,7 +77,7 @@
       set -gx LC_ALL "en_US.UTF-8"
       set -gx ALTERNATE_EDITOR ""
       set -gx EDITOR nvim
-      set -gx VISUAL "/opt/homebrew/bin/emacsclient -nc -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom"
+      set -gx VISUAL nvim
 
       # >>> conda initialize >>>
       # !! Contents within this block are managed by 'conda init' !!

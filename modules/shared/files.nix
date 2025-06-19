@@ -371,8 +371,8 @@ in
       theme = dracula
 
       # Default shell (can be overridden)
-      command = /opt/homebrew/bin/fish -i
-      initial-command = /opt/homebrew/bin/fish -i
+      command = /opt/homebrew/bin/fish -i -l
+      initial-command = /opt/homebrew/bin/fish -i -l
 
       # Window and appearance settings
       split-divider-color = green

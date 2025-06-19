@@ -406,7 +406,6 @@ in
     enableZshIntegration = true;
     enableFishIntegration = true;
     enableNushellIntegration = true;
-    settings = fromTOML(builtins.readFile ./config/starship.toml); 
   };
 
   zoxide = {

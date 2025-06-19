@@ -1,4 +1,4 @@
-{ config, pkgs, lib, neovim-nightly-overlay, op-shell-plugins, user ? "oscarvarto", ... } @ inputs:
+{ config, pkgs, lib, catppuccin, neovim-nightly-overlay, op-shell-plugins, user ? "oscarvarto", ... } @ inputs:
 
 let
   sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
@@ -23,7 +23,7 @@ in
     EDITOR = "nvim";
     LANG = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
-    BAT_THEME="Coldark-Cold";
+    BAT_THEME="ansi";
   };
 
 
@@ -41,6 +41,7 @@ in
     ];
 
     brews = [
+      "atuin"
       "autoconf"
       "autoconf-archive"
       "automake"
@@ -96,6 +97,7 @@ in
       "wmctrl"
       "xz" # lzma is part of xz
       "yq"
+      "zellij"
       "zig"
     ];
 
@@ -134,9 +136,10 @@ in
       imports = [
         ./fish-config.nix
         ../shared/git-security.nix
+        ../shared/nushell
         inputs.nixCats.homeModules.default
         op-shell-plugins.hmModules.default
-        ../shared/nushell
+        catppuccin.homeModules.catppuccin
       ];
 
       # Enable nushell with Nix environment integration
@@ -152,9 +155,18 @@ in
         file = lib.mkMerge [
           sharedFiles
           additionalFiles
+          {
+            # Copy the external Zellij configuration file
+            ".config/zellij/config.kdl".source = pkgs.writeText "zellij-config.kdl" (builtins.readFile ./zellij-config.kdl);
+          }
         ];
 
         stateVersion = "25.05";
+      };
+
+      catppuccin = {
+        enable = true;
+        flavor = "mocha";
       };
 
       programs = {
@@ -165,6 +177,23 @@ in
           # automatically installed and configured to use shell plugins
           plugins = with pkgs; [ awscli2 cachix gh glab ];
         };
+
+        atuin = {
+          enable = true;
+        };
+
+        jujutsu = {
+          enable = true;
+          settings = {
+            user = {
+              email = "contact@oscarvarto.mx";
+              name = "Oscar Vargas Torres";
+            };
+          };
+        };
+
+        # zellij is installed via homebrew and configured manually
+        # We use external config file instead of home-manager settings
       } // import ../shared/home-manager.nix { inherit config pkgs lib; /* myEmacs */ };
 
       nixCats = {
