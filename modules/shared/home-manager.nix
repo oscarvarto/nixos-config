@@ -81,23 +81,23 @@ in
     '';
   };
 
-  broot = {
-    enable = true;
-    enableFishIntegration = true;
-    enableNushellIntegration = true;
-    enableZshIntegration = true;
-  };
+  # broot = {
+  #   enable = true;
+  #   enableFishIntegration = true;
+  #   enableNushellIntegration = true;
+  #   enableZshIntegration = true;
+  # };
 
-  direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-  };
+  # direnv = {
+  #     enable = true;
+  #     nix-direnv.enable = true;
+  # };
 
-  fzf = {
-    enable = true;
-    enableZshIntegration = true;
-    enableFishIntegration = true;
-  };
+  # fzf = {
+  #   enable = true;
+  #   enableZshIntegration = true;
+  #   enableFishIntegration = true;
+  # };
 
   git = {
     enable = true;
