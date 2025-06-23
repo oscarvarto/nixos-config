@@ -974,6 +974,8 @@ use std/dirs
 alias search = rg -p --glob '!node_modules/*'
 alias diff = difft
 
+$env.EDITOR = "nvim"
+
 # Terminal and editor shortcuts
 def tg [] {
     ^$env.EDITOR ~/.config/ghostty/config

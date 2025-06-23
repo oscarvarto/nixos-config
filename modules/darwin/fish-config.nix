@@ -136,8 +136,8 @@
 
     shellAbbrs = {
       # 1Password plugin aliases (fallback to regular commands if no session)
-      aws = "if set -q OP_SESSION_my; op plugin run -- aws; else; command aws; end";
-      cachix = "if set -q OP_SESSION_my; op plugin run -- cachix; else; command cachix; end";
+      # aws = "if set -q OP_SESSION_my; op plugin run -- aws; else; command aws; end";
+      # cachix = "if set -q OP_SESSION_my; op plugin run -- cachix; else; command cachix; end";
       # gh = "op plugin run -- gh";
       # glab = "op plugin run -- glab";
       
