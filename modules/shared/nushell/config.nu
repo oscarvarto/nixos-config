@@ -999,8 +999,8 @@ def gp [] {
 }
 
 # Doom Emacs shortcuts
-alias ds = doom sync --aot --gc -j nproc
-alias dup = doom sync -u --aot --gc -j nproc
+alias ds = doom sync --aot --gc -j (nproc)
+alias dup = doom sync -u --aot --gc -j (nproc)
 
 # Nix shortcuts
 def nb [] {

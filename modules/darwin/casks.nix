@@ -10,6 +10,7 @@ _:
   "bruno"
   "chromedriver"
   "dotnet-sdk"
+  "gg"
   "jetbrains-toolbox"
   "mactex"
   "miniforge"
