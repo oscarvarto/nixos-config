@@ -211,6 +211,7 @@ in
         jujutsu = {
           enable = true;
           settings = {
+            ui.editor = "nvim";
             user = {
               email = "contact@oscarvarto.mx";
               name = "Oscar Vargas Torres";
@@ -378,7 +379,7 @@ in
               # IMPORTANT:
               # your alias may not conflict with your other packages.
               aliases = [ "nvim" "vim" "homeVim" ];
-              # neovim-unwrapped = neovim-nightly-overlay.packages.${pkgs.system}.neovim;
+              neovim-unwrapped = neovim-nightly-overlay.packages.${pkgs.system}.neovim;
               hosts.python3.enable = true;
               hosts.node.enable = true;
             };
