@@ -223,7 +223,7 @@ $env.config = {
     color_config: $dark_theme # if you want a more interesting theme, you can replace the empty record with `$dark_theme`, `$light_theme` or another custom record
     footer_mode: 25 # always, never, number_of_rows, auto
     float_precision: 2 # the precision for displaying floats in tables
-    buffer_editor: "" # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
+    buffer_editor: "nvim" # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
     use_ansi_coloring: true
     bracketed_paste: true # enable bracketed paste, currently useless on windows
     edit_mode: vi # emacs, vi
@@ -965,4 +965,83 @@ def --env "home-manager-switch" [] {
     source $nu.env-path
     reload-hm-session-vars
     print "need to reload Nu config"
+}
+
+use std
+use std/dirs
+
+# Utility shortcuts/aliases
+alias search = rg -p --glob '!node_modules/*'
+alias diff = difft
+
+# Terminal and editor shortcuts
+def tg [] {
+    ^$env.EDITOR ~/.config/ghostty/config
+}
+
+alias edd = emacs --daemon=doom
+
+def nnc [] {
+    ^$env.EDITOR ~/nixos-config/modules/shared/nushell/config.nu
+}
+
+def nne [] {
+    ^$env.EDITOR ~/nixos-config/modules/shared/nushell/env.nu
+}
+
+alias gd = ghostty +show-config --default --docs
+
+# Git shortcuts
+def gp [] {
+    git fetch --all -p; git pull; git submodule update --recursive
+}
+
+# Doom Emacs shortcuts
+alias ds = doom sync --aot --gc -j nproc
+alias dup = doom sync -u --aot --gc -j nproc
+
+# Nix shortcuts
+def nb [] {
+    dirs add ~/nixos-config
+    nix run .#build
+    dirs drop
+}
+
+def ns [] {
+    dirs add ~/nixos-config
+    nix run .#build-switch
+    dirs drop
+}
+
+alias edd = emacs --daemon=doom
+
+# Terminal Emacs function
+def "t" [...args] {
+    let socket_path = (fd -ts doom $env.TMPDIR err> (std null-device) | default "")
+    if ($socket_path | is-empty) {
+        print "Emacs daemon socket not found. Start Emacs daemon first with: emacs --daemon=doom"
+        return 1
+    } else {
+        ^/opt/homebrew/bin/emacsclient -nw -s $socket_path ...$args
+    }
+}
+
+# GUI Emacs client function
+def "e" [...args] {
+    let socket_path = (fd -ts doom $env.TMPDIR err> (std null-device) | default "")
+    if ($socket_path | is-empty) {
+        print "Emacs daemon socket not found. Start Emacs daemon first with: emacs --daemon=doom"
+        return 1
+    } else {
+        ^/opt/homebrew/bin/emacsclient -nc -s $socket_path ...$args
+    }
+}
+
+# Start Emacs in background
+def "et" [tag?: string] {
+    job spawn -t ($tag | default 'emacs') {emacs}
+}
+
+def "ke" [tag_to_kill?: string] {
+    job list | where tag == ($tag_to_kill | default 'emacs') | each { job kill $in.id }
 }

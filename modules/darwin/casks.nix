@@ -5,6 +5,7 @@ _:
   # "homebrew/cask/docker"
   "bruno"
   "chromedriver"
+  "dotnet-sdk"
   "ghostty@tip"
   "jetbrains-toolbox"
   "mactex"
@@ -32,6 +33,7 @@ _:
   "1password-cli"
   "dropbox"
   "hammerspoon"  # Lua scripting for macOS automation
+  "obsidian"
   "nordvpn"
   "proton-drive"
   "snagit"
@@ -46,7 +48,9 @@ _:
   "raycast"
 
   # Browsers
+  "arc"
   "firefox@nightly"
   "google-chrome"
   "microsoft-edge"
+  "vivaldi"
 ]

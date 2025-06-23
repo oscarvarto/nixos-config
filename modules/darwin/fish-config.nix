@@ -22,8 +22,6 @@
 
       # Check if we're in an interactive shell
       if status is-interactive
-          atuin init fish | source
-
           # At this point, specify the Zellij config dir, so we can launch it manually if we want to
           export ZELLIJ_CONFIG_DIR=$HOME/.config/zellij
 
@@ -97,13 +95,29 @@
     functions = {
       # Terminal Emacs function
       t = {
-        body = ''/opt/homebrew/bin/emacsclient -nw -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom $argv'';
+        body = ''
+          set socket_path (fd -ts doom $TMPDIR 2>/dev/null | head -1)
+          if test -n "$socket_path"
+            /opt/homebrew/bin/emacsclient -nw -s "$socket_path" $argv
+          else
+            echo "Emacs daemon socket not found. Start Emacs daemon first with: emacs --daemon=doom"
+            return 1
+          end
+        '';
         description = "Open file in terminal Emacs";
       };
 
       # GUI Emacs client function
       ee = {
-        body = ''/opt/homebrew/bin/emacsclient -nc -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom $argv'';
+        body = ''
+          set socket_path (fd -ts doom $TMPDIR 2>/dev/null | head -1)
+          if test -n "$socket_path"
+            /opt/homebrew/bin/emacsclient -nc -s "$socket_path" $argv
+          else
+            echo "Emacs daemon socket not found. Start Emacs daemon first with: emacs --daemon=doom"
+            return 1
+          end
+        '';
         description = "Open file in GUI Emacs client";
       };
 

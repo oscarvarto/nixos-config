@@ -56,7 +56,6 @@ in
       "cmake"
       "coursier"
       "difftastic"
-      "dotnet"
       {
         name = "emacs-plus@31";
         args = [ "with-xwidgets" "with-imagemagick" "with-savchenkovaleriy-big-sur-curvy-3d-icon" "with-mailutils" ];
@@ -69,7 +68,9 @@ in
       "gradle"
       "git-filter-repo"
       "gnuplot"
+      "go"
       "helix"
+      "hugo"
       "imagemagick"
       "isync"
       "jq"
@@ -79,6 +80,8 @@ in
       "libtool"
       "llvm"
       "lua"
+      "markdown-oxide"
+      "marksman"
       "maven"
       "mise"
       "mosh"
@@ -196,6 +199,10 @@ in
 
         atuin = {
           enable = true;
+          daemon.enable = true;
+          enableFishIntegration = true;
+          enableNushellIntegration = true;
+          enableZshIntegration = true;
         };
 
         helix.enable = true;
