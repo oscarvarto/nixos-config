@@ -1,4 +1,4 @@
-{ /* agenix, */ config, pkgs, /* nixCats, */ ... }:
+{ agenix, config, pkgs, nixCats, ... }:
 
 let 
   user = "oscarvarto";
@@ -6,16 +6,14 @@ in
 
 {
   imports = [
-    # ../../modules/darwin/secrets.nix
-    # ../../modules/darwin/home-manager.nix
+    ../../modules/darwin/secrets.nix
+    ../../modules/darwin/home-manager.nix
     ../../modules/shared
-    # agenix.darwinModules.default
+    agenix.darwinModules.default
   ];
 
   # Setup user, packages, programs
   nix = {
-    # package = pkgs.nix;
-
     settings = {
       trusted-users = [ "@admin" "${user}" ];
       substituters = [ "https://nix-community.cachix.org" "https://cache.nixos.org"];
@@ -48,7 +46,7 @@ in
 
   # Load configuration that is shared across systems
   environment.systemPackages = with pkgs; [
-    # agenix.packages."${pkgs.system}".default
+    agenix.packages."${pkgs.system}".default
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
   # Add fish to available shells

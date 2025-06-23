@@ -2,8 +2,8 @@
   description = "Starter Configuration with secrets for MacOS and NixOS";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    # agenix.url = "github:ryantm/agenix";
-    # catppuccin.url = "github:catppuccin/nix";
+    agenix.url = "github:ryantm/agenix";
+    catppuccin.url = "github:catppuccin/nix";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,69 +16,69 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # bash-env-json = {
-    #   url = "github:tesujimath/bash-env-json";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # bash-env-nushell = {
-    #   url = "github:tesujimath/bash-env-nushell";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    #   inputs.bash-env-json.follows = "bash-env-json";
-    # };
-    # homebrew-bundle = {
-    #   url = "github:homebrew/homebrew-bundle";
-    #   flake = false;
-    # };
-    # homebrew-cask = {
-    #   url = "github:homebrew/homebrew-cask";
-    #   flake = false;
-    # };
-    # homebrew-core = {
-    #   url = "github:homebrew/homebrew-core";
-    #   flake = false;
-    # };
-    # homebrew-emacs-plus = {
-    #   url = "github:d12frosted/homebrew-emacs-plus";
-    #   flake = false;
-    # };
-    # neovim-nightly-overlay = {
-    #   url = "github:nix-community/neovim-nightly-overlay";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # nix-homebrew = {
-    #   url = "github:zhaofengli-wip/nix-homebrew";
-    # };
-    # nixCats = {
-    #   url = "github:BirdeeHub/nixCats-nvim";
-    # };
-    # op-shell-plugins = {
-    #   url = "github:1Password/shell-plugins";
-    #   flake = true;
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # secrets = {
-    #   url = "git+ssh://git@github.com/oscarvarto/nix-secrets.git";
-    #   flake = false;
-    # };
+    bash-env-json = {
+      url = "github:tesujimath/bash-env-json";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    bash-env-nushell = {
+      url = "github:tesujimath/bash-env-nushell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.bash-env-json.follows = "bash-env-json";
+    };
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-emacs-plus = {
+      url = "github:d12frosted/homebrew-emacs-plus";
+      flake = false;
+    };
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-homebrew = {
+      url = "github:zhaofengli-wip/nix-homebrew";
+    };
+    nixCats = {
+      url = "github:BirdeeHub/nixCats-nvim";
+    };
+    op-shell-plugins = {
+      url = "github:1Password/shell-plugins";
+      flake = true;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    secrets = {
+      url = "git+ssh://git@github.com/oscarvarto/nix-secrets.git";
+      flake = false;
+    };
   };
   outputs = { self,
               nixpkgs,
-              # agenix,
-              # bash-env-json,
-              # bash-env-nushell,
-              # catppuccin,
+              agenix,
+              bash-env-json,
+              bash-env-nushell,
+              catppuccin,
               darwin,
               # disko,
               home-manager,
-              # homebrew-bundle,
-              # homebrew-cask,
-              # homebrew-core,
-              # homebrew-emacs-plus,
-              # neovim-nightly-overlay,
-              # nix-homebrew,
-              # nixCats,
-              # op-shell-plugins,
-              # secrets
+              homebrew-bundle,
+              homebrew-cask,
+              homebrew-core,
+              homebrew-emacs-plus,
+              neovim-nightly-overlay,
+              nix-homebrew,
+              nixCats,
+              op-shell-plugins,
+              secrets
               } @inputs:
     let
       user = "oscarvarto";
@@ -124,29 +124,53 @@
     {
       devShells = forAllSystems devShell;
       apps = nixpkgs.lib.genAttrs linuxSystems mkLinuxApps // nixpkgs.lib.genAttrs darwinSystems mkDarwinApps;
-      # inherit (inputs.nixCats) utils;
+      inherit (inputs.nixCats) utils;
 
-      darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (system:
+      darwinConfigurations = {
+        predator = darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = inputs // { inherit user; };
+          modules = [
+            home-manager.darwinModules.home-manager
+            nix-homebrew.darwinModules.nix-homebrew
+            {
+              nix-homebrew = {
+                inherit user;
+                enable = true;
+                taps = {
+                  "homebrew/homebrew-core" = homebrew-core;
+                  "homebrew/homebrew-cask" = homebrew-cask;
+                  "homebrew/homebrew-bundle" = homebrew-bundle;
+                  "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
+                };
+                mutableTaps = true;
+                autoMigrate = true;
+              };
+            }
+            ./hosts/darwin
+          ];
+        };
+      } // nixpkgs.lib.genAttrs darwinSystems (system:
         darwin.lib.darwinSystem {
           inherit system;
           specialArgs = inputs // { inherit user; };
           modules = [
-            # home-manager.darwinModules.home-manager
-            # nix-homebrew.darwinModules.nix-homebrew
-            # {
-            #   nix-homebrew = {
-            #     inherit user;
-            #     enable = true;
-            #     taps = {
-            #       "homebrew/homebrew-core" = homebrew-core;
-            #       "homebrew/homebrew-cask" = homebrew-cask;
-            #       "homebrew/homebrew-bundle" = homebrew-bundle;
-            #       "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
-            #     };
-            #     mutableTaps = true;
-            #     autoMigrate = true;
-            #   };
-            # }
+            home-manager.darwinModules.home-manager
+            nix-homebrew.darwinModules.nix-homebrew
+            {
+              nix-homebrew = {
+                inherit user;
+                enable = true;
+                taps = {
+                  "homebrew/homebrew-core" = homebrew-core;
+                  "homebrew/homebrew-cask" = homebrew-cask;
+                  "homebrew/homebrew-bundle" = homebrew-bundle;
+                  "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
+                };
+                mutableTaps = true;
+                autoMigrate = true;
+              };
+            }
             ./hosts/darwin
           ];
         }

@@ -65,7 +65,7 @@ in
 
       # Always color ls and group directories
       alias ls='ls --color=auto'
-      
+ 
       alias tg="$EDITOR $HOME/.config/ghostty/config"
       alias edd="emacs --daemon=doom"
  
@@ -81,23 +81,23 @@ in
     '';
   };
 
-  # broot = {
-  #   enable = true;
-  #   enableFishIntegration = true;
-  #   enableNushellIntegration = true;
-  #   enableZshIntegration = true;
-  # };
+  broot = {
+    enable = true;
+    enableFishIntegration = true;
+    enableNushellIntegration = true;
+    enableZshIntegration = true;
+  };
 
-  # direnv = {
-  #     enable = true;
-  #     nix-direnv.enable = true;
-  # };
+  direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+  };
 
-  # fzf = {
-  #   enable = true;
-  #   enableZshIntegration = true;
-  #   enableFishIntegration = true;
-  # };
+  fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    enableFishIntegration = true;
+  };
 
   git = {
     enable = true;
@@ -108,7 +108,7 @@ in
       "*~"
       ".*.swp"
       ".*.swo"
-      
+ 
       # macOS specific
       ".DS_Store"
       ".DS_Store?"
@@ -123,14 +123,14 @@ in
       ".fseventsd"
       ".VolumeIcon.icns"
       ".com.apple.timemachine.donotpresent"
-      
+ 
       # Linux specific
       "*~"
       ".fuse_hidden*"
       ".directory"
       ".Trash-*"
       ".nfs*"
-      
+ 
       # IDE and Editor files
       # JetBrains IDEs (IntelliJ, IDEA, CLion, etc.)
       ".idea/"
@@ -139,7 +139,7 @@ in
       "*.iws"
       ".idea_modules/"
       "atlassian-ide-plugin.xml"
-      
+ 
       # VSCode
       ".vscode/"
       "!.vscode/settings.json"
@@ -147,7 +147,7 @@ in
       "!.vscode/launch.json"
       "!.vscode/extensions.json"
       "*.code-workspace"
-      
+ 
       # Emacs
       "*~"
       "\\#*\\#"
@@ -170,7 +170,7 @@ in
       "flycheck_*.el"
       "/server/"
       ".projectile"
-      
+ 
       # Programming Languages
       # Java
       "*.class"
@@ -186,7 +186,7 @@ in
       "*.rar"
       "hs_err_pid*"
       "replay_pid*"
-      
+ 
       # Scala
       "*.class"
       "*.log"
@@ -198,7 +198,7 @@ in
       ".bloop/"
       "metals.sbt"
       ".scala-build/"
-      
+ 
       # Clojure
       "pom.xml"
       "pom.xml.asc"
@@ -214,7 +214,7 @@ in
       ".lein-failures"
       ".nrepl-port"
       ".cpcache/"
-      
+ 
       # Python
       "__pycache__/"
       "*.py[cod]"
@@ -259,7 +259,7 @@ in
       "ENV/"
       "env.bak/"
       "venv.bak/"
-      
+ 
       # C#/.NET
       "bin/"
       "obj/"
@@ -291,7 +291,7 @@ in
       "*.pidb"
       "*.svclog"
       "*.scc"
-      
+ 
       # Build and dependency management
       "node_modules/"
       "npm-debug.log*"
@@ -304,7 +304,7 @@ in
       "dist"
       ".cache/"
       ".parcel-cache"
-      
+ 
       # Environment and secrets
       ".env"
       ".env.local"
@@ -315,7 +315,7 @@ in
       "*.key"
       "*.p12"
       "*.jks"
-      
+ 
       # Logs and temporary files
       "*.log"
       "logs"
@@ -324,12 +324,12 @@ in
       "*.pid"
       "*.seed"
       "*.pid.lock"
-      
+ 
       # Version control
       ".svn/"
       ".hg/"
       ".bzr/"
-      
+ 
       # Archives
       "*.7z"
       "*.dmg"
