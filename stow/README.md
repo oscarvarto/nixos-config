@@ -8,7 +8,8 @@ This directory contains auxiliary scripts and configurations managed by GNU Stow
 stow/
 ├── aux-scripts/          # Auxiliary scripts package
 │   └── .local/
-│       └── bin/         # Scripts that go in ~/.local/bin
+│       └── share/
+│           └── bin/     # Scripts that go in ~/.local/share/bin
 └── README.md           # This file
 ```
 
@@ -21,7 +22,7 @@ cd ~/nixos-config/stow
 stow aux-scripts
 ```
 
-This will create symlinks from `~/.local/bin/` to the scripts in `stow/aux-scripts/.local/bin/`.
+This will create symlinks from `~/.local/share/bin/` to the scripts in `stow/aux-scripts/.local/share/bin/`.
 
 ### Remove Scripts
 To remove the symlinks:

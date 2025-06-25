@@ -20,7 +20,7 @@ def main [command: string = "help"] {
             
             if $env.LAST_EXIT_CODE == 0 {
                 print "✅ Auxiliary scripts deployed successfully!"
-                print $"📂 Scripts are now available in ($env.HOME)/.local/bin/"
+                print $"📂 Scripts are now available in ($env.HOME)/.local/share/bin/"
             } else {
                 print "❌ Failed to deploy scripts"
                 exit 1
@@ -44,7 +44,7 @@ def main [command: string = "help"] {
         "status" => {
             print "📊 Checking status of auxiliary scripts..."
             
-            let scripts = (ls $"($stow_dir)/aux-scripts/.local/bin" | get name | path basename)
+            let scripts = (ls $"($stow_dir)/aux-scripts/.local/share/bin" | get name | path basename)
             
             print $"\n📂 Available scripts in stow package: ($scripts | length)"
             for script in $scripts {
@@ -53,23 +53,23 @@ def main [command: string = "help"] {
             
             print $"\n🔗 Deployed scripts:"
             for script in $scripts {
-                let target_path = $"($env.HOME)/.local/bin/($script)"
+                let target_path = $"($env.HOME)/.local/share/bin/($script)"
                 if ($target_path | path exists) {
                     let link_info = (ls -la $target_path | get 0)
                     if ($link_info.type == "symlink") {
-                        print $"  ✅ ($script) -> (correctly symlinked)"
+                        print $"  ✅ ($script) -> correctly symlinked"
                     } else {
-                        print $"  ⚠️  ($script) -> (exists but not a symlink)"
+                        print $"  ⚠️  ($script) -> exists but not a symlink"
                     }
                 } else {
-                    print $"  ❌ ($script) -> (not deployed)"
+                    print $"  ❌ ($script) -> not deployed"
                 }
             }
         }
         
         "list" => {
             print "📋 Available scripts in stow package:"
-            let scripts = (ls $"($stow_dir)/aux-scripts/.local/bin" | get name | path basename)
+            let scripts = (ls $"($stow_dir)/aux-scripts/.local/share/bin" | get name | path basename)
             for script in $scripts {
                 print $"  • ($script)"
             }
@@ -88,7 +88,7 @@ def main [command: string = "help"] {
             print "  help               Show this help message"
             print ""
             print "Scripts are managed in ~/nixos-config/stow/aux-scripts/"
-            print "They will be deployed to ~/.local/bin/ as symlinks"
+            print "They will be deployed to ~/.local/share/bin/ as symlinks"
         }
     }
 }
