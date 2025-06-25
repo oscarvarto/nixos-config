@@ -19,6 +19,7 @@ def main [command: string = "help"] {
             stow aux-scripts
             stow cargo-tools
             stow nodejs-tools
+            stow dotnet-tools
             
             if $env.LAST_EXIT_CODE == 0 {
                 print "✅ Auxiliary scripts deployed successfully!"
@@ -36,6 +37,7 @@ def main [command: string = "help"] {
             stow -D aux-scripts
             stow -D cargo-tools
             stow -D nodejs-tools
+            stow -D dotnet-tools
             
             if $env.LAST_EXIT_CODE == 0 {
                 print "✅ Auxiliary scripts removed successfully!"
@@ -94,6 +96,7 @@ def main [command: string = "help"] {
             print "Scripts are managed in ~/nixos-config/stow/aux-scripts/"
             print "Cargo tools are managed in ~/nixos-config/stow/cargo-tools/"
             print "Node.js tools are managed in ~/nixos-config/stow/nodejs-tools/"
+            print ".NET tools are managed in ~/nixos-config/stow/dotnet-tools/"
             print "They will be deployed to ~/.local/share/bin/ as symlinks"
         }
     }

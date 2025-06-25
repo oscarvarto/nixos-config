@@ -16,6 +16,9 @@ stow/
 ├── nodejs-tools/         # Node.js tools management
 │   ├── nodejs-tools.toml# Configuration for Node.js packages
 │   └── .local/share/bin/# Management script
+├── dotnet-tools/         # .NET tools management
+│   ├── dotnet-tools.toml# Configuration for .NET SDK and tools
+│   └── .local/share/bin/# Management script
 └── README.md           # This file
 ```
 
@@ -33,6 +36,7 @@ Or deploy individual packages:
 stow aux-scripts    # Deploy auxiliary scripts
 stow cargo-tools    # Deploy cargo tools management
 stow nodejs-tools   # Deploy Node.js tools management
+stow dotnet-tools   # Deploy .NET tools management
 ```
 
 This will create symlinks from `~/.local/share/bin/` to the scripts in `stow/aux-scripts/.local/share/bin/`.
@@ -78,6 +82,12 @@ After a system wipe:
 - `manage-nodejs-tools` - Install, update, and manage Node.js environment
 - `nodejs-tools.toml` - Declarative configuration for toolchain and packages
 - Integrates with Volta for Node.js version management
+
+### .NET Tools (`dotnet-tools`)
+- Configuration-based management of .NET SDK and global tools
+- `manage-dotnet-tools` - Install, update, and manage .NET environment
+- `dotnet-tools.toml` - Declarative configuration for SDK version and tools
+- Integrates with .NET CLI global tool system
 
 ## Benefits
 
