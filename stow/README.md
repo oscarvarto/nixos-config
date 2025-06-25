@@ -10,25 +10,38 @@ stow/
 │   └── .local/
 │       └── share/
 │           └── bin/     # Scripts that go in ~/.local/share/bin
+├── cargo-tools/          # Rust/Cargo tools management
+│   ├── cargo-tools.toml # Configuration for cargo packages
+│   └── .local/share/bin/# Management script
+├── nodejs-tools/         # Node.js tools management
+│   ├── nodejs-tools.toml# Configuration for Node.js packages
+│   └── .local/share/bin/# Management script
 └── README.md           # This file
 ```
 
 ## Usage
 
-### Install/Deploy Scripts
-To deploy all auxiliary scripts:
+### Install/Deploy All Packages
+To deploy all managed tools and scripts:
 ```bash
 cd ~/nixos-config/stow
-stow aux-scripts
+manage-aux-scripts deploy
+```
+
+Or deploy individual packages:
+```bash
+stow aux-scripts    # Deploy auxiliary scripts
+stow cargo-tools    # Deploy cargo tools management
+stow nodejs-tools   # Deploy Node.js tools management
 ```
 
 This will create symlinks from `~/.local/share/bin/` to the scripts in `stow/aux-scripts/.local/share/bin/`.
 
-### Remove Scripts
-To remove the symlinks:
+### Remove All Packages
+To remove all symlinks:
 ```bash
 cd ~/nixos-config/stow
-stow -D aux-scripts
+manage-aux-scripts remove
 ```
 
 ### Add New Scripts
@@ -42,8 +55,9 @@ After a system wipe:
 2. Clone this repository
 3. Run `cd ~/nixos-config/stow && stow aux-scripts`
 
-## Current Scripts
+## Managed Packages
 
+### Auxiliary Scripts (`aux-scripts`)
 - `cleanup-intellij` - Comprehensive IntelliJ IDEA cache and project cleanup utility
 - `install-metals-emacs.sh` - Installs Metals language server for Scala development in Emacs
 - `lunar` - CLI wrapper for Lunar display control app
@@ -53,6 +67,17 @@ After a system wipe:
 - `testng-debug` - TestNG debugging wrapper with proper classpath setup
 - `testng-debug-zsh` - Zsh version of TestNG debugging wrapper
 - `testng-debug.nu` - Nushell version of TestNG debugging wrapper
+
+### Cargo Tools (`cargo-tools`)
+- Configuration-based management of Rust/Cargo installed tools
+- `manage-cargo-tools` - Install, update, and manage cargo packages
+- `cargo-tools.toml` - Declarative configuration for desired packages
+
+### Node.js Tools (`nodejs-tools`)
+- Configuration-based management of Node.js toolchain and global packages
+- `manage-nodejs-tools` - Install, update, and manage Node.js environment
+- `nodejs-tools.toml` - Declarative configuration for toolchain and packages
+- Integrates with Volta for Node.js version management
 
 ## Benefits
 
