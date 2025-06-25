@@ -100,6 +100,7 @@ in
       "pixi"
       "poppler"
       "resvg"
+      "stow"
       "swig"
       "trash-cli"
       "uv"
@@ -219,6 +220,12 @@ in
           };
         };
 
+        mise = {
+          enable = true;
+          enableFishIntegration = true;
+          enableNushellIntegration = true;
+        };
+
         starship = {
           enable = true;
           enableZshIntegration = true;
@@ -233,6 +240,13 @@ in
         };
 
         yazi = {
+          enable = true;
+          enableFishIntegration = true;
+          enableNushellIntegration = true;
+          enableZshIntegration = true;
+        };
+
+        zoxide = {
           enable = true;
           enableFishIntegration = true;
           enableNushellIntegration = true;
@@ -435,7 +449,7 @@ in
 
   # this can also be `programs.bash` or `programs.fish`
   programs.zsh = {
-    enable = false;
+    enable = true;
     # the rest of your shell configuration here
     shellInit = ''
       PATH="/opt/homebrew/bin:$PATH"

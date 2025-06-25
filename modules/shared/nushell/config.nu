@@ -977,25 +977,18 @@ alias diff = difft
 $env.EDITOR = "nvim"
 
 # Terminal and editor shortcuts
-def tg [] {
-    ^$env.EDITOR ~/.config/ghostty/config
-}
-
+alias tg = ^$env.EDITOR ~/.config/ghostty/config
+alias tgg = ^$env.EDITOR ~/.config/ghostty/overrides.conf
 alias edd = emacs --daemon=doom
-
-def nnc [] {
-    ^$env.EDITOR ~/nixos-config/modules/shared/nushell/config.nu
-}
-
-def nne [] {
-    ^$env.EDITOR ~/nixos-config/modules/shared/nushell/env.nu
-}
-
+alias nnc = ^$env.EDITOR ~/nixos-config/modules/shared/nushell/config.nu
+alias nne = ^$env.EDITOR ~/nixos-config/modules/shared/nushell/env.nu
 alias gd = ghostty +show-config --default --docs
 
 # Git shortcuts
 def gp [] {
-    git fetch --all -p; git pull; git submodule update --recursive
+    git fetch --all -p
+    git pull
+    git submodule update --recursive
 }
 
 # Doom Emacs shortcuts
@@ -1047,3 +1040,4 @@ def "et" [tag?: string] {
 def "ke" [tag_to_kill?: string] {
     job list | where tag == ($tag_to_kill | default 'emacs') | each { job kill $in.id }
 }
+

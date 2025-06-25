@@ -93,3 +93,5 @@ $env.DOOMLOCALDIR = "~/.emacs.d/.local"
 path add ($env.EMACSDIR | path join "bin")
 path add "~/Library/Application Support/Coursier/bin"
 path add "~/.volta/bin"
+path add "~/Library/Application Support/JetBrains/Toolbox/scripts"
+path add "~/.nix-profile/bin"

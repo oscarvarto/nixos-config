@@ -7,7 +7,7 @@ in
 {
   # Shared shell configuration
   zsh = {
-    enable = false;
+    enable = true;
     autocd = false;
     cdpath = [ "~/.local/share/src" ];
     plugins = [
@@ -399,12 +399,4 @@ in
       };
     };
   };
-
-  zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-    enableFishIntegration = true;
-    enableNushellIntegration = true;
-  };
-
 }

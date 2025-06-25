@@ -50,13 +50,15 @@ in
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
   # Add fish to available shells
-  environment.shells = [ "/opt/homebrew/bin/fish" ];
+  environment.shells = [ "/opt/homebrew/bin/fish" "/opt/homebrew/bin/nu"];
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
   # Enable fish shell system-wide
-  # programs.zsh.enable = true;
-  programs.fish.enable = true;
+  programs = {
+    fish.enable = true;
+    zsh.enable = true;
+  };
 
   # User-level launchd agent to set environment variables for GUI applications
   # This works with SIP enabled and provides the same functionality as system-level launchd.envVariables
