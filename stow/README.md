@@ -44,7 +44,15 @@ After a system wipe:
 
 ## Current Scripts
 
+- `cleanup-intellij` - Comprehensive IntelliJ IDEA cache and project cleanup utility
+- `install-metals-emacs.sh` - Installs Metals language server for Scala development in Emacs
+- `lunar` - CLI wrapper for Lunar display control app
+- `manage-aux-scripts` - Management utility for this stow-based script system
 - `restore-jj-repo` - Restores a Jujutsu colocated repository after .jj directory deletion
+- `test-maven-classpath.sh` - Maven classpath testing utility
+- `testng-debug` - TestNG debugging wrapper with proper classpath setup
+- `testng-debug-zsh` - Zsh version of TestNG debugging wrapper
+- `testng-debug.nu` - Nushell version of TestNG debugging wrapper
 
 ## Benefits
 
