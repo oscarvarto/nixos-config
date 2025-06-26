@@ -41,6 +41,7 @@ in
         ./fish-config.nix
         ../shared/git-security.nix
         ../shared/nushell
+        ../shared/home-manager.nix
         inputs.nixCats.homeModules.default
         op-shell-plugins.hmModules.default
         catppuccin.homeModules.catppuccin
@@ -146,7 +147,7 @@ in
 
         # zellij is installed via homebrew and configured manually
         # We use external config file instead of home-manager settings
-      } // import ../shared/home-manager.nix { inherit config pkgs lib; /* myEmacs */ };
+      };
 
       # Marked broken Oct 20, 2022 check later to remove this
       # https://github.com/nix-community/home-manager/issues/3344
