@@ -25,10 +25,11 @@
           # At this point, specify the Zellij config dir, so we can launch it manually if we want to
           export ZELLIJ_CONFIG_DIR=$HOME/.config/zellij
 
-          # Check if our Terminal emulator is Ghostty
-          if [ "$TERM" = "xterm-ghostty" ]
-              # Launch zellij
-              eval (zellij setup --generate-auto-start fish | string collect)
+          # Check if our Terminal emulator is Ghostty, we're not already in zellij,
+          # and fish is the login shell (not invoked from another shell)
+          if [ "$TERM" = "xterm-ghostty" ] && not set -q ZELLIJ && [ "$SHLVL" = "1" ]
+              # Launch zellij with fish as the default shell
+              exec zellij
           end
       end
 

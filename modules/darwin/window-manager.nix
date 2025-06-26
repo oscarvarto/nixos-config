@@ -68,49 +68,5 @@
         borders &
       '';
     };
-
-    skhd = {
-      enable = true;
-      skhdConfig = ''
-        # Example and documentation here: https://github.com/koekeishiya/yabai/blob/master/examples/skhdrc
-        cmd + ctrl + shift - r : skhd -r
-        cmd + alt - 1  : yabai -m space --focus 1
-        cmd + alt - 2  : yabai -m space --focus 2
-        cmd + alt - 3  : yabai -m space --focus 3
-        cmd + alt - 4  : yabai -m space --focus 4
-        cmd + alt - 5  : yabai -m space --focus 5
-        cmd + alt - 6  : yabai -m space --focus 6
-        cmd + alt - 7  : yabai -m space --focus 7
-        cmd + alt - 8  : yabai -m space --focus 8
-        cmd + alt - 9  : yabai -m space --focus 9
-        cmd + alt - 0  : yabai -m space --focus 10
-
-        # send window to desktop and follow focus
-        shift + cmd + alt - 1  : yabai -m window --space  1; yabai -m space --focus  1
-        shift + cmd + alt - 2  : yabai -m window --space  2; yabai -m space --focus  2
-        shift + cmd + alt - 3  : yabai -m window --space  3; yabai -m space --focus  3
-        shift + cmd + alt - 4  : yabai -m window --space  4; yabai -m space --focus  4
-        shift + cmd + alt - 5  : yabai -m window --space  5; yabai -m space --focus  5
-        shift + cmd + alt - 6  : yabai -m window --space  6; yabai -m space --focus  6
-        shift + cmd + alt - 7  : yabai -m window --space  7; yabai -m space --focus  7
-        shift + cmd + alt - 8  : yabai -m window --space  8; yabai -m space --focus  8
-        shift + cmd + alt - 9  : yabai -m window --space  9; yabai -m space --focus  9
-        shift + cmd + alt - 0  : yabai -m window --space 10; yabai -m space --focus 10
-
-        # options: zoom-parent, zoom-fullscreen, native-fullscreen
-        ctrl + alt + shift - f : yabai -m window --toggle native-fullscreen
-
-        # • Status: launchctl list | grep yabai
-
-        # yabai --restart-service
-        ctrl + alt + shift - r : launchctl kickstart -k gui/$(id -u)/org.nixos.yabai
-
-        # yabai --start-service
-        ctrl + alt + shift - s : launchctl start gui/$(id -u)/org.nixos.yabai
-
-        # yabai --stop-service
-        ctrl + alt + shift - t : launchctl stop gui/$(id -u)/org.nixos.yabai
-     '';
-    };
   };
 }

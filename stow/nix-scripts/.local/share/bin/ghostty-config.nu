@@ -71,11 +71,12 @@ def update_setting [key: string, value: string] {
 }
 
 def get_shell_path [shell_name: string] {
+  let user_home = $env.HOME
   match $shell_name {
-    "fish" => "/opt/homebrew/bin/fish -i"
+    "fish" => $"($user_home)/.nix-profile/bin/fish -i"
     "zsh" => "/bin/zsh -i"
     "bash" => "/bin/bash -i"
-    "nushell" | "nu" => "/Users/oscarvarto/.nix-profile/bin/nu -i"
+    "nushell" | "nu" => $"($user_home)/.nix-profile/bin/nu -i"
     "pwsh" | "powershell" => "/opt/homebrew/bin/pwsh -i"
     _ => ""
   }

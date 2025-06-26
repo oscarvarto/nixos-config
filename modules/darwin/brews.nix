@@ -16,7 +16,6 @@
 
     brews = [
       # Essential brews
-      "fish"
       "7-zip"
       "atuin"
       "autoconf"
@@ -65,7 +64,6 @@
       "nasm"
       "ncurses"
       "ninja"
-      "nushell"
       "pandoc"
       "pueue"
       "pass"

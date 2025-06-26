@@ -19,7 +19,7 @@ in
     name = "${user}";
     home = "/Users/${user}";
     isHidden = false;
-    shell = "/opt/homebrew/bin/fish";
+    shell = "/Users/${user}/.nix-profile/bin/fish";
   };
 
   environment.variables = {
@@ -33,11 +33,11 @@ in
   home-manager = {
     useGlobalPkgs = true;
     backupFileExtension = "backup";
-    # extraSpecialArgs = { inherit op-shell-plugins neovim-nightly-overlay; };
-    # extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { inherit inputs; };
     users.${user} = { pkgs, config, lib, ... }: {
       imports = [
         ./fish-config.nix
+        ../shared/nushell
         op-shell-plugins.hmModules.default
       ];
 
@@ -123,7 +123,13 @@ in
         # zellij is installed via homebrew and configured manually
         # We use external config file instead of home-manager settings
       };
-
+      
+      # Enable nushell via shared module
+      local = {
+        nushell = {
+          enable = true;
+        };
+      };
 
       # Marked broken Oct 20, 2022 check later to remove this
       # https://github.com/nix-community/home-manager/issues/3344

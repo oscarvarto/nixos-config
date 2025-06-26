@@ -265,7 +265,7 @@ default_mode "locked"
  
 // Choose the path to the default shell that zellij will use for opening new panes
 // Default: $SHELL
-// 
+// Using shell wrapper to detect current shell and use nix-profile versions
 default_shell "fish"
  
 // Choose the path to override cwd that zellij will use for opening new panes
@@ -363,8 +363,8 @@ copy_command "pbcopy"
 // Consider also setting `attach_to_session true,`
 // otherwise this will error if such a session exists.
 // Default: <RANDOM>
-// 
-session_name "predator"
+// Comment out to use random session names
+// session_name "predator"
  
 // When `session_name` is provided, attaches to that session
 // if it is already running or creates it otherwise.

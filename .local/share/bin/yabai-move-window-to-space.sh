@@ -1,0 +1,1 @@
+../../../stow/raycast-scripts/.local/share/bin/yabai-move-window-to-space.sh

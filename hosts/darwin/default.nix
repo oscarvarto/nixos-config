@@ -61,8 +61,8 @@ in
     agenix.packages."${pkgs.stdenv.hostPlatform.system}".default
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
-  # Add fish to available shells
-  environment.shells = [ "/opt/homebrew/bin/fish" "/opt/homebrew/bin/nu"];
+  # Add fish and nushell to available shells
+  environment.shells = [ "/Users/${user}/.nix-profile/bin/fish" "/Users/${user}/.nix-profile/bin/nu"];
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
