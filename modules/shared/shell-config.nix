@@ -32,7 +32,7 @@ in
       plugins = [ ];
       
       # Base configuration that works everywhere
-      initExtra = lib.mkAfter ''
+      initContent = lib.mkAfter ''
         # Nix daemon setup
         if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
           . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
