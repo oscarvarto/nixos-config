@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Run Emacs
+# @raycast.mode silent
+#
+# Optional parameters:
+# @raycast.packageName Emacs
+# @raycast.icon ~/.local/share/img/icons/Emacs.icns
+# @raycast.iconDark ~/.local/share/img/icons/Emacs.icns
+
+~/.local/share/bin/emacsclient -nc -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom "$@"
