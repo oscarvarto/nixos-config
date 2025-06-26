@@ -144,6 +144,26 @@
         "type": "github"
       }
     },
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1750903843,
+        "narHash": "sha256-Ng9+f0H5/dW+mq/XOKvB9uwvGbsuiiO6HrPdAcVglCs=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "83c4da299c1d7d300f8c6fd3a72ac46cb0d59aae",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -399,11 +419,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1750900172,
-        "narHash": "sha256-iTBeA62JWdzYuoYgw/D57bmHmgPw7/coCW7EyWxqyLs=",
+        "lastModified": 1750922370,
+        "narHash": "sha256-R/3Oahwn6MO47pJv1HD7xESuMTjua/L/BqQ8QsZef34=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "13d7687139c6e9578a947fe5404859e1ce790c16",
+        "rev": "7deef91e727b06c0b6a520e8b31e0d47f850ac19",
         "type": "github"
       },
       "original": {
@@ -415,11 +435,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1750899694,
-        "narHash": "sha256-A77TJJOeiCTpNF3Gq/X1nbu8gDXriXf/3SLFz/NTvEQ=",
+        "lastModified": 1750924427,
+        "narHash": "sha256-1TCkQL/evftD6pNWhVjJpAzG2bUrb7FKMRwt5WHrWek=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "4042d825367701c48f9e357e5f8377ec2a34158b",
+        "rev": "81a6a82b92ddf8bae12e86ba82026fde81d9d0b8",
         "type": "github"
       },
       "original": {
@@ -457,11 +477,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1750833445,
-        "narHash": "sha256-Kbx4eEirM4M9tdnlzBrFiroZ41XgJzOquFO0+8430rI=",
+        "lastModified": 1750920307,
+        "narHash": "sha256-w1wJ6lxK1fMXwZe8yBjAeRoOCDqmx/fkwfCwrTqc1Rg=",
         "owner": "nix-community",
         "repo": "neovim-nightly-overlay",
-        "rev": "bf72d8678a5d5aef73736ff0ee64f5800ca26bb7",
+        "rev": "da011a3510527ec378ec5504cb74ffc60fc67af7",
         "type": "github"
       },
       "original": {
@@ -473,11 +493,11 @@
     "neovim-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1750794136,
-        "narHash": "sha256-kihP/pMdpYn2DPNqlSa8UhuoOJzjhgbTgKJgde1JUdE=",
+        "lastModified": 1750889719,
+        "narHash": "sha256-QsH4nNNjYItfYwLU25JiAPBo/F5MMdaR3Ho29JdtyZw=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "5ae41ddde35041e0601e94d1c6b348029c3b305b",
+        "rev": "731e616a79d01e4797badbb4e18d167c51125151",
         "type": "github"
       },
       "original": {
@@ -501,21 +521,6 @@
       "original": {
         "owner": "zhaofengli-wip",
         "repo": "nix-homebrew",
-        "type": "github"
-      }
-    },
-    "nixCats": {
-      "locked": {
-        "lastModified": 1750385661,
-        "narHash": "sha256-JpIEf5IrOzMTjowkxB6kgh4AK3Dp9i/T9G4w2ZiKMgQ=",
-        "owner": "BirdeeHub",
-        "repo": "nixCats-nvim",
-        "rev": "04379fef2fbd4c9d8f4c9a6203cef135ab0b1acd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "BirdeeHub",
-        "repo": "nixCats-nvim",
         "type": "github"
       }
     },
@@ -553,11 +558,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1750836778,
-        "narHash": "sha256-sRLyRiC7TezRbbjGJwUFOgb2xMbSr3wQ0oJKfYlQ6s0=",
+        "lastModified": 1750865895,
+        "narHash": "sha256-p2dWAQcLVzquy9LxYCZPwyUdugw78Qv3ChvnX755qHA=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "d7bb1922f0bb3d0c990f56f9cdb767fdb20a5f22",
+        "rev": "61c0f513911459945e2cb8bf333dc849f1b976ff",
         "type": "github"
       },
       "original": {
@@ -595,6 +600,7 @@
         "bash-env-nushell": "bash-env-nushell",
         "catppuccin": "catppuccin",
         "darwin": "darwin_2",
+        "disko": "disko",
         "home-manager": "home-manager_2",
         "homebrew-bundle": "homebrew-bundle",
         "homebrew-cask": "homebrew-cask",
@@ -602,7 +608,6 @@
         "homebrew-emacs-plus": "homebrew-emacs-plus",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nix-homebrew": "nix-homebrew",
-        "nixCats": "nixCats",
         "nixpkgs": "nixpkgs_3",
         "op-shell-plugins": "op-shell-plugins",
         "secrets": "secrets"

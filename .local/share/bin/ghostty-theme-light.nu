@@ -1,0 +1,1 @@
+../../../stow/nix-scripts/.local/share/bin/ghostty-theme-light.nu

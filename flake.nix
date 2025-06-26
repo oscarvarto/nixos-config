@@ -8,10 +8,10 @@
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # disko = {
-    #   url = "github:nix-community/disko";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -48,9 +48,6 @@
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
     };
-    nixCats = {
-      url = "github:BirdeeHub/nixCats-nvim";
-    };
     op-shell-plugins = {
       url = "github:1Password/shell-plugins";
       flake = true;
@@ -68,7 +65,7 @@
               bash-env-nushell,
               catppuccin,
               darwin,
-              # disko,
+              disko,
               home-manager,
               homebrew-bundle,
               homebrew-cask,
@@ -76,7 +73,6 @@
               homebrew-emacs-plus,
               neovim-nightly-overlay,
               nix-homebrew,
-              nixCats,
               op-shell-plugins,
               secrets
               } @inputs:
@@ -120,76 +116,53 @@
         "check-keys" = mkApp "check-keys" system;
         "rollback" = mkApp "rollback" system;
       };
+      # Helper function to create darwin configurations
+      mkDarwinConfig = system: darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = inputs // { inherit user; };
+        modules = [
+          home-manager.darwinModules.home-manager
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              inherit user;
+              enable = true;
+              taps = {
+                "homebrew/homebrew-core" = homebrew-core;
+                "homebrew/homebrew-cask" = homebrew-cask;
+                "homebrew/homebrew-bundle" = homebrew-bundle;
+                "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
+              };
+              mutableTaps = true;
+              autoMigrate = true;
+            };
+          }
+          ./hosts/darwin
+        ];
+      };
     in
     {
       devShells = forAllSystems devShell;
       apps = nixpkgs.lib.genAttrs linuxSystems mkLinuxApps // nixpkgs.lib.genAttrs darwinSystems mkDarwinApps;
-      inherit (inputs.nixCats) utils;
 
       darwinConfigurations = {
-        predator = darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          specialArgs = inputs // { inherit user; };
-          modules = [
-            home-manager.darwinModules.home-manager
-            nix-homebrew.darwinModules.nix-homebrew
-            {
-              nix-homebrew = {
-                inherit user;
-                enable = true;
-                taps = {
-                  "homebrew/homebrew-core" = homebrew-core;
-                  "homebrew/homebrew-cask" = homebrew-cask;
-                  "homebrew/homebrew-bundle" = homebrew-bundle;
-                  "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
-                };
-                mutableTaps = true;
-                autoMigrate = true;
-              };
-            }
-            ./hosts/darwin
-          ];
-        };
-      } // nixpkgs.lib.genAttrs darwinSystems (system:
-        darwin.lib.darwinSystem {
-          inherit system;
-          specialArgs = inputs // { inherit user; };
-          modules = [
-            home-manager.darwinModules.home-manager
-            nix-homebrew.darwinModules.nix-homebrew
-            {
-              nix-homebrew = {
-                inherit user;
-                enable = true;
-                taps = {
-                  "homebrew/homebrew-core" = homebrew-core;
-                  "homebrew/homebrew-cask" = homebrew-cask;
-                  "homebrew/homebrew-bundle" = homebrew-bundle;
-                  "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
-                };
-                mutableTaps = true;
-                autoMigrate = true;
-              };
-            }
-            ./hosts/darwin
-          ];
-        }
-      );
+        predator = mkDarwinConfig "aarch64-darwin";
+      } // nixpkgs.lib.genAttrs darwinSystems mkDarwinConfig;
 
-      # nixosConfigurations = nixpkgs.lib.genAttrs linuxSystems (system: nixpkgs.lib.nixosSystem {
-      #   inherit system;
-      #   specialArgs = inputs;
-      #   modules = [
-      #     disko.nixosModules.disko
-      #     home-manager.nixosModules.home-manager {
-      #       home-manager = {
-      #         useGlobalPkgs = true;
-      #         useUserPackages = true;
-      #         users.${user} = import ./modules/nixos/home-manager.nix;
-      #       };
-      #     }
-      #     ./hosts/nixos
-      #   ];
-      # });
+      nixosConfigurations = nixpkgs.lib.genAttrs linuxSystems (system: nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = inputs;
+        modules = [
+          disko.nixosModules.disko
+          home-manager.nixosModules.home-manager {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${user} = import ./modules/nixos/home-manager.nix;
+            };
+          }
+          ./hosts/nixos
+        ];
+      });
   };
 }

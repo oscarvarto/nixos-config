@@ -1,0 +1,1 @@
+../../../stow/aux-scripts/.local/share/bin/install-metals-emacs.sh

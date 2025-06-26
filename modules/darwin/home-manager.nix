@@ -1,4 +1,4 @@
-{ config, pkgs, lib, catppuccin, neovim-nightly-overlay, op-shell-plugins , user ? "oscarvarto", ... } @ inputs:
+{ config, pkgs, lib, neovim-nightly-overlay, op-shell-plugins , user ? "oscarvarto", ... } @ inputs:
 
 let
   sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
@@ -34,55 +34,27 @@ in
     useGlobalPkgs = true;
     backupFileExtension = "backup";
     # extraSpecialArgs = { inherit op-shell-plugins neovim-nightly-overlay; };
-    extraSpecialArgs = { inherit inputs; };
+    # extraSpecialArgs = { inherit inputs; };
     users.${user} = { pkgs, config, lib, ... }: {
       imports = [
         ./fish-config.nix
-        ../shared/nushell
-        ../shared/home-manager.nix
         op-shell-plugins.hmModules.default
-        catppuccin.homeModules.catppuccin
       ];
-
-      # Enable nushell with Nix environment integration
-      local.nushell = {
-        enable = true;
-        left_prompt_cmd = "hostname -s";
-        history_file_format = "sqlite";
-      };
 
       home = {
         enableNixpkgsReleaseCheck = false;
-        packages = pkgs.callPackage ./packages.nix {};
+        packages = (pkgs.callPackage ./packages.nix {}) ++ [
+          # Add neovim-nightly from overlay
+          neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.neovim
+        ];
         file = lib.mkMerge [
           sharedFiles
           additionalFiles
-          {
-            # Copy the external Zellij configuration file
-            ".config/zellij/config.kdl".source = pkgs.writeText "zellij-config.kdl" (builtins.readFile ./zellij-config.kdl);
-            # Copy nixCats lua configuration
-            ".config/nvim" = {
-              source = ./nixCats;
-              recursive = true;
-            };
-          }
         ];
 
         stateVersion = "25.05";
       };
 
-      catppuccin = {
-        enable = true;
-        fish.enable = true;
-        flavor = "mocha";
-        fzf.enable = true;
-        helix = {
-          enable =true;
-          useItalics = true;
-        };
-        starship.enable = false;
-        vscode.enable = true;
-      };
 
       programs = {
         _1password-shell-plugins = {
@@ -90,7 +62,7 @@ in
           enable = true;
           # the specified packages as well as 1Password CLI will be
           # automatically installed and configured to use shell plugins
-          plugins = with pkgs; [ awscli2 cachix gh glab ];
+          plugins = with pkgs; [ awscli cachix gh glab ];
         };
 
         atuin = {
@@ -120,33 +92,6 @@ in
           enableNushellIntegration = true;
         };
         
-        neovim = {
-          enable = true;
-          viAlias = true;
-          vimAlias = true;
-          vimdiffAlias = true;
-          
-          # Use nightly neovim
-          package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
-          
-          extraPackages = with pkgs; [
-            # LSP servers
-            lua-language-server
-            stylua
-            nixd
-            alejandra
-            
-            # Development tools
-            lazygit
-            git
-            ripgrep
-            fd
-            
-            # Language support
-            nodejs
-            python3
-          ];
-        };
 
         starship = {
           enable = true;
@@ -179,10 +124,10 @@ in
         # We use external config file instead of home-manager settings
       };
 
+
       # Marked broken Oct 20, 2022 check later to remove this
       # https://github.com/nix-community/home-manager/issues/3344
       manual.manpages.enable = false;
-
     };
   };
 

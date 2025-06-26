@@ -19,6 +19,8 @@ stow/
 ├── dotnet-tools/         # .NET tools management
 │   ├── dotnet-tools.toml# Configuration for .NET SDK and tools
 │   └── .local/share/bin/# Management script
+├── lazyvim/              # Neovim LazyVim configuration
+│   └── .config/nvim/    # LazyVim configuration files
 └── README.md           # This file
 ```
 
@@ -33,10 +35,11 @@ manage-aux-scripts deploy
 
 Or deploy individual packages:
 ```bash
-stow aux-scripts    # Deploy auxiliary scripts
-stow cargo-tools    # Deploy cargo tools management
-stow nodejs-tools   # Deploy Node.js tools management
-stow dotnet-tools   # Deploy .NET tools management
+stow -t ~ aux-scripts    # Deploy auxiliary scripts
+stow -t ~ cargo-tools    # Deploy cargo tools management
+stow -t ~ nodejs-tools   # Deploy Node.js tools management
+stow -t ~ dotnet-tools   # Deploy .NET tools management
+stow -t ~ lazyvim        # Deploy LazyVim configuration
 ```
 
 This will create symlinks from `~/.local/share/bin/` to the scripts in `stow/aux-scripts/.local/share/bin/`.
@@ -88,6 +91,12 @@ After a system wipe:
 - `manage-dotnet-tools` - Install, update, and manage .NET environment
 - `dotnet-tools.toml` - Declarative configuration for SDK version and tools
 - Integrates with .NET CLI global tool system
+
+### LazyVim Configuration (`lazyvim`)
+- Neovim configuration based on LazyVim framework
+- Complete Lua configuration with plugins and settings
+- Symlinked to `~/.config/nvim/` when deployed
+- Works with neovim-nightly installed via nix
 
 ## Benefits
 

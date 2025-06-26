@@ -1,0 +1,1 @@
+../../../stow/nix-scripts/.local/share/bin/yabai_toggle_float.sh
