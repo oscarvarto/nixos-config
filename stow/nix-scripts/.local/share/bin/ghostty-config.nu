@@ -237,7 +237,7 @@ def main [
       if ($file_path | path exists) and (($file_path | path type) == "file") {
         let content = (open $file_path | lines | where { |line| not ($line | str starts-with "#") and ($line | str trim | is-not-empty) })
         if ($content | length) > 0 {
-          $content | each { |line| print $line }
+          $content | each { |line| print $line } | ignore
         } else {
           print "No active overrides"
         }

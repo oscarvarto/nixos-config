@@ -7,72 +7,9 @@ let
   hammerspoonDir = "${config.users.users.${user}.home}/.hammerspoon";
 in
 {
-  # yabai toggle split
-  # Toggles between vertical and horizontal split layouts
-  "${xdg_dataHome}/bin/yabai_toggle_split.sh" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      #
-      # Required parameters:
-      # @raycast.schemaVersion 1
-      # @raycast.title Yabai Toggle Split
-      # @raycast.mode silent
-
-      /run/current-system/sw/bin/yabai -m window --toggle split
-    '';
-  };
-
-  # yabai toggle float
-  # Toggle float
-  "${xdg_dataHome}/bin/yabai_toggle_float.sh" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      #
-      # Required parameters:
-      # @raycast.schemaVersion 1
-      # @raycast.title Yabai Toggle Float
-      # @raycast.mode silent
-
-      /run/current-system/sw/bin/yabai -m window --toggle float
-    '';
-  };
-
-  # Delete clipboard
-  "${xdg_dataHome}/bin/delete_clipboard.sh" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      #
-      # Required parameters:
-      # @raycast.schemaVersion 1
-      # @raycast.title Delete macOS clipboard
-      # @raycast.mode silent
-
-      pbcopy </dev/null
-   '';
-  };
-
-  # Emacs daemon Raycast script so that "Run Emacs" is available and uses Emacs daemon
-  "${xdg_dataHome}/bin/emacsclient" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      #
-      # Required parameters:
-      # @raycast.schemaVersion 1
-      # @raycast.title Run Emacs
-      # @raycast.mode silent
-      #
-      # Optional parameters:
-      # @raycast.packageName Emacs
-      # @raycast.icon ${xdg_dataHome}/img/icons/Emacs.icns
-      # @raycast.iconDark ${xdg_dataHome}/img/icons/Emacs.icns
-
-      /Users/${user}/.local/share/bin/emacsclient -nc -s /var/folders/f4/08zm_5ks36vc7tw43765qk580000gn/T/emacs501/doom "$@"
-    '';
-  };
+  # NOTE: Raycast scripts are now managed via stow (nix-scripts package)
+  # Run: cd ~/nixos-config/stow && stow nix-scripts
+  # Scripts: yabai_toggle_split.sh, yabai_toggle_float.sh, delete_clipboard.sh, emacsclient
 
   # Create a template config file with just the biometric settings
   "${xdg_configHome}/op/biometric-config.json" = {

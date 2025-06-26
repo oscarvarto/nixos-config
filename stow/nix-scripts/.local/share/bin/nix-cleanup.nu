@@ -98,18 +98,18 @@ def cleanup_generations [keep_count: int, dry_run: bool, force: bool] {
 def run_gc [dry_run: bool, verbose: bool] {
   let age_limit = "3d"  # Default to 3 days if not specified
   
-  print $"($BLUE)🗑️ Running garbage collection (keeping items newer than ($age_limit))($NC)"
+  print $"($BLUE)🗑️ Running garbage collection keeping items newer than ($age_limit)($NC)"
   
   let before_size = (do { ^du -sb /nix/store } | complete | get stdout | str trim | split row "\t" | get 0? | into int | default 0)
   
   if $dry_run {
     print $"($BLUE)💭 DRY RUN: Garbage collection preview($NC)"
-    ^nix store gc --dry-run --delete-older-than $age_limit
+    ^nix-collect-garbage --dry-run --delete-older-than $age_limit
   } else {
     if $verbose {
-      ^nix store gc --delete-older-than $age_limit
+      ^nix-collect-garbage --delete-older-than $age_limit
     } else {
-      ^nix store gc --delete-older-than $age_limit | ignore
+      ^nix-collect-garbage --delete-older-than $age_limit | ignore
     }
     
     let after_size = (do { ^du -sb /nix/store } | complete | get stdout | str trim | split row "\t" | get 0? | into int | default 0)

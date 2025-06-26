@@ -28,7 +28,7 @@ if $store_size_gb > 10 {
   
   # Run garbage collection (conservative - keep items newer than 7 days)
   print $"($BLUE)🗑️ Running garbage collection (keeping items newer than 7d)($NC)"
-  ^nix store gc --delete-older-than 7d | ignore
+  ^nix-collect-garbage --delete-older-than 7d | ignore
   
   let new_size_gb = (do { ^du -sb /nix/store } | complete | get stdout | str trim | split row "\t" | get 0? | into int | default 0 | $in / 1024 / 1024 / 1024)
   let freed_gb = ($store_size_gb - $new_size_gb)
