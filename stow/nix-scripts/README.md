@@ -5,6 +5,7 @@ This stow package contains various utility scripts extracted from the nix config
 ## Scripts Included
 
 ### Nix Cleanup Scripts (Nushell)
+- `smart-gc.nu` - Smart garbage collection with generation preservation and essential package pinning
 - `nix-cleanup.nu` - Main cleanup script with multiple modes
 - `nix-quick-clean.nu` - Quick cleanup (keep last 5 generations)
 - `nix-auto-cleanup.nu` - Automated cleanup for periodic maintenance
