@@ -161,7 +161,6 @@
     "venv.bak/"
 
     # C#/.NET
-    "bin/"
     "obj/"
     "*.user"
     "*.suo"
@@ -177,7 +176,6 @@
     "[Aa][Rr][Mm]/"
     "[Aa][Rr][Mm]64/"
     "bld/"
-    "[Bb]in/"
     "[Oo]bj/"
     "[Ll]og/"
     "[Ll]ogs/"
@@ -239,5 +237,12 @@
     "*.rar"
     "*.tar"
     "*.zip"
+    
+    # General .local directory ignore (common for temporary/cache files)
+    ".local/"
+    
+    # But allow .local directories in stow packages (they contain legitimate config files)
+    "!stow/**/.local/"
+    "!stow/**/.local/**"
   ];
 }
