@@ -255,14 +255,13 @@ in
 
         # zellij is installed via homebrew and configured manually
         # We use external config file instead of home-manager settings
-      } // import ../shared/home-manager.nix { inherit config pkgs lib; /* myEmacs */ }
-        // import ./nixcats.nix { inherit config pkgs lib inputs; };
+      } // import ../shared/home-manager.nix { inherit config pkgs lib; /* myEmacs */ };
 
       # Marked broken Oct 20, 2022 check later to remove this
       # https://github.com/nix-community/home-manager/issues/3344
       manual.manpages.enable = false;
 
-    };
+    } // import ./nixcats.nix { inherit config pkgs lib inputs; };
   };
 
   # Fully declarative dock using the latest from Nix Store
