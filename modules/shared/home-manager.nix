@@ -6,8 +6,11 @@ let
   email = "contact@oscarvarto.mx";
   shellConfig = import ./shell-config.nix { inherit config pkgs lib; };
   gitIgnores = import ./git-ignores.nix { inherit config pkgs lib; };
+  gitSecurityScripts = import ./git-security-scripts.nix { inherit config pkgs lib user; };
 in
 {
+  # Import git security scripts
+  imports = [ ./git-security-scripts.nix ];
   # Merge shell configurations directly (flatten)
   programs = shellConfig.programs // {
     git = {
