@@ -10,7 +10,7 @@ let BLUE = "\u{001b}[0;34m"
 let NC = "\u{001b}[0m"
 
 # Show help message
-fn show-help [] {
+def show-help [] {
     print $"($BLUE)🧹 Git BFG History Cleaner($NC)"
     print ""
     print "Usage: git-bfg-cleaner [OPTIONS] <sensitive-data-file>"
@@ -41,82 +41,76 @@ fn show-help [] {
 }
 
 # Parse args
-fn parse-args [args: list<string>] {
-    let dry_run = false
-    let force = false
-    let no_backup = false
-    let sensitive_file = ""
-    
-    for arg in $args {
-        match $arg {
-            "-h" | "--help" => {
-                show-help
-                exit 0
-            }
-            "-n" | "--dry-run" => {
-                $dry_run = true
-            }
-            "-f" | "--force" => {
-                $force = true
-            }
-            "--no-backup" => {
-                $no_backup = true
-            }
-            -- = "*" => {
-                if $sensitive_file == "" {
-                    $sensitive_file = $arg
-                } else {
-                    print "Too many positional arguments"
-                    show-help
-                    exit 1
-                }
-            }
-            _ => {
-                print $"($RED)❌ Unknown option: ($arg)($NC)"
-                show-help
-                exit 1
-            }
-        }
+def parse-args [args: list<string>] {
+    # Check for help first
+    if ("-h" in $args) or ("--help" in $args) {
+        show-help
+        exit 0
     }
 
-    # Verify mandatory args
-    if $sensitive_file == "" {
+    # Extract flags
+    let dry_run = ("-n" in $args) or ("--dry-run" in $args)
+    let force = ("-f" in $args) or ("--force" in $args)
+    let no_backup = ("--no-backup" in $args)
+    
+    # Get non-flag arguments
+    let positional_args = ($args | where { not ($in | str starts-with "-") })
+    
+    # Check for unknown flags
+    let unknown_flags = ($args | where { ($in | str starts-with "-") and ($in not-in ["-h", "--help", "-n", "--dry-run", "-f", "--force", "--no-backup"]) })
+    if ($unknown_flags | length) > 0 {
+        print $"($RED)❌ Unknown options: ($unknown_flags | str join ', ')($NC)"
+        show-help
+        exit 1
+    }
+    
+    # Check positional arguments
+    if ($positional_args | length) == 0 {
         print $"($RED)❌ Missing sensitive data file argument($NC)"
         show-help
         exit 1
     }
+    
+    if ($positional_args | length) > 1 {
+        print "Too many positional arguments"
+        show-help
+        exit 1
+    }
+    
+    let sensitive_file = ($positional_args | first)
 
     # Return config as record
     { dry_run: $dry_run, force: $force, no_backup: $no_backup, sensitive_file: $sensitive_file }
 }
 
-fn main [args: list<string>] {
+def main [args: list<string>] {
     # Parse arguments
     let config = parse-args $args
 
     let sensitive_file = $config.sensitive_file
     
     # Check if file exists
-    if not (path exists $sensitive_file) {
+    if not ($sensitive_file | path exists) {
         print $"($RED)❌ File not found: ($sensitive_file)($NC)"
         exit 1
     }
 
     # Check for git directory
-    if not (has-command git) {
+    if not (".git" | path exists) {
         print $"($RED)❌ Not in a git repository($NC)"
         exit 1
     }
 
     # Verify bfg is installed
-    if not (has-command bfg) {
+    if (which bfg | is-empty) {
         print $"($RED)❌ BFG not found. Install it via nixos-config.($NC)"
         print $"($YELLOW)💡 Add 'bfg-repo-cleaner' to your packages list($NC)"
         exit 1
     }
 
     # Check for uncommitted changes
-    if not (git diff-index --quiet HEAD --) {
+    let status_result = (do { git diff-index --quiet HEAD -- } | complete)
+    if $status_result.exit_code != 0 {
         print $"($RED)❌ Repository has uncommitted changes($NC)"
         print $"($YELLOW)💡 Commit or stash your changes first($NC)"
         exit 1
@@ -134,7 +128,7 @@ fn main [args: list<string>] {
 
     # Show potential cleaning items
     print $"($YELLOW)🔍 Items to be removed from git history:($NC)"
-    shell-open $sensitive_file | lines | each { |line|
+    open $sensitive_file | lines | each { |line|
         if $line != "" {
             print $"  - ($line)"
         }
@@ -170,12 +164,12 @@ fn main [args: list<string>] {
         print "Are you sure you want to continue? (y/N): "
 
         # Confirmation input
-        let reply = (fetch --styled characters)
+        let reply = (input "")
         if $reply != 'y' and $reply != 'Y' {
             print $"($YELLOW)🚫 Operation cancelled($NC)"
             if not $config.no_backup {
                 # Clean up backup branch
-                git branch -d $backup_branch | ignore
+                do { git branch -d $backup_branch } | ignore
             }
             exit 0
         }
@@ -184,12 +178,13 @@ fn main [args: list<string>] {
     print $"($BLUE)🧹 Starting BFG cleanup...($NC)"
 
     # Perform cleanup and optimize repository
-    if bfg --replace-text=$sensitive_file --no-blob-protection {
+    let bfg_result = (do { ^bfg $"--replace-text=($sensitive_file)" --no-blob-protection } | complete)
+    if $bfg_result.exit_code == 0 {
         print $"($GREEN)✅ BFG cleanup completed successfully($NC)"
 
         print $"($BLUE)🔧 Running git reflog expire and gc...($NC)"
-        git reflog expire --expire=now --all
-        git gc --prune=now --aggressive
+        ^git reflog expire --expire=now --all
+        ^git gc --prune=now --aggressive
 
         print $"($GREEN)✅ Git repository optimized($NC)"
     } else {

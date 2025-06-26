@@ -39,6 +39,18 @@ in
     '';
   };
 
+  # Global nixpkgs configuration to silence evaluation warnings
+  nixpkgs.config = {
+    allowAliases = false;  # Disable package aliases to prevent warnings
+  };
+  
+  # Global overlay to silence 1password rename warning
+  nixpkgs.overlays = [
+    (final: prev: {
+      _1password = prev._1password-cli;
+    })
+  ];
+
   ids.gids.nixbld = 350;
 
   # Turn off NIX_PATH warnings now that we're using flakes
@@ -46,7 +58,7 @@ in
 
   # Load configuration that is shared across systems
   environment.systemPackages = with pkgs; [
-    agenix.packages."${pkgs.system}".default
+    agenix.packages."${pkgs.stdenv.hostPlatform.system}".default
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
   # Add fish to available shells

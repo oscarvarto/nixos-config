@@ -37,12 +37,10 @@ with pkgs;
   font-awesome
   hack-font
   noto-fonts
-  noto-fonts-emoji
+  noto-fonts-emoji-blob-bin
   meslo-lgs-nf
 
   # Node.js development tools
-  nodePackages.npm # globally install npm
-  nodePackages.prettier
   nodejs
 
   # Text and terminal utilities

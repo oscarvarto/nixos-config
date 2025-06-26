@@ -7,25 +7,8 @@
     source = ./scripts/nu/git-pre-commit-secrets.nu;
   };
 
-  # 1Password helper script (nushell version)
-  home.file.".local/bin/git-1p-helper" = {
-    executable = true;
-    source = ./scripts/nu/git-1p-helper.nu;
-  };
-
-  # Work git config updater (nushell version)
-  home.file.".local/bin/update-work-git-config" = {
-    executable = true;
-    source = ./scripts/nu/update-work-git-config.nu;
-  };
-
-  # BFG git history cleaner (nushell version)
-  home.file.".local/bin/git-bfg-cleaner" = {
-    executable = true;
-    source = ./scripts/nu/git-bfg-cleaner.nu;
-  };
-
-  # Symlink to make scripts discoverable in PATH
+  # Nushell scripts for git security and utilities
+  # Following stow rule: scripts should be in .local/share/bin
   home.file.".local/share/bin/git-pre-commit-secrets" = {
     executable = true;
     source = ./scripts/nu/git-pre-commit-secrets.nu;

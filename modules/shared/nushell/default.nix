@@ -20,7 +20,7 @@ in
           "NIX_BASH_ENV_NU_MODULE"
         ] [
           config.local.nushell.history_file_format
-          "${inputs.bash-env-nushell.packages.${pkgs.system}.default}/bash-env.nu"
+          "${inputs.bash-env-nushell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bash-env.nu"
         ]
           (builtins.readFile ./config.nu));
         envFile.text = ''
@@ -47,9 +47,8 @@ in
 
     home = {
       packages = with pkgs; [
-        inputs.bash-env-json.packages.${pkgs.system}.default
-        inputs.bash-env-nushell.packages.${pkgs.system}.default
-        jc
+        inputs.bash-env-json.packages.${pkgs.stdenv.hostPlatform.system}.default
+        inputs.bash-env-nushell.packages.${pkgs.stdenv.hostPlatform.system}.default
       ];
     };
 

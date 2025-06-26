@@ -3,7 +3,6 @@
 let
   sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
-  utils = inputs.nixCats.utils;
   inherit (builtins) fromTOML;
 in
 {
@@ -39,10 +38,8 @@ in
     users.${user} = { pkgs, config, lib, ... }: {
       imports = [
         ./fish-config.nix
-        ../shared/git-security.nix
         ../shared/nushell
         ../shared/home-manager.nix
-        inputs.nixCats.homeModules.default
         op-shell-plugins.hmModules.default
         catppuccin.homeModules.catppuccin
       ];
@@ -63,6 +60,11 @@ in
           {
             # Copy the external Zellij configuration file
             ".config/zellij/config.kdl".source = pkgs.writeText "zellij-config.kdl" (builtins.readFile ./zellij-config.kdl);
+            # Copy nixCats lua configuration
+            ".config/nvim" = {
+              source = ./nixCats;
+              recursive = true;
+            };
           }
         ];
 
@@ -117,6 +119,34 @@ in
           enableFishIntegration = true;
           enableNushellIntegration = true;
         };
+        
+        neovim = {
+          enable = true;
+          viAlias = true;
+          vimAlias = true;
+          vimdiffAlias = true;
+          
+          # Use nightly neovim
+          package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
+          
+          extraPackages = with pkgs; [
+            # LSP servers
+            lua-language-server
+            stylua
+            nixd
+            alejandra
+            
+            # Development tools
+            lazygit
+            git
+            ripgrep
+            fd
+            
+            # Language support
+            nodejs
+            python3
+          ];
+        };
 
         starship = {
           enable = true;
@@ -153,7 +183,7 @@ in
       # https://github.com/nix-community/home-manager/issues/3344
       manual.manpages.enable = false;
 
-    } // import ./nixcats.nix { inherit config pkgs lib inputs; };
+    };
   };
 
   # Fully declarative dock using the latest from Nix Store
