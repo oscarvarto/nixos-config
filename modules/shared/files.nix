@@ -144,9 +144,9 @@ in
       }
 
       cleanup_generations() {
-        local keep_count=''${1}
-        local dry_run=''${2}
-        local force=''${3}
+        local keep_count="\$1"
+        local dry_run="\$2"
+        local force="\$3"
         
         echo -e "$BLUE\U0001F9F9 Cleaning up generations (keeping last $keep_count)$NC"
         
@@ -189,21 +189,22 @@ in
       }
 
       run_gc() {
-        local dry_run=''${1}
-        local verbose=''${2}
+        local dry_run="\$1"
+        local verbose="\$2"
+        local age_limit="3d"  # Default to 3 days if not specified
         
-        echo -e "$BLUE\U1F5D1 Running garbage collection$NC"
+        echo -e "$BLUE\U1F5D1 Running garbage collection (keeping items newer than $age_limit)$NC"
         
         local before_size=$(du -sb /nix/store 2>/dev/null | cut -f1 || echo "0")
         
         if [ "$dry_run" = true ]; then
           echo -e "$BLUE\U1F4AD DRY RUN: Garbage collection preview$NC"
-          nix store gc --dry-run
+          nix store gc --dry-run --delete-older-than "$age_limit"
         else
           if [ "$verbose" = true ]; then
-            nix store gc
+            nix store gc --delete-older-than "$age_limit"
           else
-            nix store gc > /dev/null 2>&1
+            nix store gc --delete-older-than "$age_limit" > /dev/null 2>&1
           fi
           
           local after_size=$(du -sb /nix/store 2>/dev/null | cut -f1 || echo "0")
@@ -341,9 +342,9 @@ in
           [ -n "$OLD_GENS" ] && nix-env --delete-generations $OLD_GENS
         fi
         
-        # Run garbage collection
-        echo -e "$BLUE\U1F5D1 Running garbage collection$NC"
-        nix store gc > /dev/null 2>&1
+        # Run garbage collection (conservative - keep items newer than 7 days)
+        echo -e "$BLUE\U1F5D1 Running garbage collection (keeping items newer than 7d)$NC"
+        nix store gc --delete-older-than 7d > /dev/null 2>&1
         
         NEW_SIZE_GB=$(du -sb /nix/store 2>/dev/null | awk '{print int($1/1024/1024/1024)}' || echo "0")
         FREED_GB=$((STORE_SIZE_GB - NEW_SIZE_GB))
