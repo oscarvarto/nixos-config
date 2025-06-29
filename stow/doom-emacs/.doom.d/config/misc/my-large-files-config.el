@@ -33,8 +33,9 @@ Large files will have TreeSitter and other heavy features disabled.")
 
 ;; Function to check if current buffer contains a large file
 (defun my/large-file-p ()
-  "Return t if current buffer is visiting a large file."
-  (when buffer-file-name
+  "Return t if current buffer is visiting a large file and is in a programming mode."
+  (when (and buffer-file-name
+             (derived-mode-p 'prog-mode))
     (let* ((attrs (file-attributes buffer-file-name))
            (file-size (and attrs (nth 7 attrs))))
       (and file-size

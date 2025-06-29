@@ -25,8 +25,7 @@
   :recipe (:host github
            :repo "kostafey/ejc-sql"
            :depth 1))
-(package! eldoc :built-in t)
-(package! eldoc-box
+(package! eldoc :built-in t
   :recipe (:host github
            :repo "casouri/eldoc-box"
            :depth 1))

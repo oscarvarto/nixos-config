@@ -119,9 +119,9 @@
 (require 'vterm)
 
 ;; Use nushell as default shell
-(setq shell-file-name (executable-find "nu"))
-(setq-default vterm-shell (executable-find "nu"))
-(setq-default explicit-shell-file-name (executable-find "nu"))
+(setq shell-file-name (executable-find "fish"))
+(setq-default vterm-shell (executable-find "fish"))
+(setq-default explicit-shell-file-name (executable-find "fish"))
 
 ;; Workaround for debugging Java tests with nushell
 ;; When debugging, temporarily use bash to ensure proper environment variable handling

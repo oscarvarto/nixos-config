@@ -83,7 +83,7 @@ path add $env.DOTNET_ROOT
 path add "~/.dotnet/tools"
 path add "~/.local/share/bin"
 path add "~/.local/bin"
-$env.CARGO_HOME = "~/.cargo"
+$env.CARGO_HOME = ($env.HOME | path join ".cargo")
 path add ($env.CARGO_HOME | path join "bin")
 path add "~/nixos-config/modules/shared/elisp-formatter"
 
@@ -96,3 +96,4 @@ path add "~/.volta/bin"
 path add "~/Library/Application Support/JetBrains/Toolbox/scripts"
 path add "~/.nix-profile/bin"
 path add "/opt/homebrew/opt/trash-cli/bin"
+path add "/usr/local/bin"

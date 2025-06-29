@@ -1,7 +1,7 @@
 ;;; my-gui-appearance-config.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Variables to track current configuration state
-(defvar my/current-font-config 'pragmatapro
+(defvar my/current-font-config 'monolisa
   "Stores the currently loaded font configuration ('pragmatapro or 'monolisa).")
 
 (defvar my/light-theme 'modus-operandi-deuteranopia
@@ -290,6 +290,6 @@
 
 ;; Auto-initialize when this file is loaded
 (my/initialize-theme-aware-appearance)
-(my/load-pragmatapro-font-config)
+(my/load-monolisa-font-config)
 
 (provide 'my-gui-appearance-config)

@@ -72,6 +72,7 @@
       fish_add_path "$HOME/Library/Application Support/Coursier/bin"
       fish_add_path "$HOME/.volta/bin"
       fish_add_path $HOME/.dotnet/tools
+      fish_add_path /opt/homebrew/opt/trash-cli/bin
 
       # Environment variables
       set -gx LC_ALL "en_US.UTF-8"
@@ -109,7 +110,7 @@
       };
 
       # GUI Emacs client function
-      ee = {
+      e = {
         body = ''
           set socket_path (fd -ts doom $TMPDIR 2>/dev/null | head -1)
           if test -n "$socket_path"
@@ -123,7 +124,7 @@
       };
 
       # Start Emacs in background
-      e = {
+      et = {
         body = ''emacs & disown'';
         description = "Start Emacs in background";
       };
@@ -152,9 +153,10 @@
 
       # Terminal and editor shortcuts
       tg = "$EDITOR $HOME/.config/ghostty/config";
+      tgg = "$EDITOR $HOME/.config/ghostty/overrides.conf";
       edd = "emacs --daemon=doom";
       pke = "pkill -9 Emacs";
-      nf = "nvim ~/.config/fish/config.fish";
+      nf = "nvim ~/nixos-config/modules/darwin/fish-config.nix";
       gd = "ghostty +show-config --default --docs";
 
       # Git shortcuts

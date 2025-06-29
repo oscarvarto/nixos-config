@@ -40,7 +40,6 @@ _:
   "nordvpn"
   "proton-drive"
   "snagit"
-  "syncthing"
   "unnaturalscrollwheels"
 
   # Entertainment Tools
@@ -54,4 +53,6 @@ _:
   "arc"
   "google-chrome"
   "microsoft-edge"
+  "vivaldi"
+  "zen"
 ]

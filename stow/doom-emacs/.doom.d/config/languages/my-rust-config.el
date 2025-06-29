@@ -32,12 +32,30 @@
   :after lsp-mode
   :config
   (setq rustic-format-on-save nil)
+  ;; Configure file watching for rustic projects
+  (setq lsp-file-watch-threshold 50000)
+  (setq lsp-enable-file-watchers t)  ; Keep watchers but with high threshold
   :custom
   (rustic-cargo-use-last-stored-arguments t)
-  (let ((toolchain (or (string-trim (shell-command-to-string "rustup default | cut -d'-' -f1"))
-                       (getenv "RUST_TOOLCHAIN")
-                       "nightly")))
+  
+  ;; Safe toolchain detection that works in daemon mode
+  (defun my/get-rust-toolchain ()
+    "Get rust toolchain safely, handling daemon mode issues."
+    (condition-case err
+        (let* ((default-directory (expand-file-name "~/"))  ; Ensure we have a valid directory
+               (process-environment (append '("PATH=/usr/local/bin:/opt/homebrew/bin:$PATH") process-environment))
+               (toolchain-output (shell-command-to-string "rustup default 2>/dev/null | cut -d'-' -f1")))
+          (if (and toolchain-output (not (string-empty-p (string-trim toolchain-output))))
+              (string-trim toolchain-output)
+            (or (getenv "RUST_TOOLCHAIN") "nightly")))
+      (error
+       (message "Warning: Could not detect rust toolchain, using fallback: %s" err)
+       (or (getenv "RUST_TOOLCHAIN") "nightly"))))
+  
+  ;; Set rust-analyzer command with safe toolchain detection
+  (let ((toolchain (my/get-rust-toolchain)))
     (setq rustic-analyzer-command `("rustup" "run" ,toolchain "rust-analyzer")))
+  
   ;; (setq rustic-analyzer-command `("rustup" "run" "nightly" "rust-analyzer"))
   (lsp-rust-analyzer-cargo-watch-command "clippy")
   ;; These are optional configurations. See https://emacs-lsp.github.io/lsp-mode/page/lsp-rust-analyzer/#lsp-rust-analyzer-display-chaining-hints for a full list
@@ -49,4 +67,10 @@
 
 (with-eval-after-load 'rustic-mode
   (add-hook! 'rustic-mode-hook #'lsp-ui-mode #'flymake-mode)
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+  
+  ;; Hook to configure file watching when entering rustic projects
+  (add-hook 'rustic-mode-hook
+            (lambda ()
+              (setq-local lsp-file-watch-threshold 50000)
+              (setq-local lsp-enable-file-watchers t))))

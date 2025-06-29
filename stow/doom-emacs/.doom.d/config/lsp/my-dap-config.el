@@ -42,7 +42,7 @@
   (unless (display-graphic-p)
     (set-face-background 'dap-ui-marker-face "gray") ; An orange background for the line to execute
     (set-face-attribute 'dap-ui-marker-face nil :inherit nil) ; Do not inherit other styles
-    (set-face-background 'dap-ui-pending-breakpoint-face "fuchsia") ; Blue background for breakpoints line
+    (set-face-background 'dap-ui-pending-breakpoint-face "purple") ; Blue background for breakpoints line
     (set-face-attribute 'dap-ui-verified-breakpoint-face nil :inherit 'dap-ui-pending-breakpoint-face)))
   ;; :custom
   ;;(dap-netcore-install-dir "/Users/oscarvarto/.emacs.d/.local/cache/.cache/lsp/netcoredbg"))

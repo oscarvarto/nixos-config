@@ -38,6 +38,7 @@ in
       imports = [
         ./fish-config.nix
         ../shared/nushell
+        ../shared/home-manager.nix
         op-shell-plugins.hmModules.default
       ];
 
@@ -111,6 +112,11 @@ in
           enableFishIntegration = true;
           enableNushellIntegration = true;
           enableZshIntegration = true;
+          settings = {
+            mgr = {
+              ratio = [1 3 4];
+            };
+          };
         };
 
         zoxide = {
