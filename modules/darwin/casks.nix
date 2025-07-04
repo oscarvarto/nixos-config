@@ -50,9 +50,7 @@ _:
   "raycast"
 
   # Browsers
-  "arc"
   "google-chrome"
   "microsoft-edge"
   "vivaldi"
-  "zen"
 ]

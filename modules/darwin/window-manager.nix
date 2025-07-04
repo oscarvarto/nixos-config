@@ -17,7 +17,7 @@
         focus_follows_mouse = "autofocus";
         display_arrangement_order = "horizontal";
         window_origin_display = "default";
-        window_placement = "second_child";
+        window_placement = "first_child";
         window_zoom_persist = "on";
         window_shadow = "off";
         window_animation_duration = "0.0";  # Faster window operations

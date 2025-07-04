@@ -977,9 +977,8 @@ alias diff = difft
 $env.EDITOR = "nvim"
 
 # Terminal and editor shortcuts
-alias tg = ^$env.EDITOR ~/.config/ghostty/config
+alias tg  = ^$env.EDITOR ~/.config/ghostty/config
 alias tgg = ^$env.EDITOR ~/.config/ghostty/overrides.conf
-alias edd = emacs --daemon=doom
 alias nnc = ^$env.EDITOR ~/nixos-config/modules/shared/nushell/config.nu
 alias nne = ^$env.EDITOR ~/nixos-config/modules/shared/nushell/env.nu
 alias gd = ghostty +show-config --default --docs
@@ -1009,29 +1008,62 @@ def ns [] {
 }
 
 alias edd = emacs --daemon=doom
+alias pke = pkill -9 Emacs
+
+def doom-socket [] {
+    let socket_file = (fd -ts doom $env.TMPDIR err> (std null-device) | default "")
+    
+    if ($socket_file | is-empty) {
+        return ""
+    }
+    
+    # Test if the socket is actually active by trying to connect
+    let test_result = (do { ^/opt/homebrew/bin/emacsclient -s $socket_file --eval "t" } | complete)
+    
+    if $test_result.exit_code == 0 {
+        $socket_file
+    } else {
+        # Socket file exists but is stale, remove it
+        rm -f $socket_file
+        ""
+    }
+}
+
+# Helper function to ensure daemon is running and return socket path
+def ensure-emacs-daemon [] {
+    mut socket_path = (doom-socket)
+    if ($socket_path | is-empty) {
+        print "Emacs daemon socket not found. Starting Emacs daemon first with: emacs --daemon=doom"
+        emacs --daemon=doom
+
+        # Wait for daemon to start and create socket
+        mut retries = 0
+        while ($socket_path | is-empty) and ($retries < 18) {
+            sleep 500ms
+            $socket_path = (doom-socket)
+            $retries = ($retries + 1)
+        }
+
+        if ($socket_path | is-empty) {
+            error make {msg: "Failed to start Emacs daemon or find socket after 9 seconds"}
+        }
+    }
+    $socket_path
+}
 
 # Terminal Emacs function
 def "t" [...args] {
-    let socket_path = (fd -ts doom $env.TMPDIR err> (std null-device) | default "")
-    if ($socket_path | is-empty) {
-        print "Emacs daemon socket not found. Start Emacs daemon first with: emacs --daemon=doom"
-        return 1
-    } else {
-        ^/opt/homebrew/bin/emacsclient -nw -s $socket_path ...$args
-    }
+    let socket_path = (ensure-emacs-daemon)
+    ^/opt/homebrew/bin/emacsclient -nw -s $socket_path ...$args
 }
 
 # GUI Emacs client function
 def "e" [...args] {
-    let socket_path = (fd -ts doom $env.TMPDIR err> (std null-device) | default "")
-    if ($socket_path | is-empty) {
-        print "Emacs daemon socket not found. Start Emacs daemon first with: emacs --daemon=doom"
-        return 1
-    } else {
-        ^/opt/homebrew/bin/emacsclient -nc -s $socket_path ...$args
-    }
+    let socket_path = (ensure-emacs-daemon)
+    ^/opt/homebrew/bin/emacsclient -nc -s $socket_path ...$args
 }
 
+alias tt = emacs -nw
 # Start Emacs in background
 def "et" [tag?: string] {
     job spawn -t ($tag | default 'emacs') {emacs}

@@ -57,6 +57,15 @@
   ;; useful beyond Corfu.
   (read-extended-command-predicate #'command-completion-default-include-p))
 
+;;; Claude Code
+(use-package! claude-code
+  :config
+  (claude-code-mode))
+
+;; Bind claude-code-command-map using Doom's map! macro
+(map! :leader
+      :desc "Claude Code" "<f8>" claude-code-command-map)
+
 ;; Enable auto completion and configure quitting
 ;; (setq org-special-ctrl-a/e t)
 (setq corfu-auto nil ; Disable auto completion popup
@@ -90,7 +99,7 @@
 
 ;; Explicitly disable line numbers for specific modes where they're not wanted
 (dolist (mode '(treemacs-mode-hook
-                vterm-mode-hook
+                ;;vterm-mode-hook
                 mu4e-headers-mode-hook
                 mu4e-view-mode-hook
                 mu4e-compose-mode-hook
@@ -116,11 +125,11 @@
 (require 'saveplace-pdf-view)
 (save-place-mode 1)
 
-(require 'vterm)
+;;(require 'vterm)
 
 ;; Use nushell as default shell
 (setq shell-file-name (executable-find "fish"))
-(setq-default vterm-shell (executable-find "fish"))
+;;(setq-default vterm-shell (executable-find "nu"))
 (setq-default explicit-shell-file-name (executable-find "fish"))
 
 ;; Workaround for debugging Java tests with nushell
@@ -131,59 +140,59 @@
   (setq-local explicit-shell-file-name "/bin/bash"))
 
 ;; Hook for dap-mode to use bash for debugging
-(with-eval-after-load 'dap-mode
-  (add-hook 'dap-mode-hook #'my/use-bash-for-debug-commands)
-
-  ;; Enhanced Java debugging setup for Nushell compatibility
-  (defun my/setup-java-debug-env ()
-    "Set up environment variables and configuration for Java debugging when using Nushell."
-    (when (string-match-p "nu$" shell-file-name)
-      ;; Temporarily use bash for this operation
-      (let ((original-shell shell-file-name)
-            (original-explicit-shell explicit-shell-file-name))
-        (setenv "SHELL" "/bin/bash")
-        (setq shell-file-name "/bin/bash")
-        (setq explicit-shell-file-name "/bin/bash")
-
-        ;; Set up proper environment variables
-        (setenv "JAVA_TOOL_OPTIONS" "-Djava.awt.headless=true")
-
-        ;; Build Maven classpath using standard Maven
-        (let* ((project-root (or (projectile-project-root) default-directory))
-               (pom-path (expand-file-name "pom.xml" project-root)))
-          (when (file-exists-p pom-path)
-            (let ((classpath-cmd
-                   (format "cd %s && mvn dependency:build-classpath -Dmdep.outputFile=/dev/stdout -q"
-                           (shell-quote-argument project-root))))
-              (let ((classpath-output (shell-command-to-string classpath-cmd)))
-                (when (and classpath-output
-                          (not (string-empty-p (string-trim classpath-output)))
-                          (not (string-match-p "ERROR\\|WARN" classpath-output)))
-                  (setenv "JUNIT_CLASS_PATH" (string-trim classpath-output))
-                  (setenv "CLASSPATH" (string-trim classpath-output))
-                  (message "Set JUNIT_CLASS_PATH and CLASSPATH for debugging: %s"
-                           (substring (string-trim classpath-output) 0 (min 100 (length (string-trim classpath-output)))))))))))))
-
-        ;; Don't restore shell immediately - let the debug session use bash
-        ;; (setq shell-file-name original-shell)
-        ;; (setq explicit-shell-file-name original-explicit-shell)
-
-  ;; Override DAP Java configuration to ensure proper shell usage
-  (defun my/dap-java-debug-test-method-advice (orig-fun &rest args)
-    "Advice to ensure proper environment for Java test debugging."
-    (let ((shell-file-name "/bin/bash")
-          (explicit-shell-file-name "/bin/bash"))
-      (my/setup-java-debug-env)
-      (apply orig-fun args)))
-
-  (advice-add 'dap-java-debug-test-method :around #'my/dap-java-debug-test-method-advice)
-  (advice-add 'dap-java-debug-test-class :around #'my/dap-java-debug-test-method-advice)
-
-  (add-hook 'dap-java-test-mode-hook #'my/setup-java-debug-env)
-  (add-hook 'java-mode-hook (lambda ()
-                              (when (and (bound-and-true-p dap-mode)
-                                         (string-match-p "Test\\.java$" (buffer-file-name)))
-                                (my/setup-java-debug-env)))))  ;; Close with-eval-after-load block
+;; (with-eval-after-load 'dap-mode
+;;   (add-hook 'dap-mode-hook #'my/use-bash-for-debug-commands)
+;;
+;;   ;; Enhanced Java debugging setup for Nushell compatibility
+;;   (defun my/setup-java-debug-env ()
+;;     "Set up environment variables and configuration for Java debugging when using Nushell."
+;;     (when (string-match-p "nu$" shell-file-name)
+;;       ;; Temporarily use bash for this operation
+;;       (let ((original-shell shell-file-name)
+;;             (original-explicit-shell explicit-shell-file-name))
+;;         (setenv "SHELL" "/bin/bash")
+;;         (setq shell-file-name "/bin/bash")
+;;         (setq explicit-shell-file-name "/bin/bash")
+;;
+;;         ;; Set up proper environment variables
+;;         (setenv "JAVA_TOOL_OPTIONS" "-Djava.awt.headless=true")
+;;
+;;         ;; Build Maven classpath using standard Maven
+;;         (let* ((project-root (or (projectile-project-root) default-directory))
+;;                (pom-path (expand-file-name "pom.xml" project-root)))
+;;           (when (file-exists-p pom-path)
+;;             (let ((classpath-cmd
+;;                    (format "cd %s && mvn dependency:build-classpath -Dmdep.outputFile=/dev/stdout -q"
+;;                            (shell-quote-argument project-root))))
+;;               (let ((classpath-output (shell-command-to-string classpath-cmd)))
+;;                 (when (and classpath-output
+;;                           (not (string-empty-p (string-trim classpath-output)))
+;;                           (not (string-match-p "ERROR\\|WARN" classpath-output)))
+;;                   (setenv "JUNIT_CLASS_PATH" (string-trim classpath-output))
+;;                   (setenv "CLASSPATH" (string-trim classpath-output))
+;;                   (message "Set JUNIT_CLASS_PATH and CLASSPATH for debugging: %s"
+;;                            (substring (string-trim classpath-output) 0 (min 100 (length (string-trim classpath-output)))))))))))))
+;;
+;;         ;; Don't restore shell immediately - let the debug session use bash
+;;         ;; (setq shell-file-name original-shell)
+;;         ;; (setq explicit-shell-file-name original-explicit-shell)
+;;
+;;   ;; Override DAP Java configuration to ensure proper shell usage
+;;   (defun my/dap-java-debug-test-method-advice (orig-fun &rest args)
+;;     "Advice to ensure proper environment for Java test debugging."
+;;     (let ((shell-file-name "/bin/bash")
+;;           (explicit-shell-file-name "/bin/bash"))
+;;       (my/setup-java-debug-env)
+;;       (apply orig-fun args)))
+;;
+;;   (advice-add 'dap-java-debug-test-method :around #'my/dap-java-debug-test-method-advice)
+;;   (advice-add 'dap-java-debug-test-class :around #'my/dap-java-debug-test-method-advice)
+;;
+;;   (add-hook 'dap-java-test-mode-hook #'my/setup-java-debug-env)
+;;   (add-hook 'java-mode-hook (lambda ()
+;;                               (when (and (bound-and-true-p dap-mode)
+;;                                          (string-match-p "Test\\.java$" (buffer-file-name)))
+;;                                 (my/setup-java-debug-env)))))  ;; Close with-eval-after-load block
 
 (add-to-list 'auto-mode-alist '("\\.json$" . json-mode)) ; Use json-mode for .json files
 (add-to-list 'auto-mode-alist '("\\.mill$" . scala-mode)) ; Use scala-mode for Mill build files

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, neovim-nightly-overlay, op-shell-plugins , user ? "oscarvarto", ... } @ inputs:
+{ config, pkgs, lib, catppuccin, neovim-nightly-overlay, op-shell-plugins, user ? "oscarvarto", ... } @ inputs:
 
 let
   sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
@@ -39,6 +39,7 @@ in
         ./fish-config.nix
         ../shared/nushell
         ../shared/home-manager.nix
+        catppuccin.homeModules.catppuccin
         op-shell-plugins.hmModules.default
       ];
 
@@ -56,6 +57,8 @@ in
         stateVersion = "25.05";
       };
 
+      catppuccin.flavor = "mocha";
+      catppuccin.enable = true;
 
       programs = {
         _1password-shell-plugins = {
@@ -92,7 +95,6 @@ in
           enableFishIntegration = true;
           enableNushellIntegration = true;
         };
-        
 
         starship = {
           enable = true;
@@ -129,7 +131,7 @@ in
         # zellij is installed via homebrew and configured manually
         # We use external config file instead of home-manager settings
       };
-      
+
       # Enable nushell via shared module
       local = {
         nushell = {

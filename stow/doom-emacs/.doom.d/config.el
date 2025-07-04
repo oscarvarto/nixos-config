@@ -51,7 +51,7 @@
 (require 'my-defaults-config)
 (require 'my-banner-config)
 (require 'my-gui-appearance-config)
-;; (require 'my-project-cleanup-config)
+(require 'my-project-cleanup-config)
 
 ;; Helper function for loading
 (defun my/load-config (feature group) ; Group is mandatory
@@ -81,17 +81,19 @@
 
 ;;; Tool-specific configurations
 (my/load-config 'mu4e 'misc)
-(my/load-config 'vterm 'misc)
+;;(my/load-config 'vterm 'misc)
+(my/load-config 'eat 'misc)
 
 (my/load-config 'tabnine-gui 'ai)
 (my/load-config 'gptel 'ai)
 
 (my/load-config 'db 'misc)
 
-(my/load-config 'dap 'lsp)
+;; Trying dape
+;; (my/load-config 'dap 'lsp)
 
 ;;; Org mode configuration
-(my/load-config 'obsidian 'writing)
+;;(my/load-config 'obsidian 'writing)
 (my/load-config 'org 'writing)
 
 ;;; External application interfaces
@@ -102,43 +104,43 @@
 ;; This error occurs specifically with emacsclient (daemon mode) and certain file types like Rust
 
 ;; Daemon-mode specific fixes
-(when (daemonp)
-  (message "Emacs daemon detected, applying daemon-specific safety measures")
-  
-  ;; Ensure environment variables are properly set in daemon mode
-  (defun my/setup-daemon-environment ()
-    "Set up environment variables for daemon mode."
-    (let ((path-from-shell (shell-command-to-string "$SHELL -c 'echo $PATH'")))
-      (when (and path-from-shell (not (string-empty-p (string-trim path-from-shell))))
-        (setenv "PATH" (string-trim path-from-shell))
-        (setq exec-path (split-string (string-trim path-from-shell) path-separator))))
-    (message "Daemon environment setup completed"))
-  
-  ;; Set up environment after daemon initialization
-  (add-hook 'server-after-make-frame-hook #'my/setup-daemon-environment)
-  
-  ;; Add safety wrapper for mode hooks in daemon mode
-  (defun my/safe-mode-hook-wrapper (original-hook)
-    "Safely wrap mode hooks to prevent daemon-mode errors."
-    (lambda (&rest args)
-      (condition-case err
-          (apply original-hook args)
-        (error
-         (message "Warning: Mode hook failed in daemon mode: %s" err)))))
-  
-  ;; Apply safe wrappers to problematic hooks after some delay
-  (run-with-timer 2 nil
-                  (lambda ()
-                    (message "Applying daemon-mode hook safety wrappers"))))
+;; (when (daemonp)
+;;   (message "Emacs daemon detected, applying daemon-specific safety measures")
+;;
+;;   ;; Ensure environment variables are properly set in daemon mode
+;;   (defun my/setup-daemon-environment ()
+;;     "Set up environment variables for daemon mode."
+;;     (let ((path-from-shell (shell-command-to-string "$SHELL -c 'echo $PATH'")))
+;;       (when (and path-from-shell (not (string-empty-p (string-trim path-from-shell))))
+;;         (setenv "PATH" (string-trim path-from-shell))
+;;         (setq exec-path (split-string (string-trim path-from-shell) path-separator))))
+;;     (message "Daemon environment setup completed"))
+;;
+;;   ;; Set up environment after daemon initialization
+;;   (add-hook 'server-after-make-frame-hook #'my/setup-daemon-environment)
+;;
+;;   ;; Add safety wrapper for mode hooks in daemon mode
+;;   (defun my/safe-mode-hook-wrapper (original-hook)
+;;     "Safely wrap mode hooks to prevent daemon-mode errors."
+;;     (lambda (&rest args)
+;;       (condition-case err
+;;           (apply original-hook args)
+;;         (error
+;;          (message "Warning: Mode hook failed in daemon mode: %s" err)))))
+;;
+;;   ;; Apply safe wrappers to problematic hooks after some delay
+;;   (run-with-timer 2 nil
+;;                   (lambda ()
+;;                     (message "Applying daemon-mode hook safety wrappers"))))
 
 ;; Remove the problematic hooks immediately (before any packages load)
 ;; (setq doom-first-file-hook (delq 'global-git-commit-mode doom-first-file-hook))
 ;; (setq doom-first-file-hook (delq 'recentf-mode doom-first-file-hook))
-;; 
+;;
 ;; ;; Also remove them from the hook variable directly
 ;; (remove-hook 'doom-first-file-hook 'global-git-commit-mode)
 ;; (remove-hook 'doom-first-file-hook 'recentf-mode)
-;; 
+;;
 ;; ;; Wrap all file hooks with error handling to prevent crashes
 ;; (defun my/safe-run-hooks (hook-var &rest args)
 ;;   "Safely run hooks with error handling."
@@ -157,22 +159,22 @@
 ;;       nil)
 ;;      (t
 ;;       (message "Warning: Non-function value %s found in %s, skipping" hook hook-var)))))
-;; 
+;;
 ;; ;; Override the problematic doom-run-hook function temporarily
 ;; (defun my/safe-doom-run-hook (hook)
 ;;   "Safely run a doom hook with comprehensive error handling."
 ;;   (when (boundp hook)
 ;;     (my/safe-run-hooks hook)))
-;; 
+;;
 ;; ;; Debug function to help identify the source of the error
 ;; (defun my/debug-file-hooks ()
 ;;   "Debug function to identify problematic hooks."
 ;;   (message "doom-first-file-hook contents: %S" doom-first-file-hook)
 ;;   (message "find-file-hook contents: %S" find-file-hook))
-;; 
+;;
 ;; ;; Add debugging to after-init
 ;; (add-hook 'doom-after-init-hook #'my/debug-file-hooks)
-;; 
+;;
 ;; ;; Safe way to enable git-commit-mode later if needed
 ;; (defun my/enable-git-commit-when-safe ()
 ;;   "Enable git-commit-mode only when it's safe to do so."
@@ -184,10 +186,10 @@
 ;;           (message "Successfully enabled global-git-commit-mode"))
 ;;       (error
 ;;        (message "Could not enable global-git-commit-mode: %s" err)))))
-;; 
+;;
 ;; ;; Enable git-commit-mode after everything is loaded
 ;; (add-hook 'doom-after-init-hook #'my/enable-git-commit-when-safe 90)
-;; 
+;;
 ;; ;; Safe way to enable recentf-mode later if needed
 ;; (defun my/enable-recentf-when-safe ()
 ;;   "Enable recentf-mode only when it's safe to do so."
@@ -198,10 +200,10 @@
 ;;           (message "Successfully enabled recentf-mode"))
 ;;       (error
 ;;        (message "Could not enable recentf-mode: %s" err)))))
-;; 
+;;
 ;; ;; Enable recentf-mode after everything is loaded
 ;; (add-hook 'doom-after-init-hook #'my/enable-recentf-when-safe 80)
-;; 
+;;
 ;; ;; Function to clean up invalid hook values
 ;; (defun my/clean-hook-values (hook-var)
 ;;   "Remove invalid values (like t) from HOOK-VAR."
@@ -212,21 +214,21 @@
 ;;       (set hook-var cleaned-hooks)
 ;;       (when (> removed-count 0)
 ;;         (message "Cleaned %s, removed %d invalid values" hook-var removed-count)))))
-;; 
+;;
 ;; ;; Clean up find-file-hook after initialization
 ;; (defun my/cleanup-hooks ()
 ;;   "Clean up hooks that might contain invalid values."
 ;;   (my/clean-hook-values 'find-file-hook)
 ;;   (my/clean-hook-values 'doom-first-file-hook))
-;; 
+;;
 ;; ;; Run cleanup after initialization
 ;; (add-hook 'doom-after-init-hook #'my/cleanup-hooks 70)
-;; 
+;;
 ;; ;; Additional safety: wrap find-file-hook execution
 ;; (defun my/safe-find-file-hook ()
 ;;   "Safely run find-file-hook."
 ;;   (my/safe-run-hooks 'find-file-hook))
-;; 
+;;
 ;; ;; Replace the standard find-file-hook runner with our safe version
 ;; ;; Only apply advice to find-file-hook, not all hooks
 ;; (advice-add 'run-hooks :around

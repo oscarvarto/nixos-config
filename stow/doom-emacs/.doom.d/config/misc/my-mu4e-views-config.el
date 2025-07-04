@@ -3,10 +3,35 @@
 ;; Load mu4e-views after mu4e is loaded
 (global-set-key (kbd "M-s-z") 'mu4e-views-mu4e-headers-windows-only)
 
+;; Function to check if current client supports GUI features
+(defun mu4e-views-client-supports-gui-p ()
+  "Return t if current client supports GUI features like webkit, nil otherwise."
+  (and (display-graphic-p)
+       ;; Additional checks for GUI capabilities
+       (not (getenv "TERM"))  ;; TERM is set in terminal emacsclient
+       ;; Check if we can create GUI widgets
+       (condition-case nil
+           (progn
+             ;; Try to access window system
+             (when (and (boundp 'window-system) window-system)
+               ;; Check if we have actual GUI display and webkit support
+               (and (display-pixel-width)
+                    (fboundp 'make-xwidget)
+                    (featurep 'xwidget-internal)))
+             t)
+         (error nil))))
 (use-package! mu4e-views
     ;; :after mu4e
     :config
-    (setq mu4e-views-default-view-method "html-nonblock")
+    ;; Set default view method based on client capabilities
+    (if (mu4e-views-client-supports-gui-p)
+        (progn
+          (message "Configuring mu4e-views for GUI client with webkit support")
+          (setq mu4e-views-default-view-method "html-nonblock"))
+      (progn
+        (message "Configuring mu4e-views for terminal client - using text view")
+        (setq mu4e-views-default-view-method "text")))
+    
     (setq mu4e-views-next-previous-message-behaviour 'always-switch-to-headers) ;; when pressing n and p stay in the current window
     (setq mu4e-views-mu4e-html-email-header-style
         "<style type=\"text/css\">
@@ -18,7 +43,22 @@
 .mu4e-mu4e-views-attachment { display: inline-block; padding-right: 8px; }
 </style>")
 
-    (mu4e-views-mu4e-use-view-msg-method "html-nonblock") ;; select the default
+    ;; Function to dynamically switch view method based on current client
+    (defun mu4e-views-configure-for-current-client ()
+      "Configure mu4e-views based on current client capabilities."
+      (if (mu4e-views-client-supports-gui-p)
+          (progn
+            (message "Switching to HTML view for GUI client")
+            (mu4e-views-mu4e-use-view-msg-method "html-nonblock"))
+        (progn
+          (message "Switching to text view for terminal client")
+          (mu4e-views-mu4e-use-view-msg-method "text"))))
+    
+    ;; Set the default view method based on client type
+    (mu4e-views-configure-for-current-client)
+    
+    ;; Add hook to reconfigure when opening messages
+    (add-hook 'mu4e-view-mode-hook #'mu4e-views-configure-for-current-client)
 
     (map! :map mu4e-headers-mode-map
           :n "M-b" #'mu4e-views-cursor-msg-view-window-up

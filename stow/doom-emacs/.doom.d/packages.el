@@ -17,10 +17,23 @@
            :files (:defaults "*.el")
            :depth 1))
 (package! centered-cursor-mode)
+(package! claude-code
+  :recipe (:host github
+           :repo "stevemolitor/claude-code.el"
+           :branch "main"
+           :files ("*.el" (:exclude "images/*"))))
 (package! clomacs)
 (package! combobulate)
 (package! dash)
 (package! diminish)
+(package! eat
+  :recipe (:host codeberg
+           :repo "akib/emacs-eat"
+           :files ("*.el" ("term" "term/*.el") "*.texi"
+                   "*.ti" ("terminfo/e" "terminfo/e/*")
+                   ("terminfo/65" "terminfo/65/*")
+                   ("integration" "integration/*")
+                   (:exclude ".dir-locals.el" "*-tests.el"))))
 (package! ejc-sql
   :recipe (:host github
            :repo "kostafey/ejc-sql"
@@ -69,7 +82,6 @@
   :recipe (:host github
            :repo "mrkkrp/nushell-mode"))
 (package! ob-mermaid)
-(package! obsidian)
 (package! org-modern)
 (package! org-modern-indent
   :recipe (:host github
@@ -99,6 +111,7 @@
   :recipe (:host github
            :repo "emacs-vs/rainbow-csv"
            :depth 1))
+(package! rainbow-delimiters)
 (package! repeat)
 (package! ripgrep)
 (package! rustic :recipe (:repo "emacs-rustic/rustic"))

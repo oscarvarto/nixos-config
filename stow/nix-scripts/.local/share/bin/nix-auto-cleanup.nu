@@ -19,20 +19,20 @@ if $store_size_gb > 10 {
   # Conservative cleanup: keep last 7 generations
   let gen_count = (^nix-env --list-generations | lines | length)
   if $gen_count > 7 {
-    print $"($BLUE)🧹 Cleaning old generations (keeping last 7)($NC)"
-    let old_gens = (^nix-env --list-generations | lines | first ($gen_count - 7) | each { |line| $line | parse "{gen} *" | get gen.0 } | str join " ")
+    print $"($BLUE)🧹 Cleaning old generations \(keeping last 7\)($NC)"
+    let old_gens = (^nix-env --list-generations | lines | first ($gen_count - 7) | each { |line| $line | split row " " | get 0 } | str join " ")
     if ($old_gens | str trim | is-not-empty) {
       ^nix-env --delete-generations $old_gens
     }
   }
   
   # Run garbage collection (conservative - keep items newer than 7 days)
-  print $"($BLUE)🗑️ Running garbage collection (keeping items newer than 7d)($NC)"
+  print $"($BLUE)🗑️ Running garbage collection \(keeping items newer than 7d\)($NC)"
   ^nix-collect-garbage --delete-older-than 7d | ignore
   
   let new_size_gb = (do { ^du -sb /nix/store } | complete | get stdout | str trim | split row "\t" | get 0? | into int | default 0 | $in / 1024 / 1024 / 1024)
   let freed_gb = ($store_size_gb - $new_size_gb)
-  print $"($GREEN)✅ Cleanup complete. Freed ($freed_gb)GB ($new_size_gb)GB remaining($NC)"
+  print $"($GREEN)✅ Cleanup complete. Freed ($freed_gb)GB \(($new_size_gb)GB remaining\)($NC)"
 } else {
   print $"($GREEN)✅ Store size is ($store_size_gb)GB, no cleanup needed($NC)"
 }

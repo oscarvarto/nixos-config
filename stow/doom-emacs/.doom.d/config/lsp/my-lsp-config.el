@@ -9,12 +9,12 @@
   (require 'cl-lib)
 
   ;; Daemon-mode safety: delay LSP initialization if needed
-  (when (daemonp)
-    (message "Running in daemon mode, applying LSP safety measures")
-    ;; Add a small delay to ensure environment is fully loaded
-    (run-with-timer 1 nil
-                    (lambda ()
-                      (message "LSP daemon initialization delay completed"))))
+  ;; (when (daemonp)
+  ;;   (message "Running in daemon mode, applying LSP safety measures")
+  ;;   ;; Add a small delay to ensure environment is fully loaded
+  ;;   (run-with-timer 1 nil
+  ;;                   (lambda ()
+  ;;                     (message "LSP daemon initialization delay completed"))))
 
   ;; Add comprehensive ignore patterns for Rust projects
   (cl-pushnew "[/\\\\]target\\(/.*\\)?\\'" lsp-file-watch-ignored-directories :test #'equal)

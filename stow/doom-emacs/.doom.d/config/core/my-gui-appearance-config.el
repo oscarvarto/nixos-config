@@ -16,7 +16,6 @@
   (eq theme my/light-theme))
 
 (load! "pragmatapro-lig")
-(pragmatapro-lig-mode +1)
 
 (defun turn-on-pragmatapro-lig-mode ()
   "Enable pragmatapro-lig-mode for the current buffer."
@@ -39,7 +38,7 @@
   "Enable `pragmatapro-lig'"
   (add-hook! '(text-mode-hook
                org-mode-hook
-               vterm-mode-hook
+               ;; vterm-mode-hook
                prog-mode-hook)
              #'delayed-turn-on-pragmatapro-lig-mode))
 
@@ -47,7 +46,7 @@
   "Disable `pragmatapro-lig'"
   (remove-hook! '(text-mode-hook
                   org-mode-hook
-                  vterm-mode-hook
+                  ;;vterm-mode-hook
                   prog-mode-hook)
     #'delayed-turn-on-pragmatapro-lig-mode))
 
@@ -65,10 +64,7 @@
      ((eq font-type 'pragmatapro)
       ;; Load PragmataPro configuration
       (my/load-pragmatapro-font-config)))
-
     (setq my/current-font-config font-type)))
-
-(add-hook! '(server-after-make-frame-hook after-load-functions window-setup-hook) (doom/reload-font))
 
 ;; Function to load MonoLisa font configuration
 (defun my/load-monolisa-font-config ()
@@ -99,69 +95,7 @@
     "*/" "--" "#:" "#!" "#?" "##" "###" "####" "#=" "/*" "/>" "//" "/**"
     "///" "$(" ">&" "<&" "&&" "|}" "|]" "$>" ".." "++" "+++" "+>" "=:="
     "=!=" ">:" ">>" ">>>" "<:" "<*" "<*>" "<$" "<$>" "<+" "<+>" "<>" "<<"
-    "<<<" "</" "</>" "^=" "%%")
-
-  ;; Prettify symbols
-  (set-ligatures! 'prog-mode
-    ;; Functional
-    :lambda        "lambda keyword"
-    :def           "function keyword"
-    :composition   "composition"
-    :map           "map/dictionary keyword"
-    ;; Types
-    :null          "null type"
-    :true          "true keyword"
-    :false         "false keyword"
-    :int           "int keyword"
-    :float         "float keyword"
-    :str           "string keyword"
-    :bool          "boolean keyword"
-    :list          "list keyword"
-    ;; Flow
-    :not           "not operator"
-    :in            "in operator"
-    :not-in        "not in operator"
-    :and           "and keyword"
-    :or            "or keyword"
-    :for           "for keyword"
-    :some          "some keyword"
-    :return        "return"
-    :yield         "yeild"
-    ;; Other
-    :union         "Union keyword"
-    :intersect     "Intersect keyword"
-    :diff          "diff keyword"
-    :tuple         "Tuple Keyword "
-    :pipe          "Pipe Keyword"
-    :dot           "Dot operator")
-
-  (plist-put! +ligatures-extra-symbols
-              ;; org
-              :name          "»"
-              :src_block     "»"
-              :src_block_end "«"
-              ;; Functional
-              :lambda        "λ"
-              :def           "ƒ"
-              :composition   "∘"
-              :map           "↦"
-              ;; Types
-              ;; Flow
-              :not           "￢"
-              :in            "∈"
-              :not-in        "∉"
-              :and           "∧"
-              :or            "∨"
-              :for           "∀"
-              :some          "∃"
-              :return        "⟼"
-              :yield         "⟻"
-              ;; Other
-              :union         "⋃"
-              :intersect     "∩"
-              :diff          "∖"
-              :tuple         "⨂"
-              :dot           "•"))
+    "<<<" "</" "</>" "^=" "%%"))
 
 ;; Function to load PragmataPro font configuration
 (defun my/load-pragmatapro-font-config ()
@@ -234,6 +168,7 @@
     :config (setq idle-highlight-idle-time 0.1)
     :hook ((org-mode text-mode) . idle-highlight-mode))
 
+  (global-centered-cursor-mode +1)
   ;; Treemacs
   (load (expand-file-name "config/ui/my-treemacs-config" doom-user-dir))
 
@@ -273,11 +208,44 @@
     ;; Load initial font configuration (default to pragmata)
     (my/load-font-config my/current-font-config))
 
+  (after! (solaire-mode demap)
+    (setq demap-minimap-window-width 15)
+    (let ((gray1 "#1A1C22")
+          (gray2 "#21242b")
+          (gray3 "#282c34")
+          (gray4 "#2b3038"))
+      (face-spec-set 'demap-minimap-font-face
+                     `((t :background ,gray2
+                          :inherit    unspecified
+                          :family     "minimap"
+                          :height     15)))
+      (face-spec-set 'demap-visible-region-face
+                     `((t :background ,gray4
+                          :inherit    unspecified)))
+      (face-spec-set 'demap-visible-region-inactive-face
+                     `((t :background ,gray3
+                          :inherit    unspecified)))
+      (face-spec-set 'demap-current-line-face
+                     `((t :background ,gray1
+                          :inherit    unspecified)))
+      (face-spec-set 'demap-current-line-inactive-face
+                     `((t :background ,gray1
+                          :inherit    unspecified)))))
+
+  (add-hook! 'demap-minimap-construct-hook
+    (when (bound-and-true-p org-modern-mode)
+      (org-modern-mode -1))
+    (when (bound-and-true-p ligature-mode)
+      (ligature-mode -1))
+    (when (bound-and-true-p pragmatapro-lig-mode)
+      (pragmatapro-lig-mode -1)))
+
   ;; Add keybindings [INFO]
-  (define-key global-map (kbd "<f4>")  (lambda ()
+  (define-key global-map (kbd "<f7>")  #'my/toggle-theme)
+  (define-key global-map (kbd "<f8>")  #'my/toggle-font)
+  (define-key global-map (kbd "<f9>")  (lambda ()
                                          (interactive)
                                          (ligature-mode 'toggle)))
-  (define-key global-map (kbd "<f9>")  #'my/toggle-font)
   (define-key global-map (kbd "<f10>")  (lambda ()
                                           (interactive)
                                           (pragmatapro-lig-mode 'toggle)))
@@ -286,7 +254,7 @@
                                          (indent-bars-reset)))
   (define-key global-map (kbd "<f12>") (lambda ()
                                          (interactive)
-                                         (centered-cursor-mode 'toggle))))
+                                         (global-centered-cursor-mode 'toggle))))
 
 ;; Auto-initialize when this file is loaded
 (my/initialize-theme-aware-appearance)

@@ -34,6 +34,7 @@
       end
 
       # PATH configuration
+      fish_add_path /usr/local/bin
       fish_add_path /opt/homebrew/bin
       fish_add_path /opt/homebrew/opt/llvm/bin
       fish_add_path /opt/homebrew/opt/mysql@8.4/bin
@@ -73,6 +74,7 @@
       fish_add_path "$HOME/.volta/bin"
       fish_add_path $HOME/.dotnet/tools
       fish_add_path /opt/homebrew/opt/trash-cli/bin
+      fish_add_path "$HOME/.nix-profile/bin"
 
       # Environment variables
       set -gx LC_ALL "en_US.UTF-8"
@@ -127,6 +129,14 @@
       et = {
         body = ''emacs & disown'';
         description = "Start Emacs in background";
+      };
+
+      ppath = {
+        body = ''
+          for p in $PATH
+            echo $p
+          end
+        '';
       };
 
       # Nix shell shortcut

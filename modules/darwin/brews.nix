@@ -15,8 +15,8 @@
     ];
 
     brews = [
-      # Essential brews
       "7-zip"
+      "angular-cli"
       "atuin"
       "autoconf"
       "autoconf-archive"

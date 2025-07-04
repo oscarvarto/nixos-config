@@ -31,113 +31,108 @@ Large files will have TreeSitter and other heavy features disabled.")
     hl-line-mode)
   "List of features to disable for large files.")
 
+;; Track which buffers have been processed to avoid repeated processing
+(defvar my/large-file-processed-buffers (make-hash-table :test 'eq)
+  "Hash table to track buffers that have been processed for large file optimization.")
+
 ;; Function to check if current buffer contains a large file
 (defun my/large-file-p ()
-  "Return t if current buffer is visiting a large file and is in a programming mode."
-  (when (and buffer-file-name
-             (derived-mode-p 'prog-mode))
-    (let* ((attrs (file-attributes buffer-file-name))
-           (file-size (and attrs (nth 7 attrs))))
-      (and file-size
-           (numberp file-size)
-           (> file-size my/large-file-threshold)))))
+  "Return t if current buffer is visiting a large file."
+  (when buffer-file-name
+    (condition-case err
+        (let* ((attrs (file-attributes buffer-file-name))
+               (file-size (and attrs (nth 7 attrs))))
+          (and file-size
+               (numberp file-size)
+               (> file-size my/large-file-threshold)))
+      (error
+       (message "Error checking file size for %s: %s" buffer-file-name (error-message-string err))
+       nil))))
+;; Function to safely disable a mode if it exists and is enabled
+(defun my/safe-disable-mode (mode)
+  "Safely disable MODE if it exists and is currently enabled."
+  (condition-case err
+      (when (and (fboundp mode)
+                 (boundp mode)
+                 (symbol-value mode))
+        (funcall mode -1))
+    (error
+     (message "Warning: Could not disable %s: %s" mode (error-message-string err)))))
 
 ;; Function to disable heavy features for large files
 (defun my/disable-features-for-large-file ()
   "Disable heavy features when opening large files."
-  (when (my/large-file-p)
+  (when (and buffer-file-name
+             (not (gethash (current-buffer) my/large-file-processed-buffers))
+             (my/large-file-p))
+    ;; Mark this buffer as processed
+    (puthash (current-buffer) t my/large-file-processed-buffers)
+    
     (let* ((attrs (file-attributes buffer-file-name))
            (file-size (and attrs (nth 7 attrs))))
       (when file-size
-        (message "Large file detected (%s bytes). Disabling heavy features for better performance."
+        (message "Large file detected (%s). Disabling heavy features for better performance."
                  (file-size-human-readable file-size))))
 
-    ;; Disable TreeSitter specifically
-    (when (bound-and-true-p tree-sitter-mode)
-      (tree-sitter-mode -1))
-    (when (bound-and-true-p tree-sitter-hl-mode)
-      (tree-sitter-hl-mode -1))
+    ;; Safely disable features
+    (dolist (feature my/large-file-disabled-features)
+      (my/safe-disable-mode feature))
+    
+    ;; Additional cleanup for specific modes that might cause issues
+    (condition-case nil
+        (progn
+          ;; Clean up line-reminder overlays
+          (when (fboundp 'line-reminder--clear-all-ovs)
+            (line-reminder--clear-all-ovs))
+          ;; Cancel any active timers
+          (when (and (boundp 'line-reminder--timer)
+                     line-reminder--timer)
+            (cancel-timer line-reminder--timer)
+            (setq line-reminder--timer nil)))
+      (error nil))
 
-    ;; Disable other TreeSitter-related features
-    (when (bound-and-true-p ts-fold-mode)
-      (ts-fold-mode -1))
-    (when (bound-and-true-p ts-fold-indicators-mode)
-      (ts-fold-indicators-mode -1))
-    (when (bound-and-true-p combobulate-mode)
-      (combobulate-mode -1))
-    ;; Disable line-reminder with additional cleanup
-    (when (bound-and-true-p line-reminder-mode)
-      (condition-case nil
-          (progn
-            (line-reminder-mode -1)
-            ;; Clean up any existing overlays to prevent errors
-            (when (fboundp 'line-reminder--clear-all-ovs)
-              (line-reminder--clear-all-ovs))
-            ;; Remove any timers that might cause issues
-            (when (boundp 'line-reminder--timer)
-              (when line-reminder--timer
-                (cancel-timer line-reminder--timer)
-                (setq line-reminder--timer nil))))
-        (error nil)))
+    ;; Set buffer-local performance optimizations
+    (condition-case nil
+        (progn
+          (setq-local bidi-display-reordering nil)
+          (setq-local bidi-paragraph-direction 'left-to-right)
+          (setq-local buffer-read-only nil))
+      (error nil))
 
-    ;; Disable LSP for large files
-    (when (bound-and-true-p lsp-mode)
-      (lsp-mode -1))
-
-    ;; Disable completion backends
-    (when (bound-and-true-p company-mode)
-      (company-mode -1))
-    (when (bound-and-true-p corfu-mode)
-      (corfu-mode -1))
-
-    ;; Disable syntax checking
-    (when (bound-and-true-p flycheck-mode)
-      (flycheck-mode -1))
-
-    ;; Optionally disable font-lock (syntax highlighting) for very large files
-    ;; Uncomment the next lines if you want to disable syntax highlighting entirely
-    ;; (when (bound-and-true-p font-lock-mode)
-    ;;   (font-lock-mode -1))
-    ;; (when (bound-and-true-p global-font-lock-mode)
-    ;;   (setq-local font-lock-defaults nil))
-
-    ;; Switch to fundamental-mode for very large files (optional)
-    ;; Uncomment if you want to completely disable major mode features
-    ;; (fundamental-mode)
-
-    ;; Set some buffer-local variables for better performance
-    (setq-local bidi-display-reordering nil)
-    (setq-local bidi-paragraph-direction 'left-to-right)
-    (setq-local buffer-read-only nil) ; Ensure we can still edit
-
-    ;; Disable undo for large files (optional - uncomment if needed)
-    ;; (setq-local buffer-undo-list t)
-
-    ;; Display a message about what was disabled
+    ;; Display final message
     (let* ((attrs (file-attributes buffer-file-name))
            (file-size (and attrs (nth 7 attrs))))
       (when file-size
-        (message "TreeSitter and heavy features disabled for large file. File size: %s"
+        (message "Heavy features disabled for large file. File size: %s"
                  (file-size-human-readable file-size))))))
 
 ;; Enhanced version of the TreeSitter check that considers file size
 (defun my/should-enable-tree-sitter-p-with-size-check ()
   "Check if tree-sitter should be enabled, considering file size."
-  (and (not (my/large-file-p))
-       (not (memq major-mode my/tree-sitter-disabled-modes))
-       (my/tree-sitter-language-available-p major-mode)))
+  (condition-case nil
+      (and (not (my/large-file-p))
+           ;; Only check these if the functions exist
+           (or (not (fboundp 'my/tree-sitter-disabled-modes))
+               (not (and (boundp 'my/tree-sitter-disabled-modes)
+                         (memq major-mode my/tree-sitter-disabled-modes))))
+           (or (not (fboundp 'my/tree-sitter-language-available-p))
+               (my/tree-sitter-language-available-p major-mode)))
+    (error nil)))
 
 ;; Hook to check file size when opening files
 (defun my/check-file-size-on-find-file ()
   "Check file size and disable features if necessary when opening files."
-  (my/disable-features-for-large-file))
+  (condition-case err
+      (run-with-idle-timer 0.1 nil #'my/disable-features-for-large-file)
+    (error
+     (message "Error in large file check: %s" (error-message-string err)))))
 
-;; Hook to check file size when switching buffers
-(defun my/check-file-size-on-buffer-switch ()
-  "Check file size when switching to a buffer."
-  (when (and buffer-file-name
-             (my/large-file-p))
-    (my/disable-features-for-large-file)))
+;; Clean up processed buffers when they're killed
+(defun my/cleanup-large-file-buffer ()
+  "Clean up tracking for killed buffers."
+  (condition-case nil
+      (remhash (current-buffer) my/large-file-processed-buffers)
+    (error nil)))
 
 ;; User command to manually toggle large file mode
 (defun my/toggle-large-file-mode ()
@@ -162,9 +157,12 @@ SIZE should be in bytes."
            size
            (file-size-human-readable size)))
 
-;; Add hooks
+;; Add hooks safely
 (add-hook 'find-file-hook #'my/check-file-size-on-find-file)
-(add-hook 'buffer-list-update-hook #'my/check-file-size-on-buffer-switch)
+(add-hook 'kill-buffer-hook #'my/cleanup-large-file-buffer)
+
+;; Alternative approach: check on mode changes instead of buffer switches
+(add-hook 'after-change-major-mode-hook #'my/check-file-size-on-find-file)
 
 ;; Integration with existing TreeSitter configuration
 ;; Override the existing function to include size check

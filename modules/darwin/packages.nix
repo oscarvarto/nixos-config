@@ -5,6 +5,6 @@ let shared-packages = import ../shared/packages.nix { inherit pkgs; }; in
 shared-packages ++ [
   # Minimal darwin-specific packages only
   dockutil
-  # exercism
   mas
+  netcoredbg
 ]
