@@ -2,7 +2,6 @@
 
 with pkgs; 
 [
-  # Minimal essential packages only
   coreutils
   curl
   alejandra
@@ -21,7 +20,6 @@ with pkgs;
 
   # Encryption and security tools
   age
-  # age-plugin-yubikey
   bfg-repo-cleaner
   gnupg
   libfido2
@@ -31,14 +29,13 @@ with pkgs;
   docker-compose
 
   # Media-related packages
-  dejavu_fonts
   ffmpeg
   fd
   font-awesome
-  hack-font
   noto-fonts
   noto-fonts-emoji-blob-bin
-  meslo-lgs-nf
+
+  # JVM (Java, ...)
 
   # Node.js development tools
   nodejs

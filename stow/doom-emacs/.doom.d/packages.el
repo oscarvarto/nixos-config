@@ -34,6 +34,15 @@
                    ("terminfo/65" "terminfo/65/*")
                    ("integration" "integration/*")
                    (:exclude ".dir-locals.el" "*-tests.el"))))
+(package! eglot-booster
+  :recipe (:host github
+           :repo "jdtsmith/eglot-booster"
+           :depth 1))
+(package! eglot-java)
+(package! eglot-java-lombok
+  :recipe (:host github
+           :repo "ltylty/eglot-java-lombok"
+           :depth 1))
 (package! ejc-sql
   :recipe (:host github
            :repo "kostafey/ejc-sql"
