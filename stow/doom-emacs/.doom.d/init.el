@@ -93,7 +93,6 @@
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
        ;;vterm             ; the best terminal emulation in Emacs
-       ;;ghostty           ; terminal emulation using libghostty
 
        :checkers
        ;; syntax              ; tasing you for every semicolon you forget
@@ -104,7 +103,7 @@
        ;;ansible
        ;;biblio            ; Writes a PhD for you (citation needed)
        (collab +tunnel)    ; buffers with friends
-       debugger     ; FIXME stepping through code, to help you add bugs
+       (debugger +lsp)    ; FIXME stepping through code, to help you add bugs
        direnv
        ;;docker
        editorconfig      ; let someone else argue about tabs vs spaces
@@ -130,7 +129,7 @@
        :lang
        ;;agda              ; types of types of types of types...
        ;;beancount         ; mind the GAAP
-       (cc +tree-sitter)         ; C > C++ == 1
+       (cc +lsp +tree-sitter)         ; C > C++ == 1
        (clojure +lsp +tree-sitter)           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs

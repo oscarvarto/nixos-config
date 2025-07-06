@@ -270,11 +270,6 @@
   :quit t
   :ttl nil)
 
-;; workspace configuration
-;;   - do not create new workspace for each session
-;;(after! persp-mode
-;;  (setq persp-emacsclient-init-frame-behaviour-override "main"))
-
 (use-package envrc
   :hook (after-init . envrc-global-mode))
 (with-eval-after-load 'envrc

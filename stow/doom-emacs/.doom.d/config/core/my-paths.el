@@ -54,7 +54,7 @@
       (:jdks . 
              ,(cond 
                ((eq my/platform 'macos) 
-                (expand-file-name "Library/Caches/Coursier/arc" home))
+                 "/Library/Java/JavaVirtualMachines")
                ((eq my/platform 'windows) 
                 (expand-file-name "AppData/Local/Coursier/Cache/arc" home))
                ((eq my/platform 'linux)
