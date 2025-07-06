@@ -51,7 +51,7 @@
 (require 'my-defaults-config)
 (require 'my-banner-config)
 (require 'my-gui-appearance-config)
-;;(require 'my-project-cleanup-config)
+(require 'my-project-cleanup-config)
 
 ;; Helper function for loading
 (defun my/load-config (feature group) ; Group is mandatory
@@ -66,18 +66,18 @@
 
 (my/load-config 'treemacs 'ui)
 
-(my/load-config 'java 'jvm)
+(my/load-config 'lsp 'lsp)
 
-;; (my/load-config 'lsp 'lsp)
-;; (my/load-config 'jdk 'jvm)
-;; (my/load-config 'jvm-build 'jvm)
-;; (my/load-config 'jvm-compile 'jvm)
-;; (my/load-config 'jvm-navigation 'jvm)
-;; (my/load-config 'lsp-java 'jvm)
-;; (my/load-config 'clojure 'jvm)
-;; (my/load-config 'scala 'jvm)
-;; (my/load-config 'rust 'languages)
-;; (my/load-config 'python 'languages)
+(my/load-config 'jdk 'jvm)
+(my/load-config 'jvm-build 'jvm)
+(my/load-config 'jvm-compile 'jvm)
+(my/load-config 'jvm-navigation 'jvm)
+(my/load-config 'lsp-java 'jvm)
+(my/load-config 'clojure 'jvm)
+(my/load-config 'scala 'jvm)
+
+(my/load-config 'rust 'languages)
+(my/load-config 'python 'languages)
 
 ;;; Tool-specific configurations
 (my/load-config 'mu4e 'misc)

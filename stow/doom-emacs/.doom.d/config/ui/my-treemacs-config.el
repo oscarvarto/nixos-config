@@ -36,4 +36,5 @@
   (map! :leader
         :desc "Toggle multiple treemacs roots" "o x" #'my/treemacs-toggle-multiple-roots))
 
+
 (provide 'my-treemacs-config)

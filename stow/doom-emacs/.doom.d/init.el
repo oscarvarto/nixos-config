@@ -58,7 +58,7 @@
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
        smooth-scroll
        ;; tabs              ; a tab bar for Emacs
-       treemacs            ; a project drawer, like neotree but cooler
+       (treemacs +lsp)            ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        (vc-gutter +pretty) ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -112,7 +112,7 @@
        (eval +overlay)     ; run code, run (also, repls)
        lookup              ; navigate your code and its documentation
        llm
-       (lsp +eglot +peek)         ; M-x vscode
+       (lsp +peek)         ; M-x vscode
        (magit +forge)             ; a git porcelain for Emacs
        ;;magit
        ;;make              ; run make tasks from Emacs
@@ -131,7 +131,7 @@
        ;;agda              ; types of types of types of types...
        ;;beancount         ; mind the GAAP
        (cc +tree-sitter)         ; C > C++ == 1
-       ;;(clojure +lsp +tree-sitter)           ; java with a lisp
+       (clojure +lsp +tree-sitter)           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c

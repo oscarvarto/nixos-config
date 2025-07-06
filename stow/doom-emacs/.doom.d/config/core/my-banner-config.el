@@ -26,8 +26,8 @@
 (setq +doom-dashboard-ascii-banner-fn #'predator-banner-fn)
 
 ;;(setq fancy-splash-image "~/doom-extra-files/banners/predator-19-banner.png")
-(setq fancy-splash-image "~/doom-extra-files/banners/predator-dark-19-banner.png")
+;;(setq fancy-splash-image "~/doom-extra-files/banners/predator-dark-19-banner.png")
 ;;(setq fancy-splash-image "~/doom-extra-files/banners/predator.jpg")
-;;(setq fancy-splash-image "~/doom-extra-files/banners/emacs-lsp-left.png")
+(setq fancy-splash-image "~/doom-extra-files/banners/emacs-lsp-left.png")
 
 (provide 'my-banner-config)

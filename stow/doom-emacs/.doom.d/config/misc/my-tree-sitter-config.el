@@ -85,7 +85,7 @@
 (use-package! line-reminder
   :config
   ;; Configuration
-  (setq line-reminder-show-option 'indicators)
+  (setq line-reminder-show-option 'linum)
   (setq line-reminder-fringe-placed 'right-fringe)
 
   ;; Simple buffer size check without dependencies

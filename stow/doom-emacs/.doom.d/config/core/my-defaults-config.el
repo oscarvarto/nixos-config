@@ -132,16 +132,12 @@
 ;;(setq-default vterm-shell (executable-find "nu"))
 (setq-default explicit-shell-file-name (executable-find "fish"))
 
-;; (use-package eglot-booster
-;;   :after eglot
-;;   :config (eglot-booster-mode))
-
 ;; Workaround for debugging Java tests with nushell
 ;; When debugging, temporarily use bash to ensure proper environment variable handling
-;; (defun my/use-bash-for-debug-commands ()
-;;   "Temporarily set shell to bash for debug operations."
-;;   (setq-local shell-file-name "/bin/bash")
-;;   (setq-local explicit-shell-file-name "/bin/bash"))
+(defun my/use-bash-for-debug-commands ()
+  "Temporarily set shell to bash for debug operations."
+  (setq-local shell-file-name "/bin/bash")
+  (setq-local explicit-shell-file-name "/bin/bash"))
 
 ;; Hook for dap-mode to use bash for debugging
 ;; (with-eval-after-load 'dap-mode
@@ -305,15 +301,5 @@
 (setq vertico-cycle t) ; Allow cycling through Vertico completion candidates
 
 (setq +format-on-save-disabled-modes '(java-mode))
-
-(add-hook
- 'eglot-managed-mode-hook
- (lambda ()
-   ;; we want eglot to setup callbacks from eldoc, but we don't want eldoc
-   ;; running after every command. As a workaround, we disable it after we just
-   ;; enabled it. Now calling `M-x eldoc` will put the help we want in the eldoc
-   ;; buffer. Alternatively we could tell eglot to stay out of eldoc, and add the
-   ;; hooks manually, but that seems fragile to updates in eglot.
-   (eldoc-mode -1)))
 
 (provide 'my-defaults-config)
