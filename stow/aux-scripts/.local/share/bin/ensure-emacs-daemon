@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+
+# Helper function to ensure daemon is running and return socket path
+socket_path=$(doom-socket)
+
+if [[ -z "$socket_path" ]]; then
+    echo "Emacs daemon socket not found. Starting Emacs daemon first with: emacs --daemon=doom" >&2
+    emacs --daemon=doom
+
+    # Wait for daemon to start and create socket
+    retries=0
+    while [[ -z "$socket_path" && $retries -lt 18 ]]; do
+        sleep 0.5
+        socket_path=$(doom-socket)
+        ((retries++))
+    done
+
+    if [[ -z "$socket_path" ]]; then
+        echo "Failed to start Emacs daemon or find socket after 9 seconds" >&2
+        exit 1
+    fi
+fi
+
+echo "$socket_path"

@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+# Start Emacs in background
+tag="${1:-emacs}"
+
+# Start emacs in background with nohup and redirect output
+nohup emacs >/dev/null 2>&1 &
+pid=$!
+
+echo "Started Emacs with PID $pid (tag: $tag)"
+echo "$pid:$tag" >> ~/.emacs_jobs

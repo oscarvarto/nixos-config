@@ -95,7 +95,7 @@ in
       # Shell configuration (default fish, can be overridden)
       # Note: Default shell is set below, override with ghostty-config shell <shell-name>
       shell-integration = fish
-      shell-integration-features = no-cursor,sudo,title
+      shell-integration-features = cursor,sudo,title
 
       # Default font (can be overridden)
       # font-family = PragmataPro Mono Liga

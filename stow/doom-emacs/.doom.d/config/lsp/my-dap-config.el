@@ -40,7 +40,7 @@
   :config
   (setq dap-python-debugger 'debugpy)
   (unless (display-graphic-p)
-    (set-face-background 'dap-ui-marker-face "orange") ; An orange background for the line to execute
+    (set-face-background 'dap-ui-marker-face "HotPink4") ; An orange background for the line to execute
     (set-face-attribute 'dap-ui-marker-face nil :inherit nil) ; Do not inherit other styles
     (set-face-background 'dap-ui-pending-breakpoint-face "purple") ; Purple background for breakpoints line
     (set-face-attribute 'dap-ui-verified-breakpoint-face nil :inherit 'dap-ui-pending-breakpoint-face)))

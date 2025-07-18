@@ -82,6 +82,7 @@
   :recipe (:host github
            :repo "mrkkrp/nushell-mode"))
 (package! ob-mermaid)
+(package! obsidian)
 (package! org-modern)
 (package! org-modern-indent
   :recipe (:host github
@@ -123,6 +124,7 @@
 (package! verb
   :recipe (:host github
            :repo "federicotdn/verb"))
+(package! vterm)
 (package! yasnippet-snippets)
 (package! zoxide)
 

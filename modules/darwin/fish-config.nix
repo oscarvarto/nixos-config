@@ -75,62 +75,17 @@
       fish_add_path $HOME/.dotnet/tools
       fish_add_path /opt/homebrew/opt/trash-cli/bin
       fish_add_path "$HOME/.nix-profile/bin"
+      fish_add_path "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+      fish_add_path "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/"
 
       # Environment variables
       set -gx LC_ALL "en_US.UTF-8"
       set -gx ALTERNATE_EDITOR ""
       set -gx EDITOR nvim
       set -gx VISUAL nvim
-
-      # >>> conda initialize >>>
-      # !! Contents within this block are managed by 'conda init' !!
-      if test -f /opt/homebrew/Caskroom/miniforge/base/bin/conda
-          eval /opt/homebrew/Caskroom/miniforge/base/bin/conda "shell.fish" "hook" | source
-      else
-          if test -f "/opt/homebrew/Caskroom/miniforge/base/etc/fish/conf.d/conda.fish"
-              . "/opt/homebrew/Caskroom/miniforge/base/etc/fish/conf.d/conda.fish"
-          else
-              set -x PATH "/opt/homebrew/Caskroom/miniforge/base/bin" $PATH
-          end
-      end
-      # <<< conda initialize <<<
     '';
 
     functions = {
-      # Terminal Emacs function
-      t = {
-        body = ''
-          set socket_path (fd -ts doom $TMPDIR 2>/dev/null | head -1)
-          if test -n "$socket_path"
-            /opt/homebrew/bin/emacsclient -nw -s "$socket_path" $argv
-          else
-            echo "Emacs daemon socket not found. Start Emacs daemon first with: emacs --daemon=doom"
-            return 1
-          end
-        '';
-        description = "Open file in terminal Emacs";
-      };
-
-      # GUI Emacs client function
-      e = {
-        body = ''
-          set socket_path (fd -ts doom $TMPDIR 2>/dev/null | head -1)
-          if test -n "$socket_path"
-            /opt/homebrew/bin/emacsclient -nc -s "$socket_path" $argv
-          else
-            echo "Emacs daemon socket not found. Start Emacs daemon first with: emacs --daemon=doom"
-            return 1
-          end
-        '';
-        description = "Open file in GUI Emacs client";
-      };
-
-      # Start Emacs in background
-      et = {
-        body = ''emacs & disown'';
-        description = "Start Emacs in background";
-      };
-
       ppath = {
         body = ''
           for p in $PATH

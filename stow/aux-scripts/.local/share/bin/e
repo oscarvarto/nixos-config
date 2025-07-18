@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+# GUI Emacs client function
+socket_path=$(ensure-emacs-daemon)
+if [[ $? -ne 0 ]]; then
+    exit 1
+fi
+
+exec /opt/homebrew/bin/emacsclient -nc -s "$socket_path" "$@"

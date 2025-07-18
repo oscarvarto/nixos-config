@@ -10,7 +10,7 @@
   (markdown-enable-wiki-links t)
   :config
   (global-obsidian-mode t)
-  (obsidian-backlinks-mode t)
+  ;;(obsidian-backlinks-mode t)
   
   ;; These bindings are only suggestions; it's okay to use other bindings
   ;; Key bindings for obsidian-mode-map

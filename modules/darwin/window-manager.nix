@@ -3,15 +3,15 @@
 {
   services = {
     jankyborders = {
-      enable = true;
+      enable = false;
       active_color = "0xff00ff00";
       inactive_color = "0xff494d64";
       width = 10.0;
     };
 
     yabai = {
-      enable = true;
-      enableScriptingAddition = true;
+      enable = false;
+      enableScriptingAddition = false;
       config = {
         mouse_follows_focus = "on";
         focus_follows_mouse = "autofocus";

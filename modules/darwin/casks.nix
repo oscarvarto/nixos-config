@@ -1,24 +1,21 @@
 _:
 
 [
-  # Minimal essential casks only
   "ghostty@tip"
-  "firefox@nightly"
   
   # Development Tools
   # "homebrew/cask/docker"
-  "bruno"
   "chromedriver"
   "dotnet-sdk"
   "gg"
   "jetbrains-toolbox"
   "mactex"
-  "miniforge"
-  "okta-advanced-server-access"
   "ollama"
   "postman"
   "powershell"
-  "visual-studio-code"
+  "qt-creator"
+  "qt-design-studio"
+  "unity-hub"
 
   # Communication Tools
   "discord"
@@ -28,6 +25,7 @@ _:
   "nheko"
   "notion"
   "slack"
+  "teamviewer"
   "whatsapp"
   "zoom"
 
@@ -35,7 +33,9 @@ _:
   "1password@nightly"
   "1password-cli"
   "dropbox"
+  "figma"
   "hammerspoon"  # Lua scripting for macOS automation
+  "jordanbaird-ice"
   "obsidian"
   "nordvpn"
   "proton-drive"
@@ -53,4 +53,5 @@ _:
   "google-chrome"
   "microsoft-edge"
   "vivaldi"
+  "zen"
 ]

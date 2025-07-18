@@ -7,5 +7,5 @@ cs bootstrap \
 	--java-opt -Xms100m \
 	--java-opt -Xmx30G \
 	--java-opt -Dmetals.client=emacs \
-	-r sonatype:snapshots -r sonatype:releases \
+	-r "https://central.sonatype.com/repository/maven-snapshots" \
 	org.scalameta:metals_2.13:$1 -o ~/.local/bin/metals -f

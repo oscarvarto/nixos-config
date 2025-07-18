@@ -104,11 +104,6 @@ in
           settings = fromTOML(builtins.readFile ./starship.toml);
         };
 
-        vscode = {
-          enable = true;
-          mutableExtensionsDir = true;
-        };
-
         yazi = {
           enable = true;
           enableFishIntegration = true;
@@ -155,13 +150,8 @@ in
         { path = "/Applications/Zed Preview.app/"; }
         { path = "/Applications/Ghostty.app/"; }
         { path = "/Applications/WarpPreview.app/"; }
-        { path = "/Applications/Firefox Nightly.app/"; }
-        { path = "/Applications/Microsoft Edge.app/"; }
-        { path = "/Applications/Google Chrome.app/"; }
-        { path = "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/"; }
-        { path = "/Applications/Microsoft Teams.app/"; }
-        { path = "/Applications/Microsoft Outlook.app/"; }
-        { path = "/Applications/zoom.us.app/"; }
+        { path = "/Applications/Zen.app/"; }
+        { path = "/Applications/Safari Technology Preview.app/"; }
         { path = "/Applications/Parallels Desktop.app/"; }
         { path = "/Applications/Beekeeper Studio.app/"; }
         { path = "/System/Applications/Music.app/"; }

@@ -29,6 +29,7 @@
       "cargo-binstall"
       "ccache"
       "cmake"
+      "cmake-language-server"
       "coursier"
       "difftastic"
       {
@@ -69,13 +70,11 @@
       "pass"
       "pkg-config"
       "pinentry-mac"
-      "pixi"
       "poppler"
       "resvg"
       "stow"
       "swig"
       "trash-cli"
-      "uv"
       "vivid"
       "vcpkg"
       "volta"
@@ -105,7 +104,6 @@
     masApps = {
       "1Password for Safari" = 1569813296;  # Temporarily disabled
       "neptunes" = 1006739057;
-      "Okta Verify" = 490179405;
       "rcmd" = 1596283165;
       "XCode" = 497799835;
     };

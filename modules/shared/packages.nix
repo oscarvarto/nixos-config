@@ -1,6 +1,6 @@
 { pkgs }:
 
-with pkgs; 
+with pkgs;
 [
   coreutils
   curl
@@ -14,6 +14,7 @@ with pkgs;
   neofetch
   nil
   openssh
+  pixi
   sqlite
   wget
   zip
@@ -54,6 +55,13 @@ with pkgs;
   unzip
 
   # Python packages
-  python3
-  virtualenv
+  (python3.withPackages (python-pkgs: with python-pkgs; [
+    jupyterlab
+    matplotlib
+    polars
+    pyqt6
+    python
+    sympy
+    uv
+  ]))
 ]
